@@ -4,9 +4,11 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "start": "ts-node src/socket.ts",
+    "start-server": "node build/socket.js",
     "dev": "nodemon src/socket.ts",
+    "generate-prisma": "prisma generate",
     "migrate": "prisma migrate dev",
+    "compile": "tsc -b ./tsconfig.json",
     "tscheck": "tsc --noEmit"
   },
   "dependencies": {

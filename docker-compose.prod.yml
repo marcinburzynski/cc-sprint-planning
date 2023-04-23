@@ -23,19 +23,12 @@ services:
     build:
       context: $PWD/socket
       dockerfile: ./Dockerfile
-      target: "dev"
+      target: "prod"
     ports:
       - "3000:3000"
     networks:
       comscore-planning-network:
         ipv4_address: 172.41.0.13
-    volumes:
-      - type: bind
-        source: ./socket/src
-        target: /app/src
-      - type: bind
-        source: ./socket/prisma
-        target: /app/prisma
 
   frontend:
     working_dir: /app
@@ -44,16 +37,12 @@ services:
     build:
       context: $PWD/frontend
       dockerfile: ./Dockerfile
-      target: "dev"
+      target: "prod"
     ports:
-      - "5173:5173"
+      - "80:80"
     networks:
       comscore-planning-network:
         ipv4_address: 172.41.0.14
-    volumes:
-      - type: bind
-        source: ./frontend
-        target: /app
 
 volumes:
   postgres-data:
