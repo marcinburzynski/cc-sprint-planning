@@ -24,7 +24,9 @@ FROM nginx:1.23-bullseye as prod
 
 COPY --from=prod-builder /app/dist /app
 RUN rm /etc/nginx/conf.d/default.conf
-COPY ../data/nginx/nginx.conf /etc/nginx/conf.d
+COPY config/nginx.conf /etc/nginx/conf.d
+
+COPY ./ssl /ssl
 
 #ENTRYPOINT ["tail", "-f", "/dev/null"]
 CMD ["nginx", "-g", "daemon off;"]
