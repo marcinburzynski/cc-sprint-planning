@@ -1,0 +1,13 @@
+.logo-header {
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+    position: absolute;
+    top: 30px;
+    left: 30px;
+
+    span {
+        margin-left: 14px;
+        font-size: 24px;
+    }
+}

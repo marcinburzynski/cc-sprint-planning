@@ -1,0 +1,26 @@
+{
+  "name": "lexi-server-socket",
+  "main": "src/socket.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "ts-node src/socket.ts",
+    "dev": "nodemon src/socket.ts",
+    "migrate": "prisma migrate dev"
+  },
+  "dependencies": {
+    "@prisma/client": "4.13.0",
+    "jsonwebtoken": "8.5.1",
+    "nanoid": "4.0.2",
+    "socket.io": "4.5.2",
+    "typescript": "5.0.4"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "8.5.9",
+    "@types/node": "18.15.13",
+    "@types/nodemon": "1.19.2",
+    "nodemon": "2.0.22",
+    "prisma": "4.13.0",
+    "ts-node": "10.9.1"
+  }
+}

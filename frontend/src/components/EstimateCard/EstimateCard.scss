@@ -1,0 +1,61 @@
+@import '../../assets/style/colors';
+
+.default-card-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 175px;
+    border-radius: 3px;
+    background-color: $default-bg-gray;
+    border: 2px solid transparent;
+
+    &--back-side-not-selected, &--back-side-selected {
+        svg {
+            width: 51px;
+            height: 42px;
+        }
+    }
+
+    &--front-side-not-selected, &--front-side-selected {
+        position: relative;
+        font-size: 24px;
+
+        .logo {
+            position: absolute;
+            width: 16px;
+            height: 12px;
+
+            &--top-left {
+                left: 6px;
+                top: 8px;
+            }
+
+            &--bottom-right {
+                right: 6px;
+                bottom: 8px;
+            }
+        }
+
+        .score-circle {
+            $circle-rotation: 26deg;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 108px;
+            width: 71px;
+            border-radius: 100%;
+            border: 1px solid $contour-gray;
+            transform: rotate($circle-rotation);
+
+            span {
+                transform: rotate(-$circle-rotation);
+            }
+        }
+    }
+
+    &--front-side-selected {
+        border: 2px solid $comscore-blue;
+    }
+}

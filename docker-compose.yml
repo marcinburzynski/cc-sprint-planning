@@ -1,0 +1,51 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:15.2-bullseye
+    env_file:
+      - ./.env
+    restart: always
+    volumes:
+      - type: volume
+        source: postgres-data
+        target: /var/lib/postgresql/data
+    networks:
+      comscore-planning-network:
+        ipv4_address: 172.41.0.10
+    ports:
+      - "5432:5432"
+
+  socket:
+    working_dir: /app
+    env_file:
+      - ./.env
+    environment:
+      - PSQL_HOST=172.41.0.10
+    build:
+      context: $PWD/socket
+      dockerfile: ./Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      comscore-planning-network:
+        ipv4_address: 172.41.0.13
+    volumes:
+      - type: bind
+        source: ./socket/src
+        target: /app/src
+      - type: bind
+        source: ./socket/prisma
+        target: /app/prisma
+
+volumes:
+  postgres-data:
+
+networks:
+  comscore-planning-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.41.0.0/24
+          gateway: 172.41.0.1

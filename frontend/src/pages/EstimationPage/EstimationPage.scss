@@ -1,0 +1,54 @@
+@import '../../assets/style/colors';
+
+$page-padding: 20px;
+
+.estimation-page {
+    display: flex;
+    padding: 0 $page-padding $page-padding $page-padding;
+    height: 100vh;
+
+    .cards-container {
+        margin-top: 111px;
+        width: 100%;
+
+        .header {
+            display: flex;
+            width: 80%;
+            flex-direction: column;
+            padding-bottom: 32px;
+            border-bottom: 1px solid $light-gray;
+
+            .estimating-label {
+                font-size: 15px;
+                line-height: 18px;
+            }
+
+            .estimating-ticket {
+                font-size: 24px;
+                line-height: 28px;
+                margin-top: 5px;
+            }
+        }
+
+        .cards-preview {
+            margin-top: 32px;
+        }
+    }
+
+    .side-container {
+        $sidebar-top-margin: 66px;
+        margin: $sidebar-top-margin 0 0 auto;
+        height: calc(100% - $page-padding - $sidebar-top-margin - 55px);
+    }
+
+    .card-picker {
+        position: fixed;
+        bottom: 25px;
+        right: 411px;
+    }
+
+    .reveal-estimation-button {
+        width: 100%;
+        margin-top: 16px;
+    }
+}

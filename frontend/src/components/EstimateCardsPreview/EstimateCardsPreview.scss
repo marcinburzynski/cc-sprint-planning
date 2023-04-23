@@ -1,0 +1,7 @@
+.estimate-cards-preview {
+    .team-lane {
+        &:not(:first-of-type) {
+            margin-top: 64px;
+        }
+    }
+}

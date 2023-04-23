@@ -1,0 +1,62 @@
+@import '../../assets/style/colors';
+
+.default-ticket-manager-sidebar {
+    display: flex;
+    flex-direction: column;
+    width: 371px;
+    height: 100%;
+    padding: 26px 14px;
+    background-color: $default-bg-gray;
+    border-radius: 3px;
+
+    .tickets-list {
+        display: flex;
+        flex-direction: column;
+        max-height: 750px;
+        overflow-y: auto;
+
+        .ticket {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 20px 15px;
+            background-color: #fff;
+            border-radius: 2px;
+            cursor: pointer;
+            border: 2px solid transparent;
+
+            &--selected {
+                border: 2px solid $comscore-blue;
+            }
+
+            &:not(:first-of-type) {
+                margin-top: 20px;
+            }
+
+            span {
+                font-size: 14px;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+        }
+    }
+
+
+    .add-ticket-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-right: 8px;
+        margin-top: 24px;
+
+        textarea {
+            width: 100%;
+        }
+
+        svg {
+            margin-left: 16px;
+            cursor: pointer;
+        }
+    }
+}

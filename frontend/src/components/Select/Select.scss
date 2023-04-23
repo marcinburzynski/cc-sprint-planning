@@ -1,0 +1,38 @@
+.default-select-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    border: 1px solid #000;
+    cursor: pointer;
+    height: 30px;
+
+    .chevron-icon {
+        margin-left: 12px;
+    }
+
+    &:focus {
+        outline: none;
+    }
+}
+
+.default-select-dropdown {
+    box-shadow: rgba(149, 157, 165, 0.2) 0 8px 24px;
+
+    .default-select-item {
+        cursor: pointer;
+        padding: 8px 4px;
+        font-family: 'Roboto', sans-serif;
+
+        &:focus {
+            outline: none;
+        }
+
+        &:hover {
+            outline: none;
+            background-color: #c2c2c2;
+        }
+    }
+}
+
+
