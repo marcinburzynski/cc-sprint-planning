@@ -38,11 +38,20 @@ services:
       context: $PWD/frontend
       dockerfile: ./Dockerfile
       target: "prod"
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
     ports:
       - "80:80"
     networks:
       comscore-planning-network:
         ipv4_address: 172.41.0.14
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
 
 volumes:
   postgres-data:
