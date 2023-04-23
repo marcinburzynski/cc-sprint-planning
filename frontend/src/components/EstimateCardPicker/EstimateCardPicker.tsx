@@ -10,7 +10,7 @@ import './EstimateCardPicker.scss';
 
 type EstimateCardPickerProps = {
     className?: string;
-    selectedCard?: string;
+    selectedCard?: string | null
     cardsSet?: string[];
     freeze?: boolean;
     onChangeSelection: (selectedCard?: string) => void;

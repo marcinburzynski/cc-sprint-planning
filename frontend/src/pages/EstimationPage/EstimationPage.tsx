@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { isEmpty, omit } from 'lodash';
 
 import { useTypedDispatch, useTypedSelector } from '../../store/hooks';
@@ -22,6 +22,7 @@ const isCompleteUser = (user: Partial<UserType>): user is UserType => (
 
 export const EstimationPage = () => {
     const dispatch = useTypedDispatch();
+    const navigateTo = useNavigate();
     const { sessionId } = useParams<'sessionId'>()
 
     const [selectedTicketId, setSelectedTicketId] = useState<string>();
@@ -70,12 +71,20 @@ export const EstimationPage = () => {
     }
 
     useEffect(() => {
+        if (!user.id) {
+            return navigateTo(`/join/${sessionId}`);
+        }
+
         handleJoinAndLoadData()
     }, [])
 
     useEffect(() => {
         if (!selectedTicketId && !isEmpty(tickets)) {
-            setSelectedTicketId(Object.values(tickets)[0].id)
+            const firstTicket = Object.values(tickets).find(({ order }) => order === 1)
+
+            if (firstTicket) {
+                setSelectedTicketId(firstTicket.id)
+            }
         }
     }, [tickets, selectedTicketId])
 
@@ -101,6 +110,7 @@ export const EstimationPage = () => {
 
             <div className="side-container">
                 <TicketManagerSidebar
+                    isSpectator={isSpectator}
                     tickets={Object.values(tickets)}
                     selectedTicket={selectedTicket}
                     onSelectTicket={(ticket) => setSelectedTicketId(ticket.id)}

@@ -14,7 +14,7 @@ type TeamEstimateLaneProps = {
     users: UserType[];
     reveal?: boolean;
     estimations: {
-        [userId: string]: string;
+        [userId: string]: string | null;
     }
 }
 
@@ -33,6 +33,8 @@ export const TeamEstimateLane = ({ className, teamName, users, estimations, reve
         const currentTeamEstimations = pick(estimations, currentTeamUserIds)
 
         const counted = Object.values(currentTeamEstimations).reduce((acc, curr) => {
+            if (!curr) return acc;
+
             if (acc[curr]) {
                 acc[curr] += 1
             } else {

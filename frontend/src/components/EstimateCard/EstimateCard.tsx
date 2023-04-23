@@ -15,7 +15,7 @@ export enum EstimateCardMode {
 type EstimateCardProps = {
     className?: string;
     mode: EstimateCardMode;
-    value?: string;
+    value?: string | null;
     onClick?: (value: string) => void;
 }
 

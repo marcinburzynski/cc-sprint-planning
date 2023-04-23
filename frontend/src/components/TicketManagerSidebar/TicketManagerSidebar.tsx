@@ -1,5 +1,5 @@
 import ClassName from 'classnames';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
 import { TextArea } from '../TextArea';
 
@@ -13,6 +13,7 @@ type TicketManagerSidebarProps = {
     className?: string;
     tickets: TicketType[];
     selectedTicket: TicketType | undefined;
+    isSpectator?: boolean;
     onSelectTicket: (ticket: TicketType) => void;
     onAddTicket: (name: string) => void;
 }
@@ -21,6 +22,7 @@ export const TicketManagerSidebar = ({
     className,
     tickets,
     selectedTicket,
+    isSpectator,
     onSelectTicket,
     onAddTicket,
 }: TicketManagerSidebarProps) => {
@@ -33,12 +35,17 @@ export const TicketManagerSidebar = ({
         setNewTicketName('');
     }
 
+    const sortedTickets = useMemo(() => {
+        const clonedTickets = [...tickets];
+        return clonedTickets.sort((a, b) => a.order - b.order);
+    }, [tickets])
+
     const fullClassName = ClassName('default-ticket-manager-sidebar', className);
 
     return (
         <div className={fullClassName}>
             <div className="tickets-list">
-                {tickets.map((ticket) => (
+                {sortedTickets.map((ticket) => (
                     <div
                         key={ticket.id}
                         onClick={() => onSelectTicket(ticket)}
@@ -49,10 +56,12 @@ export const TicketManagerSidebar = ({
                 ))}
             </div>
 
-            <div className="add-ticket-container">
-                <TextArea value={newTicketName} onChange={setNewTicketName} />
-                <PlusIconSVG onClick={handleAddNewTicket} />
-            </div>
+            {isSpectator && (
+                <div className="add-ticket-container">
+                    <TextArea value={newTicketName} onChange={setNewTicketName} />
+                    <PlusIconSVG onClick={handleAddNewTicket} />
+                </div>
+            )}
         </div>
     )
 }

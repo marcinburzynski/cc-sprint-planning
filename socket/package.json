@@ -6,7 +6,8 @@
   "scripts": {
     "start": "ts-node src/socket.ts",
     "dev": "nodemon src/socket.ts",
-    "migrate": "prisma migrate dev"
+    "migrate": "prisma migrate dev",
+    "tscheck": "tsc --noEmit"
   },
   "dependencies": {
     "@prisma/client": "4.13.0",

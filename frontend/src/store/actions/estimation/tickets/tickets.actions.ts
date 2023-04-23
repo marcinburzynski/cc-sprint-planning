@@ -34,12 +34,15 @@ export const getSessionTickets = (sessionId: string): TypedThunkAction<GetSessio
 
 type CreateTicketAction = {
     type: 'CREATE_TICKET';
-    ticket: Omit<TicketType, 'id'>;
+    ticket: TicketType;
 }
 
-export const createTicket = (sessionId: string, name: string): TypedThunkAction<CreateTicketAction> => async (dispatch) => {
+export const createTicket = (sessionId: string, name: string): TypedThunkAction<CreateTicketAction> => async (dispatch, getState) => {
+    const state = getState()
+
     const partialTicket: Omit<TicketType, 'id'> = {
         name,
+        order: Object.values(state.estimation.tickets.data).length + 1,
         isRevealed: false,
     }
 

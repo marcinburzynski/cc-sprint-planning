@@ -8,6 +8,7 @@ export type UserType = {
 export type TicketType = {
     id: string;
     name: string;
+    order: number;
     isRevealed?: boolean;
 }
 

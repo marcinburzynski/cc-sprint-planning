@@ -5,7 +5,7 @@ import type { EstimationsActionTypes } from '../../../actions/estimation/estimat
 type EstimationsReducerState = {
     data: {
         [ticketId: string]: {
-            [userId: string]: string;
+            [userId: string]: string | null;
         };
     };
     loading: boolean;

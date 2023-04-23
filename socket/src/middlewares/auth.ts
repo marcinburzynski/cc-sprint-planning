@@ -1,8 +1,8 @@
 import * as jwt from 'jsonwebtoken';
+import { Socket } from 'socket.io'
 
-import type { MiddlewareFunction } from './types';
 
-export const authenticateMiddleware: MiddlewareFunction = (socket, next) => {
+export const authenticateMiddleware = (socket: Socket, next: (err?: Error) => void) => {
     const { token } = socket.handshake.auth;
 
     const isAuthorized = jwt.verify(token, process.env.SECRET!)

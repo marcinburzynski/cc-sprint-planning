@@ -1,7 +1,8 @@
 import { Server } from 'socket.io';
 import { nanoid } from 'nanoid';
-import { PrismaClient, User, Estimation } from '@prisma/client';
+import { PrismaClient, type User, type Estimation } from '@prisma/client';
 
+import { authenticateMiddleware } from './middlewares/auth.js';
 import type { UserType, EstimationType, TicketType } from './types/commonTypes.js';
 import type { PartialBy } from './types/utilTypes.js';
 
@@ -11,18 +12,19 @@ const main = async () => {
     let socketSessionId: string | undefined
 
     io.on('connection', (socket) => {
+
         socket.on('create-and-join-session', async (user: PartialBy<UserType, 'id' | 'team'>, teams: string[], callback) => {
             let savedUser: User
 
-            if (!user.id) {
+            if (user.id) {
+                savedUser = await prisma.user.findUnique({ where: { id: user.id } }) as User
+            } else {
                 savedUser = await prisma.user.create({
                     data: {
                         ...user,
                         id: nanoid(),
                     }
                 })
-            } else {
-                savedUser = await prisma.user.findUnique({ where: { id: user.id } }) as User
             }
 
             const session = await prisma.session.create({
@@ -52,15 +54,15 @@ const main = async () => {
         socket.on('join-session', async (sessionId: string, user: PartialBy<UserType, 'id'>, callback) => {
             let savedUser: User
 
-            if (!user.id) {
+            if (user.id) {
+                savedUser = await prisma.user.findUnique({ where: { id: user.id } }) as User
+            } else {
                 savedUser = await prisma.user.create({
                     data: {
                         ...user,
                         id: nanoid(),
                     }
                 })
-            } else {
-                savedUser = await prisma.user.findUnique({ where: { id: user.id } }) as User
             }
 
             const session = await prisma.session.findUnique({ where: { id: sessionId } });
@@ -119,6 +121,7 @@ const main = async () => {
                 data: {
                     id: nanoid(),
                     name: ticket.name,
+                    order: ticket.order,
                     isRevealed: ticket.isRevealed || false,
                     session: {
                         connect: { id: sessionId },
