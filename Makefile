@@ -11,6 +11,8 @@ help:
 	@echo
 	@echo "  start"
 	@echo "    Starts docker dev environment."
+	@echo "  start-prod-server"
+	@echo "    Starts docker prod environment."
 	@echo "  stop"
 	@echo "    Stops docker dev environment."
 	@echo "  migrate"
@@ -19,6 +21,9 @@ help:
 
 start:
 	@docker-compose up -d --build --always-recreate-deps
+
+start-prod-server:
+	@docker-compose -f ./docker-compose.prod.yml up -d --build --always-recreate-deps
 
 stop:
 	@docker-compose down
