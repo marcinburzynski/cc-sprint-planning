@@ -5,7 +5,6 @@ import { prisma } from '../../datasources/prisma.js';
 
 export const initSessionRoutes = (app: Express) => {
     app.post('/session/create', async (req, res) => {
-        console.log(req.body);
         if (!req.body?.teams || !req.body?.teams.length) {
             res.status(400);
             return res.json({ error: 'Teams field is required and cannot be empty' });
