@@ -1,14 +1,30 @@
+import https from 'https';
+import fs from 'fs';
+import express from 'express';
 import { Server } from 'socket.io';
 import { nanoid } from 'nanoid';
 import { PrismaClient, type User, type Estimation } from '@prisma/client';
 
-import { authenticateMiddleware } from './middlewares/auth.js';
 import type { UserType, EstimationType, TicketType } from './types/commonTypes.js';
 import type { PartialBy } from './types/utilTypes.js';
 
+
 const main = async () => {
+    const privateKey = fs.readFileSync('/ssl/privkey.pem').toString();
+    const certificate = fs.readFileSync('/ssl/fullchain.pem').toString();
+
+    const app = express();
+    const server = https.createServer({
+        key: privateKey,
+        cert: certificate,
+        requestCert: false,
+        rejectUnauthorized: false,
+    }, app);
+
+    const io = new Server(server);
+
     const prisma = new PrismaClient();
-    const io = new Server(3000, { cors: { origin: '*' } });
+
     let socketSessionId: string | undefined
 
     io.on('connection', (socket) => {
@@ -176,6 +192,8 @@ const main = async () => {
             callback({ estimates })
         })
     });
+
+    server.listen(443)
 };
 
 main();
