@@ -1,12 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import jwtDecode from 'jwt-decode';
 
 import { useTypedDispatch } from '../../store/hooks';
 import { socket } from '../../services/socket';
+import { http } from '../../services/http';
 import { setUser } from '../../store/actions/user';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
 import { Select, type SelectOption } from '../../components/Select';
+
+import type { UserType } from '../../types/commonTypes';
 
 import './JoinPage.scss';
 
@@ -22,7 +26,7 @@ export const JoinPage = () => {
     const handleGetSessionTeams = async () => {
         if (!sessionId) return
 
-        const { teams: receivedTeams } = await socket.getSessionTeams(sessionId)
+        const { data: { teams: receivedTeams } } = await http.getSessionTeams(sessionId);
 
         setTeams(receivedTeams)
         setSelectedTeam({ value: receivedTeams[0], label: receivedTeams[0] })
@@ -35,13 +39,17 @@ export const JoinPage = () => {
     const handleJoinSession = async () => {
         if (!selectedTeam || !username || !sessionId) return
 
-        const { user } = await socket.joinSession(sessionId, {
+        const { data } = await http.createUser({
             name: username,
             isSpectator: false,
             team: selectedTeam.value,
         })
 
-        dispatch(setUser(user));
+        await socket.joinSession(sessionId, data.token)
+
+        const decodedUser = jwtDecode(data.token) as UserType;
+
+        dispatch(setUser(decodedUser));
         navigateTo(`/session/${sessionId}`)
     }
 

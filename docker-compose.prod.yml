@@ -16,12 +16,12 @@ services:
     ports:
       - "5432:5432"
 
-  socket:
+  server:
     working_dir: /app
     env_file:
       - ./.env
     build:
-      context: $PWD/socket
+      context: $PWD/server
       dockerfile: ./Dockerfile
       target: "prod"
     ports:
@@ -41,9 +41,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    networks:
-      comscore-planning-network:
-        ipv4_address: 172.41.0.14
 
 volumes:
   postgres-data:

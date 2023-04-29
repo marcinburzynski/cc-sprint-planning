@@ -1,4 +1,4 @@
-import * as jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { Socket } from 'socket.io'
 
 
@@ -8,8 +8,10 @@ export const authenticateMiddleware = (socket: Socket, next: (err?: Error) => vo
     const isAuthorized = jwt.verify(token, process.env.SECRET!)
 
     if (!isAuthorized) {
-        return void next(new Error('unauthorised'))
+        return void next(new Error('unauthorised'));
     }
+
+    socket.data.user = jwt.decode(token);
 
     next()
 }

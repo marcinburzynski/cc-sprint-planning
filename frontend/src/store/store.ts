@@ -4,15 +4,12 @@ import { composeWithDevTools } from '@redux-devtools/extension';
 
 import { rootReducer } from './reducers/rootReducer';
 import { getPreloadedState } from './getPreloadedState';
-import { listenToEvents } from './socketListener';
 
 export const store = createStore(
     rootReducer,
     getPreloadedState(),
     composeWithDevTools(applyMiddleware(thunk)),
 )
-
-listenToEvents(store);
 
 export type StoreType = typeof store;
 export type StoreStateType = ReturnType<typeof store.getState>;

@@ -22,8 +22,8 @@ type GetSessionUsersAction =
     | GetSessionUsersFailure
 
 
-export const getSessionUsers = (sessionId: string): TypedThunkAction<GetSessionUsersAction> => async (dispatch) => {
-    const { users } = await socket.getSessionUsers(sessionId);
+export const getSessionUsers = (): TypedThunkAction<GetSessionUsersAction> => async (dispatch) => {
+    const { users } = await socket.getSessionUsers();
 
     dispatch({
         type: 'GET_SESSION_USERS_SUCCESS',

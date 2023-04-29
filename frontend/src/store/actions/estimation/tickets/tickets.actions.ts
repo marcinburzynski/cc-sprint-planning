@@ -22,8 +22,8 @@ type GetSessionTicketsAction =
     | GetSessionTicketsFailure
 
 
-export const getSessionTickets = (sessionId: string): TypedThunkAction<GetSessionTicketsAction> => async (dispatch) => {
-    const { tickets } = await socket.getSessionTickets(sessionId);
+export const getSessionTickets = (): TypedThunkAction<GetSessionTicketsAction> => async (dispatch) => {
+    const { tickets } = await socket.getSessionTickets();
 
     dispatch({
         type: 'GET_SESSION_TICKETS_SUCCESS',
@@ -37,7 +37,7 @@ type CreateTicketAction = {
     ticket: TicketType;
 }
 
-export const createTicket = (sessionId: string, name: string): TypedThunkAction<CreateTicketAction> => async (dispatch, getState) => {
+export const createTicket = (name: string): TypedThunkAction<CreateTicketAction> => async (dispatch, getState) => {
     const state = getState()
 
     const partialTicket: Omit<TicketType, 'id'> = {
@@ -46,7 +46,7 @@ export const createTicket = (sessionId: string, name: string): TypedThunkAction<
         isRevealed: false,
     }
 
-    const { ticket } = await socket.createTicket(sessionId, partialTicket)
+    const { ticket } = await socket.createTicket(partialTicket)
 
     dispatch({
         type: 'CREATE_TICKET',

@@ -16,12 +16,14 @@ services:
     ports:
       - "5432:5432"
 
-  socket:
+  server:
     working_dir: /app
     env_file:
       - ./.env
+    environment:
+      - DEV=1
     build:
-      context: $PWD/socket
+      context: $PWD/server
       dockerfile: ./Dockerfile
       target: "dev"
     ports:
@@ -31,10 +33,10 @@ services:
         ipv4_address: 172.41.0.13
     volumes:
       - type: bind
-        source: ./socket/src
+        source: ./server/src
         target: /app/src
       - type: bind
-        source: ./socket/prisma
+        source: ./server/prisma
         target: /app/prisma
 
   frontend:

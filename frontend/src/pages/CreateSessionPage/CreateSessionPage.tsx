@@ -1,13 +1,17 @@
 import { useState } from 'react';
 import { isEmpty } from 'lodash';
 import { useNavigate } from 'react-router-dom';
+import jwtDecode from 'jwt-decode';
 
 import { useTypedDispatch } from '../../store/hooks';
 import { socket } from '../../services/socket';
+import { http } from '../../services/http';
 import { setUser } from '../../store/actions/user';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
 import { TeamsCreator } from '../../components/TeamsCreator';
+
+import type { UserType } from '../../types/commonTypes';
 
 import './CreateSessionPage.scss';
 
@@ -26,9 +30,19 @@ export const CreateSessionPage = () => {
             isSpectator: true,
         }
 
-        const { sessionId, user } = await socket.createAndJoinSession(partialUser, teams)
+        const [
+            { data: { sessionId } },
+            { data: { token } },
+        ] = await Promise.all([
+            http.createSession(teams),
+            http.createUser(partialUser),
+        ]);
 
-        dispatch(setUser(user))
+        await socket.joinSession(sessionId, token);
+
+        const decodedUser = jwtDecode(token) as UserType;
+
+        dispatch(setUser(decodedUser))
         navigateTo(`/session/${sessionId}`)
     }
 

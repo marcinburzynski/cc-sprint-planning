@@ -22,12 +22,12 @@ type GetSessionEstimationsAction =
     | GetSessionEstimationsFailure
 
 
-export const getSessionEstimations = (sessionId: string): TypedThunkAction<GetSessionEstimationsAction> => async (dispatch) => {
+export const getSessionEstimations = (): TypedThunkAction<GetSessionEstimationsAction> => async (dispatch) => {
     dispatch({
         type: 'GET_SESSION_ESTIMATIONS_START',
     })
 
-    const { estimates } = await socket.getSessionEstimates(sessionId);
+    const { estimates } = await socket.getSessionEstimates();
 
     dispatch({
         type: 'GET_SESSION_ESTIMATIONS_SUCCESS',
@@ -42,19 +42,22 @@ type SendEstimationAction = {
 
 export const sendEstimation = (
     ticketId: string,
-    userId: string,
     estimationValue: string | null,
-): TypedThunkAction<SendEstimationAction> => async (dispatch) => {
-    const estimation: EstimationType = {
+): TypedThunkAction<SendEstimationAction> => async (dispatch, getState) => {
+    const { id } = getState().user;
+    if (!id) return;
+
+    const estimation: SendEstimationAction['estimation'] = {
         value: estimationValue,
+        userId: id,
         ticketId,
-        userId,
     }
 
     await socket.sendEstimation(estimation);
 
     dispatch({
         type: 'SEND_ESTIMATION',
+        userId: id,
         estimation,
     })
 }

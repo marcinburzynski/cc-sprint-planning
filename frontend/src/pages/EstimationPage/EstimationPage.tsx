@@ -12,13 +12,7 @@ import { TicketManagerSidebar } from '../../components/TicketManagerSidebar';
 import { EstimateCardsPreview } from '../../components/EstimateCardsPreview';
 import { EstimateCardPicker } from '../../components/EstimateCardPicker';
 
-import type { UserType } from '../../types/commonTypes';
-
 import './EstimationPage.scss';
-
-const isCompleteUser = (user: Partial<UserType>): user is UserType => (
-    !!(user.id && user.name)
-)
 
 export const EstimationPage = () => {
     const dispatch = useTypedDispatch();
@@ -53,29 +47,34 @@ export const EstimationPage = () => {
     const userEstimation = estimationsForTicket && userId ? estimationsForTicket[userId] : undefined
 
     const handleJoinAndLoadData = async () => {
-        if (!socket.sessionId && sessionId && isCompleteUser(user)) {
-            await socket.joinSession(sessionId, user);
+        if (!socket.token) {
+            return navigateTo(`/join/${sessionId}`);
         }
 
-        if (!loadingTickets && !noTicketsAdded && isEmpty(tickets) && sessionId) {
-            dispatch(getSessionTickets(sessionId));
+        if (!socket.sessionId && sessionId && socket.token) {
+            await socket.joinSession(sessionId, socket.token);
+            console.log('joined');
         }
 
-        if (!loadingUsers && !noUsersInSession && userId && isEmpty(omit(users, userId)) && sessionId) {
-            dispatch(getSessionUsers(sessionId));
+        if (!loadingTickets && !noTicketsAdded && isEmpty(tickets)) {
+            dispatch(getSessionTickets());
         }
 
-        if (!loadingEstimations && isEmpty(estimations) && sessionId) {
-            dispatch(getSessionEstimations(sessionId));
+        if (!loadingUsers && !noUsersInSession && userId && isEmpty(omit(users, userId))) {
+            dispatch(getSessionUsers());
+        }
+
+        if (!loadingEstimations && isEmpty(estimations)) {
+            dispatch(getSessionEstimations());
         }
     }
 
     useEffect(() => {
-        if (!user.id) {
-            return navigateTo(`/join/${sessionId}`);
-        }
-
         handleJoinAndLoadData()
+
+        return () => {
+            socket.disconnect()
+        }
     }, [])
 
     useEffect(() => {
@@ -114,7 +113,7 @@ export const EstimationPage = () => {
                     tickets={Object.values(tickets)}
                     selectedTicket={selectedTicket}
                     onSelectTicket={(ticket) => setSelectedTicketId(ticket.id)}
-                    onAddTicket={(name) => sessionId && dispatch(createTicket(sessionId, name))}
+                    onAddTicket={(name) => sessionId && dispatch(createTicket(name))}
                 />
 
                 {isSpectator && !selectedTicket?.isRevealed && selectedTicketId && (
@@ -132,7 +131,7 @@ export const EstimationPage = () => {
                     className="card-picker"
                     freeze={selectedTicket?.isRevealed}
                     selectedCard={userEstimation}
-                    onChangeSelection={(value) => dispatch(sendEstimation(selectedTicketId, userId, value || null))}
+                    onChangeSelection={(value) => dispatch(sendEstimation(selectedTicketId, value || null))}
                 />
             ) : null}
         </div>
