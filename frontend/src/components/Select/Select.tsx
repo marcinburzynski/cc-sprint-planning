@@ -14,13 +14,21 @@ export type SelectOption = {
 type SelectProps = {
     classNameButton?: string;
     classNameDropdown?: string;
+    disabled?: boolean;
     options: SelectOption[];
     selection?: SelectOption;
     onChange: (selection: SelectOption | undefined) => void
 }
 
 
-export const Select = ({ classNameButton, classNameDropdown, options, selection, onChange }: SelectProps) => {
+export const Select = ({
+    classNameButton,
+    classNameDropdown,
+    disabled,
+    options,
+    selection,
+    onChange,
+}: SelectProps) => {
     const buttonRef = useRef<HTMLButtonElement>(null);
 
     const contentStyle = {
@@ -32,6 +40,7 @@ export const Select = ({ classNameButton, classNameDropdown, options, selection,
 
     return (
         <Root
+            disabled={disabled}
             value={selection?.value}
             onValueChange={(newValue) => onChange(options.find(({ value }) => value === newValue))}
         >

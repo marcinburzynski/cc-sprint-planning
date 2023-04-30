@@ -73,16 +73,18 @@ export const TicketManagerSidebar = ({
                                 <LinkIconSVG className="ticket-link-icon" onClick={handleGoToTicket(ticket)} />
                             )}
 
-                            <ConfirmationModal
-                                dangerous
-                                title="Are you sure?"
-                                message="This action will remove the ticket from the estimation."
-                                acceptLabel="Remove"
-                                onCancel={(e) => e.stopPropagation()}
-                                onAccept={handleRemoveTicket(ticket.id)}
-                            >
-                                <TrashBinIconSVG className="remove-ticket-icon" />
-                            </ConfirmationModal>
+                            {isSpectator && (
+                                <ConfirmationModal
+                                    dangerous
+                                    title="Are you sure?"
+                                    message="This action will remove the ticket from the estimation."
+                                    acceptLabel="Remove"
+                                    onCancel={(e) => e.stopPropagation()}
+                                    onAccept={handleRemoveTicket(ticket.id)}
+                                >
+                                    <TrashBinIconSVG className="remove-ticket-icon" />
+                                </ConfirmationModal>
+                            )}
                         </div>
                     </div>
                 ))}

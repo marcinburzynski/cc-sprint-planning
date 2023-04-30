@@ -8,6 +8,7 @@ import { http } from '../../services/http';
 import { setUser } from '../../store/actions/user';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
+import { Checkbox } from '../../components/Checkbox';
 import { Select, type SelectOption } from '../../components/Select';
 
 import type { UserType } from '../../types/commonTypes';
@@ -20,6 +21,7 @@ export const JoinPage = () => {
     const { sessionId } = useParams<'sessionId'>();
 
     const [username, setUsername] = useState('');
+    const [isSpectator, setIsSpectator] = useState(false);
     const [teams, setTeams] = useState<string[]>([]);
     const [selectedTeam, setSelectedTeam] = useState<SelectOption | undefined>()
 
@@ -40,9 +42,9 @@ export const JoinPage = () => {
         if (!selectedTeam || !username || !sessionId) return
 
         const { data } = await http.createUser({
+            isSpectator,
             name: username,
-            isSpectator: false,
-            team: selectedTeam.value,
+            team: isSpectator ? undefined : selectedTeam.value,
         })
 
         await socket.joinSession(sessionId, data.token)
@@ -63,10 +65,14 @@ export const JoinPage = () => {
 
                 <label className="team-label">Team:</label>
                 <Select
+                    disabled={isSpectator}
                     options={teams.map((team) => ({ label: team, value: team }))}
                     selection={selectedTeam}
                     onChange={setSelectedTeam}
                 />
+
+                <label className="spectator-label">Join as spectator</label>
+                <Checkbox isChecked={isSpectator} onChange={setIsSpectator} />
 
                 <Button className="join-button" onClick={handleJoinSession}>
                     Join
