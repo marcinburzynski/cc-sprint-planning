@@ -15,6 +15,8 @@ help:
 	@echo "    Starts docker prod environment."
 	@echo "  stop"
 	@echo "    Stops docker dev environment."
+	@echo "  stop-prod-server"
+	@echo "    Stops docker prod environment."
 	@echo "  migrate"
 	@echo "    Run all DB migrations and create new if models have changed."
 	@echo "  gen-ssl-cert"
@@ -29,6 +31,9 @@ start-prod-server:
 
 stop:
 	@docker-compose down
+
+stop-prod-server:
+	@docker-compose -f ./docker-compose.prod.yml down
 
 migrate:
 	@docker-compose exec -it $(SERVER_CONTAINER) yarn migrate

@@ -1,32 +1,32 @@
 import { nanoid } from 'nanoid';
-import type { Express } from 'express';
+import { Router } from 'express';
 
 import { prisma } from '../../datasources/prisma.js';
 
-export const initSessionRoutes = (app: Express) => {
-    app.post('/session/create', async (req, res) => {
-        if (!req.body?.teams || !req.body?.teams.length) {
-            res.status(400);
-            return res.json({ error: 'Teams field is required and cannot be empty' });
-        }
+export const sessionRouter = Router();
 
-        const session = await prisma.session.create({
-            data: { id: nanoid() }
-        });
+sessionRouter.post('/create', async (req, res) => {
+    if (!req.body?.teams || !req.body?.teams.length) {
+        res.status(400);
+        return res.json({ error: 'Teams field is required and cannot be empty' });
+    }
 
-        await prisma.team.createMany({
-            data: req.body.teams.map((team: string) => ({
-                sessionId: session.id,
-                name: team,
-            })),
-        });
-
-        res.json({ sessionId: session.id })
+    const session = await prisma.session.create({
+        data: { id: nanoid() }
     });
 
-    app.get('/session/:sessionId/teams', async (req, res) => {
-        const teams = await prisma.team.findMany({ where: { sessionId: req.params.sessionId } });
+    await prisma.team.createMany({
+        data: req.body.teams.map((team: string) => ({
+            sessionId: session.id,
+            name: team,
+        })),
+    });
 
-        res.json({ teams: teams.map((team) => team.name) })
-    })
-};
+    res.json({ sessionId: session.id });
+});
+
+sessionRouter.get('/:sessionId/teams', async (req, res) => {
+    const teams = await prisma.team.findMany({ where: { sessionId: req.params.sessionId } });
+
+    res.json({ teams: teams.map((team) => team.name) });
+});

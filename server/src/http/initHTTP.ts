@@ -1,9 +1,13 @@
-import type { Express } from 'express';
+import { Router, type Express } from 'express';
 
-import { initSessionRoutes } from './session/session.js';
-import { initUserRoutes } from './user/user.js';
+import { sessionRouter } from './session/session.js';
+import { userRouter } from './user/user.js';
 
 export const initHTTP = (app: Express) => {
-    initSessionRoutes(app);
-    initUserRoutes(app);
+    const apiRouter = Router();
+
+    apiRouter.use('/session', sessionRouter);
+    apiRouter.use('/user', userRouter);
+
+    app.use('/api', apiRouter);
 }

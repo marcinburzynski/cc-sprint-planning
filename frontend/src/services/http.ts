@@ -9,7 +9,7 @@ class Http {
     token?: string
 
     constructor() {
-        this.#client = axios.create({ baseURL: `${window.location.protocol}//${window.location.hostname}` })
+        this.#client = axios.create({ baseURL: `${window.location.protocol}//${window.location.hostname}/api` })
         this.token = localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY) || undefined;
     }
 

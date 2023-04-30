@@ -38,6 +38,9 @@ services:
       context: $PWD/frontend
       dockerfile: ./Dockerfile
       target: "prod"
+    networks:
+      comscore-planning-network:
+        ipv4_address: 172.41.0.14
     ports:
       - "80:80"
       - "443:443"
