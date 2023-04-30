@@ -31,3 +31,5 @@ stop:
 migrate:
 	@docker-compose exec -it $(SOCKET_CONTAINER) yarn migrate
 
+gen-ssl-cert:
+	@./scripts/gen-self-signed-ssl-cert.sh

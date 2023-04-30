@@ -24,7 +24,7 @@ class Socket {
     }
 
     joinSession = async (sessionId: string, token: string) => {
-        this.client = io(import.meta.env.TEST_ENV_SOCKET_HOST, {
+        this.client = io(`wss://${window.location.hostname}`, {
             auth: { token },
             query: { sessionId },
         });

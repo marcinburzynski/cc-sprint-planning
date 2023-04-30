@@ -10,8 +10,6 @@ declare global {
             POSTGRES_DB: string;
             POSTGRES_USER: string;
             POSTGRES_PASSWORD: string;
-            TEST_ENV_API_HOST: string;
-            TEST_ENV_SOCKET_HOST: string;
         }
     }
 }
