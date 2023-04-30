@@ -24,6 +24,8 @@ FROM nginx:1.23-bullseye as prod
 COPY --from=prod-builder /app/dist /app
 COPY --from=prod-builder /ssl /ssl
 
+COPY privacy-policy.html /app/privacy-policy.html
+
 RUN rm /etc/nginx/conf.d/default.conf
 COPY config/nginx.conf /etc/nginx/conf.d
 
