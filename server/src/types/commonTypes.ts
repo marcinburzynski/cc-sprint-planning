@@ -9,6 +9,7 @@ export type TicketType = {
     id: string;
     name: string;
     order: number;
+    issueKey?: string;
     isRevealed?: boolean;
 }
 

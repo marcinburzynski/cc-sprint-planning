@@ -6,7 +6,7 @@ import fs from 'fs'
 // https://vitejs.dev/config/
 export default defineConfig({
   envDir: '..',
-  envPrefix: 'TEST_ENV_',
+  envPrefix: 'VITE_ENV_',
   plugins: [react(), svgr()],
   server: {
     https: {

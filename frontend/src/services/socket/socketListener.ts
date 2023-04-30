@@ -2,7 +2,7 @@ import { Socket } from 'socket.io-client';
 
 import { userJoined } from '../../store/actions/estimation/users';
 import { receiveEstimation } from '../../store/actions/estimation/estimations';
-import { receiveTicket } from '../../store/actions/estimation/tickets';
+import { receiveTicket, receiveMultipleTickets, receiveRemoveTicket } from '../../store/actions/estimation/tickets';
 
 import type { StoreType } from '../../store/store';
 import type { UserType, TicketType, EstimationType } from '../../types/commonTypes';
@@ -18,5 +18,13 @@ export const listenToEvents = (socket: Socket, store: StoreType) => {
 
     socket.on('receive-ticket', (ticket: TicketType) => {
         store.dispatch(receiveTicket(ticket));
+    })
+
+    socket.on('receive-multiple-tickets', (tickets: TicketType[]) => {
+        store.dispatch(receiveMultipleTickets(tickets));
+    })
+
+    socket.on('receive-remove-ticket', (ticketId: string) => {
+        store.dispatch(receiveRemoveTicket(ticketId));
     })
 }

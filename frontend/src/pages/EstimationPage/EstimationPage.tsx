@@ -5,7 +5,7 @@ import ClassName from 'classnames';
 
 import { useTypedDispatch, useTypedSelector } from '../../store/hooks';
 import { socket } from '../../services/socket';
-import { createTicket, getSessionTickets, revealTicketEstimate } from '../../store/actions/estimation/tickets';
+import { createTicket, getSessionTickets, revealTicketEstimate, removeTicket } from '../../store/actions/estimation/tickets';
 import { getSessionUsers } from '../../store/actions/estimation/users';
 import { getSessionEstimations, sendEstimation } from '../../store/actions/estimation/estimations';
 import { Button } from '../../components/Button';
@@ -69,23 +69,31 @@ export const EstimationPage = () => {
         }
     }
 
+    const handleSelectFirstInOrderTicket = () => {
+        const [firstTicket] = Object.values(tickets).sort((a, b) => a.order - b.order);
+
+        setSelectedTicketId(firstTicket.id);
+    };
+
     useEffect(() => {
         handleJoinAndLoadData()
 
         return () => {
-            socket.disconnect()
+            socket.disconnect();
         }
     }, [])
 
     useEffect(() => {
         if (!selectedTicketId && !isEmpty(tickets)) {
-            const firstTicket = Object.values(tickets).find(({ order }) => order === 1)
-
-            if (firstTicket) {
-                setSelectedTicketId(firstTicket.id)
-            }
+            handleSelectFirstInOrderTicket();
         }
     }, [tickets, selectedTicketId])
+
+    useEffect(() => {
+        if (!selectedTicket && selectedTicketId && !isEmpty(tickets)) {
+            handleSelectFirstInOrderTicket();
+        }
+    }, [selectedTicket, tickets])
 
     const activeUsers = useMemo(() => {
         return Object.values(users).filter(({ isSpectator }) => !isSpectator);
@@ -117,7 +125,8 @@ export const EstimationPage = () => {
                     tickets={Object.values(tickets)}
                     selectedTicket={selectedTicket}
                     onSelectTicket={(ticket) => setSelectedTicketId(ticket.id)}
-                    onAddTicket={(name) => sessionId && dispatch(createTicket(name))}
+                    onAddTicket={(name) => sessionId && dispatch(createTicket({ name }))}
+                    onRemoveTicket={(ticketId) => dispatch(removeTicket(ticketId))}
                 />
 
                 {isSpectator && (

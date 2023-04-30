@@ -18,7 +18,7 @@
         .ticket {
             width: 100%;
             display: flex;
-            align-items: center;
+            flex-direction: column;
             padding: 20px 15px;
             background-color: #fff;
             border-radius: 2px;
@@ -39,6 +39,36 @@
                 white-space: nowrap;
                 text-overflow: ellipsis;
             }
+
+            .controls {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 14px;
+
+                .ticket-link-icon {
+                    width: 23px;
+                    height: 12px;
+
+                    &:hover {
+                        path {
+                            fill: $comscore-blue;
+                        }
+                    }
+                }
+
+                .remove-ticket-icon {
+                    width: 16px;
+                    height: 19px;
+                    margin-left: auto;
+
+                    &:hover {
+                        path {
+                            stroke: $warning-red;
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -58,5 +88,9 @@
             margin-left: 16px;
             cursor: pointer;
         }
+    }
+
+    &__add-jira-ticket-button {
+        margin: 16px 36px 0 0;
     }
 }

@@ -1,4 +1,6 @@
 FROM node:18.16.0-bullseye as base
+ARG JIRA_CLIENT_ID_ARG
+ENV VITE_ENV_JIRA_CLIENT_ID=$JIRA_CLIENT_ID_ARG
 
 WORKDIR /app
 
@@ -21,6 +23,7 @@ RUN yarn build
 FROM nginx:1.23-bullseye as prod
 COPY --from=prod-builder /app/dist /app
 COPY --from=prod-builder /ssl /ssl
+
 RUN rm /etc/nginx/conf.d/default.conf
 COPY config/nginx.conf /etc/nginx/conf.d
 

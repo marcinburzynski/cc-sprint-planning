@@ -1,4 +1,5 @@
 import { nanoid } from 'nanoid';
+import lodash from 'lodash';
 import type { Server, Socket } from 'socket.io';
 import type { Estimation } from '@prisma/client';
 
@@ -73,6 +74,7 @@ export const initSocket = (io: Server) => {
                     id: nanoid(),
                     name: ticket.name,
                     order: ticket.order,
+                    issueKey: ticket.issueKey,
                     isRevealed: ticket.isRevealed || false,
                     session: {
                         connect: { id: socketSessionId },
@@ -84,13 +86,38 @@ export const initSocket = (io: Server) => {
             callback({ ticket: savedTicket })
         })
 
+        socket.on('create-multiple-tickets', async (tickets: Omit<TicketType, 'id'>[], callback) => {
+            const completeTickets = tickets.map((ticket) => ({
+                id: nanoid(),
+                name: ticket.name,
+                order: ticket.order,
+                issueKey: ticket.issueKey,
+                isRevealed: ticket.isRevealed || false,
+                sessionId: socketSessionId,
+            }))
+
+            await prisma.ticket.createMany({ data: completeTickets })
+
+            const withoutSessionId = completeTickets.map((ticket) => lodash.omit(ticket, 'sessionId'))
+
+            socket.to(socketSessionId).emit('receive-multiple-tickets', withoutSessionId)
+            callback({ tickets: withoutSessionId })
+        })
+
+        socket.on('remove-ticket', async (ticketId: string, callback) => {
+            await prisma.ticket.delete({ where: { id: ticketId } })
+
+            socket.to(socketSessionId).emit('receive-remove-ticket', ticketId);
+            callback();
+        })
+
         socket.on('reveal-estimate', async (ticketId: string) => {
             const updatedTicket = await prisma.ticket.update({
                 data: { isRevealed: true },
                 where: { id: ticketId },
             });
 
-            socket.to(socketSessionId!).emit('receive-ticket', updatedTicket)
+            socket.to(socketSessionId).emit('receive-ticket', updatedTicket)
         })
 
         socket.on('get-session-tickets', async (callback) => {

@@ -3,6 +3,7 @@ import axios, { AxiosInstance } from 'axios';
 import { TOKEN_LOCAL_STORAGE_KEY } from '../constants/localStorageKeys';
 
 import type { UserType } from '../types/commonTypes';
+import type { JiraAccessTokenRes } from './jira/jira.types';
 
 class Http {
     #client: AxiosInstance
@@ -24,6 +25,9 @@ class Http {
 
     createSession = (teams: string[]) => this.#client.post<{ sessionId: string }>('/session/create', { teams });
     getSessionTeams = (sessionId: string) => this.#client.get<{ teams: string[] }>(`/session/${sessionId}/teams`);
+
+    getJiraAuthToken = (oauthToken: string) => this.#client.post<JiraAccessTokenRes>('/jira/get-auth-token', { oauthToken });
+    refreshJiraAuthToken = (refreshToken: string) => this.#client.post<JiraAccessTokenRes>('/jira/refresh-token', { refreshToken });
 }
 
 export const http = new Http();

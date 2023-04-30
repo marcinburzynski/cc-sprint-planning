@@ -1,11 +1,15 @@
 import ClassName from 'classnames';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, MouseEvent } from 'react';
 
 import { TextArea } from '../TextArea';
+import { AddJiraTicketModal } from '../AddJiraTicketModal';
+import { ConfirmationModal } from '../ConfirmationModal';
 
 import type { TicketType } from '../../types/commonTypes';
 
 import { ReactComponent as PlusIconSVG } from '../../assets/icons/plus.svg';
+import { ReactComponent as TrashBinIconSVG } from '../../assets/icons/trash-bin.svg';
+import { ReactComponent as LinkIconSVG } from '../../assets/icons/link.svg';
 
 import './TicketManagerSidebar.scss';
 
@@ -16,6 +20,7 @@ type TicketManagerSidebarProps = {
     isSpectator?: boolean;
     onSelectTicket: (ticket: TicketType) => void;
     onAddTicket: (name: string) => void;
+    onRemoveTicket: (ticketId: string) => void;
 }
 
 export const TicketManagerSidebar = ({
@@ -25,6 +30,7 @@ export const TicketManagerSidebar = ({
     isSpectator,
     onSelectTicket,
     onAddTicket,
+    onRemoveTicket,
 }: TicketManagerSidebarProps) => {
     const [newTicketName, setNewTicketName] = useState('');
 
@@ -33,6 +39,16 @@ export const TicketManagerSidebar = ({
 
         onAddTicket(newTicketName);
         setNewTicketName('');
+    }
+
+    const handleGoToTicket = (ticket: TicketType) => (e: MouseEvent<SVGElement>) => {
+        e.stopPropagation();
+        window.open(`https://shareablee.atlassian.net/browse/${ticket.issueKey}`, '_blank');
+    }
+
+    const handleRemoveTicket = (ticketId: string) => (e: MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation();
+        onRemoveTicket(ticketId)
     }
 
     const sortedTickets = useMemo(() => {
@@ -52,6 +68,22 @@ export const TicketManagerSidebar = ({
                         className={ClassName('ticket', { 'ticket--selected': ticket.id === selectedTicket?.id })}
                     >
                         <span>{ticket.name}</span>
+                        <div className="controls">
+                            {ticket.issueKey && (
+                                <LinkIconSVG className="ticket-link-icon" onClick={handleGoToTicket(ticket)} />
+                            )}
+
+                            <ConfirmationModal
+                                dangerous
+                                title="Are you sure?"
+                                message="This action will remove the ticket from the estimation."
+                                acceptLabel="Remove"
+                                onCancel={(e) => e.stopPropagation()}
+                                onAccept={handleRemoveTicket(ticket.id)}
+                            >
+                                <TrashBinIconSVG className="remove-ticket-icon" />
+                            </ConfirmationModal>
+                        </div>
                     </div>
                 ))}
             </div>
@@ -61,6 +93,10 @@ export const TicketManagerSidebar = ({
                     <TextArea value={newTicketName} onChange={setNewTicketName} />
                     <PlusIconSVG onClick={handleAddNewTicket} />
                 </div>
+            )}
+
+            {isSpectator && (
+                <AddJiraTicketModal buttonClassName="default-ticket-manager-sidebar__add-jira-ticket-button" />
             )}
         </div>
     )

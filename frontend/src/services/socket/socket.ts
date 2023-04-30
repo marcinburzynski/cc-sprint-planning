@@ -47,6 +47,18 @@ class Socket {
         });
     }
 
+    createMultipleTickets = (tickets: Omit<TicketType, 'id'>[]) => {
+        return new Promise<{ tickets: TicketType[] }>((resolve) => {
+            this.client?.emit('create-multiple-tickets', tickets, resolve);
+        });
+    }
+
+    removeTicket = (ticketId: string) => {
+        return new Promise((resolve) => {
+            this.client?.emit('remove-ticket', ticketId, resolve);
+        });
+    };
+
     revealTicketEstimate = (ticketId: string) => {
         return this.client?.emit('reveal-estimate', ticketId);
     }

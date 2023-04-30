@@ -10,6 +10,9 @@ declare global {
             POSTGRES_DB: string;
             POSTGRES_USER: string;
             POSTGRES_PASSWORD: string;
+            JIRA_CLIENT_ID: string;
+            JIRA_CLIENT_SECRET: string;
+            APP_HOST: string;
         }
     }
 }

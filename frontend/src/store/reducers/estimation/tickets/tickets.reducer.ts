@@ -1,4 +1,5 @@
 import { produce } from 'immer';
+import { omit } from 'lodash';
 
 import { TicketsActionTypes } from '../../../actions/estimation/tickets';
 
@@ -41,8 +42,24 @@ export const ticketsReducer = (state = TicketsDefaultState, action: TicketsActio
             draft.isEmpty = false;
             break;
 
+        case 'CREATE_MULTIPLE_TICKETS':
+        case 'RECEIVE_MULTIPLE_TICKETS':
+            return {
+                ...state,
+                isEmpty: false,
+                data: {
+                    ...state.data,
+                    ...action.tickets.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {}),
+                },
+            }
+
         case 'REVEAL_TICKET_ESTIMATE':
             draft.data[action.ticketId].isRevealed = true;
+            break;
+
+        case 'REMOVE_TICKET':
+        case 'RECEIVE_REMOVE_TICKET':
+            draft.data = omit(state.data, action.ticketId);
             break;
 
         default:

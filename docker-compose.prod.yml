@@ -30,7 +30,7 @@ services:
       comscore-planning-network:
         ipv4_address: 172.41.0.13
 
-  nginx:
+  frontend:
     working_dir: /app
     env_file:
       - ./.env
@@ -38,6 +38,8 @@ services:
       context: $PWD/frontend
       dockerfile: ./Dockerfile
       target: "prod"
+      args:
+        JIRA_CLIENT_ID_ARG: $JIRA_CLIENT_ID
     networks:
       comscore-planning-network:
         ipv4_address: 172.41.0.14

@@ -1,0 +1,38 @@
+@import '../../assets/style/colors';
+
+.default-confirmation-modal {
+    height: 400px;
+
+    .default-confirmation-modal-header {
+        font-size: 26px;
+        font-weight: 600;
+    }
+
+    .default-confirmation-modal-content {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        padding: 16px;
+
+        .default-confirmation-modal-message {
+            font-size: 20px;
+            margin: auto 0;
+        }
+
+        .default-confirmation-modal-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: auto;
+
+            .accept-button {
+                background-color: $acceptance-green;
+            }
+        }
+    }
+
+    &--dangerous {
+        .accept-button {
+            background-color: $warning-red !important;
+        }
+    }
+}
