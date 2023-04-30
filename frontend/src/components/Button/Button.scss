@@ -13,4 +13,9 @@
     height: 55px;
     border: none;
     cursor: pointer;
+
+    &--disabled {
+        background-color: $default-bg-gray;
+        cursor: not-allowed;
+    }
 }

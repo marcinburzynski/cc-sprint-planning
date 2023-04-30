@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { isEmpty, omit } from 'lodash';
+import ClassName from 'classnames';
 
 import { useTypedDispatch, useTypedSelector } from '../../store/hooks';
 import { socket } from '../../services/socket';
@@ -53,7 +54,6 @@ export const EstimationPage = () => {
 
         if (!socket.sessionId && sessionId && socket.token) {
             await socket.joinSession(sessionId, socket.token);
-            console.log('joined');
         }
 
         if (!loadingTickets && !noTicketsAdded && isEmpty(tickets)) {
@@ -91,6 +91,10 @@ export const EstimationPage = () => {
         return Object.values(users).filter(({ isSpectator }) => !isSpectator);
     }, [users])
 
+    const sidebarFullClassName = ClassName('side-container', {
+        'side-container--spectator': isSpectator,
+    })
+
     return (
         <div className="estimation-page">
             <div className="cards-container">
@@ -107,7 +111,7 @@ export const EstimationPage = () => {
                 />
             </div>
 
-            <div className="side-container">
+            <div className={sidebarFullClassName}>
                 <TicketManagerSidebar
                     isSpectator={isSpectator}
                     tickets={Object.values(tickets)}
@@ -116,10 +120,11 @@ export const EstimationPage = () => {
                     onAddTicket={(name) => sessionId && dispatch(createTicket(name))}
                 />
 
-                {isSpectator && !selectedTicket?.isRevealed && selectedTicketId && (
+                {isSpectator && (
                     <Button
                         className="reveal-estimation-button"
-                        onClick={() => dispatch(revealTicketEstimate(selectedTicketId))}
+                        disabled={!!selectedTicket?.isRevealed || !selectedTicketId}
+                        onClick={() => selectedTicketId && dispatch(revealTicketEstimate(selectedTicketId))}
                     >
                         Reveal Estimate
                     </Button>

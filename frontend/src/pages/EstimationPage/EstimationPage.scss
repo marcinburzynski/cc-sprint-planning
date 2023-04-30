@@ -38,12 +38,16 @@ $page-padding: 20px;
     .side-container {
         $sidebar-top-margin: 66px;
         margin: $sidebar-top-margin 0 0 auto;
-        height: calc(100% - $page-padding - $sidebar-top-margin - 55px);
+        height: calc(100% - $page-padding - $sidebar-top-margin);
+
+        &--spectator {
+            height: calc(100% - $page-padding - $sidebar-top-margin - 55px);
+        }
     }
 
     .card-picker {
         position: fixed;
-        bottom: 25px;
+        bottom: 40px;
         right: 411px;
     }
 
