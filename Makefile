@@ -1,6 +1,6 @@
 SHELL=/usr/bin/env bash
 
-SOCKET_CONTAINER=socket
+SERVER_CONTAINER=server
 
 include .env
 
@@ -17,6 +17,8 @@ help:
 	@echo "    Stops docker dev environment."
 	@echo "  migrate"
 	@echo "    Run all DB migrations and create new if models have changed."
+	@echo "  gen-ssl-cert"
+	@echo "    Generate self-signed cert-key pair and install it on the system."
 
 
 start:
@@ -29,7 +31,7 @@ stop:
 	@docker-compose down
 
 migrate:
-	@docker-compose exec -it $(SOCKET_CONTAINER) yarn migrate
+	@docker-compose exec -it $(SERVER_CONTAINER) yarn migrate
 
 gen-ssl-cert:
 	@./scripts/gen-self-signed-ssl-cert.sh
