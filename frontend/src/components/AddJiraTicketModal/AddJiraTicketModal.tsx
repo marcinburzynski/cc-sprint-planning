@@ -71,7 +71,7 @@ export const AddJiraTicketModal = ({ buttonClassName }: AddJiraTicketModalProps)
         setBoards(res.data.values)
     }
 
-    const debouncedGetTickets = useCallback(debounce(handleGetTickets), [])
+    const debouncedGetTickets = useCallback(debounce(handleGetTickets, 400), [])
 
     const handleSetIssueSearchTerm = (searchTerm: string) => {
         setIssueSearchTerm(searchTerm);

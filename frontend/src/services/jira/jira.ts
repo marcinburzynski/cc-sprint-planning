@@ -185,7 +185,7 @@ class Jira {
     }
 
     getAllIssuesFromBoard = (board: number, searchText?: string) => {
-        const url = new URL(`https://api.atlassian.com/ex/jira/${this.cloudId}/rest/agile/1.0/board/${board}/backlog`);
+        const url = new URL(`https://api.atlassian.com/ex/jira/${this.cloudId}/rest/agile/1.0/board/${board}/issue`);
 
         let jql = 'summary IS NOT EMPTY ORDER BY updatedDate';
 
