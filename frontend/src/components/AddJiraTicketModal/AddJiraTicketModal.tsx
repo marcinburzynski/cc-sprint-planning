@@ -1,6 +1,5 @@
 import ClassName from 'classnames';
-import { useState, useEffect, useCallback } from 'react';
-import { debounce } from 'lodash';
+import { useState } from 'react';
 
 import { jira } from '../../services/jira';
 import { useTypedSelector, useTypedDispatch } from '../../store/hooks';
@@ -10,7 +9,7 @@ import { ModalWithButton } from '../Modal';
 import { BoardPicker } from './BoardPicker';
 import { IssuePicker } from './IssuePicker';
 
-import type { JiraBoard, JiraIssue } from '../../services/jira/jira.types';
+import type { JiraIssue } from '../../services/jira/jira.types';
 
 import { ReactComponent as JiraIconSVG } from '../../assets/icons/jira.svg';
 import { ReactComponent as ChevronLeftIconSVG } from '../../assets/icons/chevron-left.svg';
@@ -26,59 +25,16 @@ export const AddJiraTicketModal = ({ buttonClassName }: AddJiraTicketModalProps)
 
     const [isVisible, setIsVisible] = useState(false);
     const [selectedBoard, setSelectedBoard] = useState<number>();
-    const [loadingBoards, setLoadingBoards] = useState(false);
-    const [boards, setBoards] = useState([] as JiraBoard[]);
-    const [loadingIssues, setLoadingIssues] = useState(false);
-    const [issues, setIssues] = useState([] as JiraIssue[]);
     const [selectedIssues, setSelectedIssues] = useState([] as JiraIssue[])
-    const [issueSearchTerm, setIssueSearchTerm] = useState('');
 
     const user = useTypedSelector((state) => state.user);
 
-    const handleGetTickets = async (selectedBoard: number, searchTerm?: string) => {
-        if (!selectedBoard) return;
-
-        setLoadingIssues(true);
-        const res = await jira.getAllIssuesFromBoard(selectedBoard, searchTerm);
-        setLoadingIssues(false);
-
-        if (!res) return
-
-        setIssues(res.data.issues)
-    }
-
-    useEffect(() => {
-        if (selectedBoard && !issues.length) {
-            handleGetTickets(selectedBoard);
-        }
-    }, [selectedBoard])
-
     const handleShowModal = async () => {
-        setIsVisible(true);
-        setLoadingBoards(true);
-
         if (!jira.authorized && user.id) {
             await jira.auth(user.id);
         }
 
-        if (boards.length) return setLoadingBoards(false);
-
-        const res = await jira.getAllBoards();
-        setLoadingBoards(false);
-
-        if (!res?.data) return;
-
-        setBoards(res.data.values)
-    }
-
-    const debouncedGetTickets = useCallback(debounce(handleGetTickets, 400), [])
-
-    const handleSetIssueSearchTerm = (searchTerm: string) => {
-        setIssueSearchTerm(searchTerm);
-
-        if (!selectedBoard) return;
-
-        debouncedGetTickets(selectedBoard, searchTerm)
+        setIsVisible(true);
     }
 
     const handleAddTickets = (issues: JiraIssue[]) => {
@@ -93,21 +49,16 @@ export const AddJiraTicketModal = ({ buttonClassName }: AddJiraTicketModalProps)
 
     const handleGoBackToBoardSelection = () => {
         setSelectedBoard(undefined);
-        setIssues([]);
-        setIssueSearchTerm('');
     }
 
     const getModalContent = () => {
         if (!selectedBoard) {
-            return <BoardPicker loading={loadingBoards} boards={boards} onSelect={setSelectedBoard} />
+            return <BoardPicker onSelect={setSelectedBoard} />
         }
 
         return (
             <IssuePicker
-                issues={issues}
-                loading={loadingIssues}
-                searchTerm={issueSearchTerm}
-                setSearchTerm={handleSetIssueSearchTerm}
+                selectedBoard={selectedBoard}
                 selectedIssues={selectedIssues}
                 onChange={setSelectedIssues}
                 onAddTickets={handleAddTickets}

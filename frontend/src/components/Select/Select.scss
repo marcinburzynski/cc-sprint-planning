@@ -18,11 +18,18 @@
 
 .default-select-dropdown {
     box-shadow: rgba(149, 157, 165, 0.2) 0 8px 24px;
+    background-color: #fff;
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
 
     .default-select-item {
         cursor: pointer;
         padding: 8px 4px;
         font-family: 'Roboto', sans-serif;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
 
         &:focus {
             outline: none;

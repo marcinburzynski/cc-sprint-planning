@@ -1,38 +1,95 @@
-import ClassName from 'classnames';
-import { MouseEventHandler } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { debounce } from 'lodash';
 
+import { jira, type GetIssuesSearchParams } from '../../../services/jira';
+import { useBottomScrollListener } from '../../../hooks';
+import { IssueItem } from './IssueItem';
+import { SprintPicker } from './SprintPicker';
 import { Button } from '../../Button';
 import { Input } from '../../Input';
 import { Spinner } from '../../Spinner';
 
 import type { JiraIssue } from '../../../services/jira/jira.types';
 
-import { ReactComponent as LinkIconSVG } from '../../../assets/icons/link.svg';
-
 import './IssuePicker.scss';
 
 type IssuePickerProps = {
-    issues: JiraIssue[];
-    loading?: boolean;
-    searchTerm: string;
-    setSearchTerm: (newValue: string) => void;
     selectedIssues: JiraIssue[];
+    selectedBoard: number;
     onChange: (selectedIssues: JiraIssue[]) => void;
     onAddTickets: (selectedIssueIds: JiraIssue[]) => void;
 }
 
 export const IssuePicker = ({
-    issues,
-    loading,
-    searchTerm,
-    setSearchTerm,
     selectedIssues,
+    selectedBoard,
     onChange,
     onAddTickets,
 }: IssuePickerProps) => {
+    const [issues, setIssues] = useState([] as JiraIssue[]);
+    const [loading, setLoading] = useState(false);
+    const [totalIssues, setTotalIssues] = useState<number>();
+    const [selectedSprintId, setSelectedSprintId] = useState<number>();
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const handleGetTickets = async (params: GetIssuesSearchParams) => {
+        if (!selectedBoard) return;
+
+        if (!params.startAt) {
+            setIssues([]);
+        }
+
+        setLoading(true);
+        const { data } = await jira.getIssues(params);
+        setLoading(false);
+
+        setTotalIssues(data.total);
+
+        if (params.startAt) {
+            return setIssues([...issues, ...data.issues])
+        }
+
+        setIssues(data.issues);
+    };
+
+    const handleOnScrollBottom = () => {
+        if (loading) return;
+        if (totalIssues && issues.length >= totalIssues) return
+
+        handleGetTickets({
+            boardId: selectedBoard,
+            sprintId: selectedSprintId,
+            searchText: searchTerm,
+            startAt: issues.length,
+        });
+    };
+
+    const listRef = useBottomScrollListener<HTMLDivElement>(handleOnScrollBottom)
+
+    useEffect(() => {
+        if (!issues.length) {
+            handleGetTickets({ boardId: selectedBoard, searchText: searchTerm });
+        }
+
+        return () => {
+            setIssues([]);
+        }
+    }, []);
+
+    const debouncedGetTickets = useCallback(debounce(handleGetTickets, 400), [])
+
+    const handleSetIssueSearchTerm = (searchTerm: string) => {
+        setSearchTerm(searchTerm);
+        debouncedGetTickets({
+            boardId: selectedBoard,
+            sprintId: selectedSprintId,
+            searchText: searchTerm,
+        });
+    };
+
     const findIfSelected = (issue: JiraIssue) => !!selectedIssues.find(({ id }) => id === issue.id)
 
-    const handleSelect = (issue: JiraIssue) => {
+    const handleSelectIssue = (issue: JiraIssue) => {
         if (findIfSelected(issue)) {
             return onChange(selectedIssues.filter(({ id }) => id !== issue.id))
         }
@@ -40,57 +97,46 @@ export const IssuePicker = ({
         onChange([...selectedIssues, issue]);
     }
 
-    const handleClickLink = (issue: JiraIssue): MouseEventHandler<SVGElement> => (e) => {
-        e.stopPropagation();
-        window.open(`https://shareablee.atlassian.net/browse/${issue.key}`, '_blank');
+    const handleSelectSprint = (sprintId?: number) => {
+        if (sprintId === selectedSprintId) return;
+
+        setSelectedSprintId(sprintId);
+        setIssues([]);
+
+        handleGetTickets({
+            sprintId,
+            boardId: selectedBoard,
+            searchText: searchTerm,
+        })
     }
 
     return (
         <div className="default-issue-picker">
-            <Input value={searchTerm} onChange={setSearchTerm} placeholder="Search" />
+            <div className="issue-picker-filters">
+                <Input value={searchTerm} onChange={handleSetIssueSearchTerm} placeholder="Search" />
+                <SprintPicker
+                    className="sprint-picker"
+                    selectedBoardId={selectedBoard}
+                    selectedSprintId={selectedSprintId}
+                    onChange={handleSelectSprint}
+                />
+            </div>
 
-            {loading ? (
-                <div className="loading-container">
-                    <Spinner />
-                </div>
-            ) : (
-                <div className="issues-list">
-                    {issues.map((issue) => (
-                        <div
-                            className={ClassName('issue-item', { 'issue-item--selected': findIfSelected(issue) })}
-                            onClick={() => handleSelect(issue)}
-                            key={issue.id}
-                        >
-                            <div className="issue-description">
-                                <div className="issue-header">
-                                    <span className="issue-key">{issue.key}</span>
-                                    <LinkIconSVG onClick={handleClickLink(issue)} />
-                                </div>
-                                <span className="issue-summary">
-                                {issue.fields.summary}
-                            </span>
-                            </div>
+            <div className="issues-list" ref={listRef}>
+                {issues.map((issue) => (
+                    <IssueItem
+                        issue={issue}
+                        isSelected={findIfSelected(issue)}
+                        onClick={handleSelectIssue}
+                    />
+                ))}
 
-                            <div className="issue-status">
-                                <div className="issue-status-labels">
-                                <span className="issue-status-name">
-                                    <b>Status:</b> {issue.fields.status.name}
-                                </span>
-                                    {issue.fields.assignee && (
-                                        <span className="issue-assignee-name">
-                                        <b>Assignee:</b> {issue.fields.assignee.displayName}
-                                    </span>
-                                    )}
-                                </div>
-
-                                {issue.fields.assignee && (
-                                    <img src={issue.fields.assignee.avatarUrls['48x48']} alt="assignee-avatar" />
-                                )}
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            )}
+                {loading && (
+                    <div className="loading-container">
+                        <Spinner />
+                    </div>
+                )}
+            </div>
 
             <div className="issues-picker-footer">
                 <Button disabled={!selectedIssues.length} onClick={() => onChange([])}>

@@ -99,3 +99,22 @@ export type JiraIssuesRes = {
     total: number;
     issues: JiraIssue[];
 }
+
+export type JiraSprint = {
+    id: number;
+    state: string;
+    name: string;
+    startDate?: string;
+    endDate?: string;
+    completeDate?: string;
+    goal?: string;
+    self: string;
+}
+
+export type JiraSprintsRes = {
+    maxResults: number;
+    startAt: number;
+    total: number;
+    isLast: boolean;
+    values: JiraSprint[];
+}

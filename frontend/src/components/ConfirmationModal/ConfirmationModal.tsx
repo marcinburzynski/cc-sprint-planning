@@ -11,6 +11,7 @@ type ConfirmationModalProps = {
     className?: string;
     title?: string;
     message?: string;
+    content?: JSX.Element;
     dangerous?: boolean;
     acceptLabel?: string;
     cancelLabel?: string;
@@ -23,6 +24,7 @@ export const ConfirmationModal = ({
     className,
     title,
     message,
+    content,
     dangerous,
     acceptLabel = 'Accept',
     cancelLabel = 'Cancel',
@@ -59,7 +61,11 @@ export const ConfirmationModal = ({
             header={headerContent}
         >
             <div className="default-confirmation-modal-content">
-                <span className="default-confirmation-modal-message">{message}</span>
+                {content ? (
+                    content
+                ) : (
+                    <span className="default-confirmation-modal-message">{message}</span>
+                )}
 
                 <div className="default-confirmation-modal-footer">
                     <Button className="cancel-button" onClick={handleCancel}>

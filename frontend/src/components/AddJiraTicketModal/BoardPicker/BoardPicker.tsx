@@ -1,21 +1,32 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
+import { useTypedSelector, useTypedDispatch } from '../../../store/hooks';
+import { getBoards } from '../../../store/actions/jira/boards';
 import { Input } from '../../Input';
 import { JiraImage } from '../../JiraImage';
 import { Spinner } from '../../Spinner';
 
-import type { JiraBoard } from '../../../services/jira/jira.types';
-
 import './BoardPicker.scss';
 
 type BoardPickerProps = {
-    boards: JiraBoard[];
-    loading?: boolean;
     onSelect: (boardId: number) => void;
 }
 
-export const BoardPicker = ({ boards, loading, onSelect }: BoardPickerProps) => {
+export const BoardPicker = ({ onSelect }: BoardPickerProps) => {
+    const dispatch = useTypedDispatch();
+
     const [searchTerm, setSearchTerm] = useState('');
+
+    const {
+        data: boards,
+        loading,
+    } = useTypedSelector((state) => state.jira.boards);
+
+    useEffect(() => {
+        if (!boards.length) {
+            dispatch(getBoards())
+        }
+    }, [])
 
     const filteredBoards = boards.filter((board) => (
         board.name.toLowerCase().includes(searchTerm.toLowerCase())

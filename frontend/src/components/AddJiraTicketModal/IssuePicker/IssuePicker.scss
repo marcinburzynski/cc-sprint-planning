@@ -5,16 +5,26 @@
     display: flex;
     flex-direction: column;
 
-    input {
-        width: 100%;
+    .issue-picker-filters {
+        display: flex;
+        align-items: center;
         margin-bottom: 16px;
-        flex-shrink: 0;
+
+        input {
+            flex: 1 0 auto;
+        }
+
+        .sprint-picker {
+            width: 200px;
+            margin-left: 16px;
+        }
     }
 
     .loading-container {
         display: flex;
         justify-content: center;
         width: 100%;
+        height: 100px;
         margin-top: 16px;
     }
 
@@ -23,87 +33,6 @@
         flex-direction: column;
         height: calc(100% - 120px);
         overflow-y: auto;
-
-        .issue-item {
-            display: flex;
-            align-items: center;
-            min-height: 100px;
-            padding: 8px;
-            cursor: pointer;
-            border: 2px solid transparent;
-
-            &:hover {
-                background-color: $light-gray;
-            }
-
-            &--selected {
-                border: 2px solid $comscore-blue;
-            }
-
-            .issue-description {
-                display: flex;
-                flex-direction: column;
-
-                .issue-header {
-                    display: flex;
-                    align-items: center;
-
-                    .issue-key {
-                        font-weight: 600;
-                        line-height: 16px;
-                    }
-
-                    svg {
-                        width: 23px;
-                        height: 12px;
-                        margin: 0 0 4px 6px;
-
-                        &:hover {
-                            path {
-                                fill: $comscore-blue;
-                            }
-                        }
-                    }
-                }
-
-                .issue-summary {
-                    max-width: 385px;
-                    margin-top: 10px;
-                    font-size: 14px;
-                    line-height: 20px;
-                }
-            }
-
-            .issue-status {
-                display: flex;
-                align-items: center;
-                margin-left: auto;
-                font-size: 14px;
-                min-width: 250px;
-
-                .issue-status-labels {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: flex-start;
-                    justify-content: center;
-
-                    b {
-                        font-weight: 600;
-                    }
-
-                    .issue-status-name {
-                        margin-bottom: 10px;
-                    }
-                }
-
-                img {
-                    width: 48px;
-                    height: 48px;
-                    border-radius: 1000px;
-                    margin-left: auto;
-                }
-            }
-        }
     }
 
     .issues-picker-footer {
