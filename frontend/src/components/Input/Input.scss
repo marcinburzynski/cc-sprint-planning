@@ -1,6 +1,10 @@
 .default-input {
-    height: 30px;
-    border: 1px solid #000;
+    height: 40px;
+    font-size: 14px;
+    background-color: #fff;
+    padding: 0 8px;
+    border-radius: 4px;
+    border: 0;
 
     &:focus {
         outline: none;

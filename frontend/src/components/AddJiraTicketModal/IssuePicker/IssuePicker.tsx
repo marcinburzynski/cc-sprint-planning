@@ -125,6 +125,7 @@ export const IssuePicker = ({
             <div className="issues-list" ref={listRef}>
                 {issues.map((issue) => (
                     <IssueItem
+                        key={issue.id}
                         issue={issue}
                         isSelected={findIfSelected(issue)}
                         onClick={handleSelectIssue}

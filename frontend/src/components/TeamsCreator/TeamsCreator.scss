@@ -1,51 +1,42 @@
 @import "../../assets/style/colors";
 
-.teams-creator {
+.default-teams-creator {
     display: flex;
     flex-direction: column;
     width: 100%;
 
     .teams-list {
         overflow-y: auto;
-        max-height: 250px;
 
         .team {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 6px 8px;
-            width: 100%;
-            background-color: $comscore-blue;
-            border-radius: 4px;
-
             &:not(:first-of-type) {
                 margin-top: 16px;
-            }
-
-            span {
-                font-size: 14px;
-            }
-
-            .trash-icon {
-                cursor: pointer;
             }
         }
     }
 
-    .add-team-container {
+    .add-team-form {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding-right: 9px;
+        flex-direction: column;
         margin-top: 16px;
 
         input {
-            margin-right: 19px;
             width: 100%;
         }
 
-        .add-team-button {
-            cursor: pointer;
+        .add-team-form-buttons {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-top: 16px;
+
+            button:last-of-type {
+                margin-left: 8px;
+            }
         }
+    }
+
+    .show-team-adding-form-button {
+        margin: 16px 0 0 auto;
     }
 }

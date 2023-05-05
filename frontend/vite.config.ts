@@ -7,7 +7,7 @@ import fs from 'fs'
 export default defineConfig({
   envDir: '..',
   envPrefix: 'VITE_ENV_',
-  plugins: [react(), svgr()],
+  plugins: [react(), svgr({ svgrOptions: { ref: true }})],
   server: {
     https: {
       key: fs.readFileSync('/ssl/privkey.pem'),

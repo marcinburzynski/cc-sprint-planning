@@ -1,11 +1,17 @@
+@import '../../assets/style/colors';
+@import '../../assets/style/shadows';
+
 .default-select-button {
     display: flex;
     align-items: center;
     justify-content: space-between;
     background-color: #fff;
-    border: 1px solid #000;
+    border: none;
     cursor: pointer;
-    height: 30px;
+    height: 40px;
+    border-radius: 4px;
+    font-size: 14px;
+    padding: 0 16px 0 8px;
 
     .chevron-icon {
         margin-left: 12px;
@@ -17,7 +23,7 @@
 }
 
 .default-select-dropdown {
-    box-shadow: rgba(149, 157, 165, 0.2) 0 8px 24px;
+    box-shadow: $popup-shadow;
     background-color: #fff;
     max-height: 500px;
     overflow-y: auto;
@@ -25,8 +31,10 @@
 
     .default-select-item {
         cursor: pointer;
-        padding: 8px 4px;
+        padding: 8px;
+        color: $almost-black;
         font-family: 'Roboto', sans-serif;
+        font-size: 14px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -37,7 +45,7 @@
 
         &:hover {
             outline: none;
-            background-color: #c2c2c2;
+            background-color: $light-gray;
         }
     }
 }

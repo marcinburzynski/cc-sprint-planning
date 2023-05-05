@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
-import { LogoHeader } from './components/LogoHeader';
+import './App.scss';
 
 import {
     JoinPage,
@@ -16,7 +16,7 @@ export const App = () => {
 
     return (
         <Provider store={store}>
-            <LogoHeader />
+            <span className="main-header">Sprint planning</span>
 
             <BrowserRouter>
                 <Routes>

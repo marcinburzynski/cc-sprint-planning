@@ -71,10 +71,14 @@ export const JoinPage = () => {
                     onChange={setSelectedTeam}
                 />
 
-                <label className="spectator-label">Join as spectator</label>
-                <Checkbox isChecked={isSpectator} onChange={setIsSpectator} />
+                <div className="spectator-checkbox-container">
+                    <Checkbox isChecked={isSpectator} onChange={setIsSpectator} />
+                    <label className="spectator-label" onClick={() => setIsSpectator(!isSpectator)}>
+                        Join as spectator
+                    </label>
+                </div>
 
-                <Button className="join-button" onClick={handleJoinSession}>
+                <Button className="join-button" buttonSize="medium" onClick={handleJoinSession}>
                     Join
                 </Button>
             </div>

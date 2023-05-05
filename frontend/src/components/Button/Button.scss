@@ -3,20 +3,43 @@
 
 .default-button {
     font-family: 'Roboto', sans-serif;
-    font-size: 24px;
-    background-color: $comscore-orange;
-    color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 14px;
-    height: 55px;
+    color: #fff;
     border: none;
+    border-radius: 4px;
     cursor: pointer;
     user-select: none;
+    width: fit-content;
+
+    &--small {
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 16px;
+        padding: 8px 17px;
+    }
+
+    &--medium {
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 21px;
+        padding: 11px 17px;
+    }
 
     &--disabled {
         background-color: $default-bg-gray;
         cursor: not-allowed;
+    }
+
+    &--filled {
+        background-color: $light-blue;
+        color: #fff;
+    }
+
+    &--outline {
+        background-color: transparent;
+        border: 1px solid $light-blue;
+        color: $light-blue;
     }
 }

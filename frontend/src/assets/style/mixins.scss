@@ -1,0 +1,13 @@
+@import './colors';
+@import './shadows';
+
+@mixin loginCard {
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+    width: 424px;
+    padding: 24px 24px 40px 32px;
+    border-radius: 3px;
+    background-color: $default-bg-gray;
+    box-shadow: $card-shadow;
+}

@@ -57,9 +57,15 @@ export const CreateSessionPage = () => {
                 <Input className="name-input" value={username} onChange={setUsername} />
 
                 <label className="teams-label">Teams:</label>
-                <TeamsCreator teams={teams} onChange={setTeams} />
+                <TeamsCreator className="teams-creator" teams={teams} onChange={setTeams} />
 
-                <Button className="start-button" onClick={handleStartSession}>Start</Button>
+                <Button
+                    className="start-button"
+                    onClick={handleStartSession}
+                    buttonSize="medium"
+                >
+                    Start
+                </Button>
             </div>
         </div>
     )
