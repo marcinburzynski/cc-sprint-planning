@@ -31,7 +31,7 @@ export const ModalWithButton = ({
 
     return (
         <>
-            {cloneElement(triggerButton, { onClick: handleShow })}
+            {cloneElement(triggerButton, { onClick: triggerButton.props.onClick || handleShow })}
 
             {isVisible && (
                 <Modal className={modalClassName} onHide={handleHide} header={header}>

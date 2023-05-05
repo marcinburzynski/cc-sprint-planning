@@ -18,6 +18,7 @@
     background-color: $white-completely;
     min-width: 96px;
     padding: 9px 0;
+    z-index: 101;
     animation-duration: 400ms;
     animation-timing-function: cubic-bezier(0, 1,.6,.96);
     will-change: transform, opacity;

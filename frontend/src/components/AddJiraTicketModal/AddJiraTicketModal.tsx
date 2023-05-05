@@ -11,7 +11,6 @@ import { IssuePicker } from './IssuePicker';
 
 import type { JiraIssue } from '../../services/jira/jira.types';
 
-import { ReactComponent as JiraIconSVG } from '../../assets/icons/jira.svg';
 import { ReactComponent as ChevronLeftIconSVG } from '../../assets/icons/chevron-left.svg';
 
 import './AddJiraTicketModal.scss';

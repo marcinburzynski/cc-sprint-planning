@@ -1,10 +1,12 @@
 @import '../../../../assets/style/colors';
+@import '../../../../assets/style/shadows';
 
 .issue-item {
     display: flex;
     align-items: center;
     min-height: 100px;
     padding: 8px;
+    margin: 0 6px;
     cursor: pointer;
     border: 2px solid transparent;
 
@@ -13,7 +15,13 @@
     }
 
     &--selected {
-        border: 2px solid $comscore-blue;
+        background-color: $blue-highlight;
+        box-shadow: $selected-shadow;
+
+        &:hover {
+            background-color: $blue-highlight;
+            opacity: 0.8;
+        }
     }
 
     .issue-description {
@@ -36,7 +44,7 @@
 
                 &:hover {
                     path {
-                        fill: $comscore-blue;
+                        fill: $blue-malibu;
                     }
                 }
             }

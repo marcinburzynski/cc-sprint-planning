@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from 'axios';
+import axios, { AxiosInstance, AxiosError } from 'axios';
 import jwtDecode from 'jwt-decode';
 
 import { http } from '../http';
@@ -53,25 +53,8 @@ export class JiraBase {
         const tokenExpired = Math.sign(willExpireIn) < 1;
 
         if (tokenExpired) {
-            this.authorized = false;
-            this.#token = undefined;
-            this.#refreshToken = undefined;
-            this.#oauthToken = undefined;
-            this.cloudId = undefined;
-            this.#client = undefined;
-            this.#state = undefined;
-
-            localStorage.removeItem(JIRA_STATE_LOCAL_STORAGE_KEY);
-            localStorage.removeItem(JIRA_OAUTH_TOKEN_LOCAL_STORAGE_KEY);
-            localStorage.removeItem(JIRA_TOKEN_LOCAL_STORAGE_KEY);
-            localStorage.removeItem(JIRA_REFRESH_TOKEN_LOCAL_STORAGE_KEY);
-            localStorage.removeItem(JIRA_CLOUD_ID_LOCAL_STORAGE_KEY);
-
-            if (this.#refreshTokenTimeout) {
-                clearTimeout(this.#refreshTokenTimeout);
-            }
-
-            return;
+            this.#disconnectClient();
+            return this;
         }
 
         const shouldRefreshNow = Math.sign(willExpireIn - 5000) < 1;
@@ -79,7 +62,7 @@ export class JiraBase {
         if (shouldRefreshNow) {
             this.#handleRefreshToken();
         } else {
-            this.#refreshTokenTimeout = setTimeout(this.#handleRefreshToken, willExpireIn - 5000);
+            this.#refreshTokenTimeout = setTimeout(this.#handleRefreshToken, willExpireIn * 0.75);
         }
     }
 
@@ -103,14 +86,53 @@ export class JiraBase {
         });
     };
 
+    #disconnectClient = () => {
+        this.authorized = false;
+        this.#token = undefined;
+        this.#refreshToken = undefined;
+        this.#oauthToken = undefined;
+        this.cloudId = undefined;
+        this.#client = undefined;
+        this.#state = undefined;
+
+        localStorage.removeItem(JIRA_STATE_LOCAL_STORAGE_KEY);
+        localStorage.removeItem(JIRA_OAUTH_TOKEN_LOCAL_STORAGE_KEY);
+        localStorage.removeItem(JIRA_TOKEN_LOCAL_STORAGE_KEY);
+        localStorage.removeItem(JIRA_REFRESH_TOKEN_LOCAL_STORAGE_KEY);
+        localStorage.removeItem(JIRA_CLOUD_ID_LOCAL_STORAGE_KEY);
+
+        if (this.#refreshTokenTimeout) {
+            clearTimeout(this.#refreshTokenTimeout);
+        }
+    };
+
+    #axiosResponseInterceptorOnRejected = (error: unknown) => {
+        if (!(error instanceof AxiosError)) return Promise.reject(error)
+
+        if (error?.code === '401') {
+            this.#disconnectClient();
+
+            const userToken = localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY) as string;
+            const decodedUser = jwtDecode<UserType>(userToken);
+
+            this.auth(decodedUser.id);
+        }
+
+        return Promise.reject(error);
+    }
+
     #getConfiguredClient = (token: string) => {
-        return axios.create({
+        const client = axios.create({
             headers: {
                 common: {
                     Authorization: `Bearer ${token}`,
                 },
-            },
+            }
         });
+
+        client.interceptors.response.use((req) => req, this.#axiosResponseInterceptorOnRejected)
+
+        return client;
     }
 
     auth = (userId: string) => {

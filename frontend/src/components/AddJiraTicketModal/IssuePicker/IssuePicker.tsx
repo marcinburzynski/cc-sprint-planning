@@ -140,7 +140,7 @@ export const IssuePicker = ({
             </div>
 
             <div className="issues-picker-footer">
-                <Button disabled={!selectedIssues.length} onClick={() => onChange([])}>
+                <Button buttonStyle="outline" disabled={!selectedIssues.length} onClick={() => onChange([])}>
                     {selectedIssues.length
                         ? `Clear ${selectedIssues.length} ${selectedIssues.length > 1 ? 'selections' : 'selection'}`
                         : 'Nothing selected'}
