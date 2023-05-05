@@ -12,12 +12,34 @@
     cursor: pointer;
     user-select: none;
     width: fit-content;
+    position: relative;
+
+    &--loading {
+        & > *:not(.default-button-loader-container) {
+            opacity: 0;
+        }
+    }
+
+    .default-button-loader-container {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
     &--small {
         font-size: 14px;
         font-weight: 500;
         line-height: 16px;
         padding: 8px 17px;
+
+        .default-button-loader-container svg {
+            height: 16px;
+        }
     }
 
     &--medium {
@@ -25,17 +47,29 @@
         font-weight: 700;
         line-height: 21px;
         padding: 11px 17px;
+
+        .default-button-loader-container svg {
+            height: 21px;
+        }
     }
 
     &--filled {
         background-color: $blue-malibu;
         color: #fff;
+
+        .default-button-loader-container svg path {
+            fill: $white-completely
+        }
     }
 
     &--outline {
         background-color: transparent;
         border: 1px solid $blue-malibu;
         color: $blue-malibu;
+
+        .default-button-loader-container svg path {
+            fill: $blue-malibu;
+        }
     }
 
     &--disabled {

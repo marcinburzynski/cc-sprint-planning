@@ -6,6 +6,7 @@ import { useTypedDispatch } from '../../store/hooks';
 import { socket } from '../../services/socket';
 import { http } from '../../services/http';
 import { setUser } from '../../store/actions/user';
+import { setNotification } from '../../store/actions/notifications';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
 import { Checkbox } from '../../components/Checkbox';
@@ -24,6 +25,7 @@ export const JoinPage = () => {
     const [isSpectator, setIsSpectator] = useState(false);
     const [teams, setTeams] = useState<string[]>([]);
     const [selectedTeam, setSelectedTeam] = useState<SelectOption | undefined>()
+    const [loading, setLoading] = useState(false);
 
     const handleGetSessionTeams = async () => {
         if (!sessionId) return
@@ -41,18 +43,31 @@ export const JoinPage = () => {
     const handleJoinSession = async () => {
         if (!selectedTeam || !username || !sessionId) return
 
-        const { data } = await http.createUser({
-            isSpectator,
-            name: username,
-            team: isSpectator ? undefined : selectedTeam.value,
-        })
+        setLoading(true);
 
-        await socket.joinSession(sessionId, data.token)
+        try {
+            const { data } = await http.createUser({
+                isSpectator,
+                name: username,
+                team: isSpectator ? undefined : selectedTeam.value,
+            });
 
-        const decodedUser = jwtDecode(data.token) as UserType;
+            await socket.joinSession(sessionId, data.token);
 
-        dispatch(setUser(decodedUser));
-        navigateTo(`/session/${sessionId}`)
+            const decodedUser = jwtDecode(data.token) as UserType;
+
+            dispatch(setUser(decodedUser));
+            navigateTo(`/session/${sessionId}`);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                dispatch(setNotification('Failed to join session.', {
+                    notificationType: 'error',
+                    description: e.message,
+                }))
+            }
+        }
+
+        setLoading(false);
     }
 
     return (
@@ -80,7 +95,7 @@ export const JoinPage = () => {
                     </label>
                 </div>
 
-                <Button className="join-button" buttonSize="medium" onClick={handleJoinSession}>
+                <Button loading={loading} className="join-button" buttonSize="medium" onClick={handleJoinSession}>
                     Join
                 </Button>
             </div>

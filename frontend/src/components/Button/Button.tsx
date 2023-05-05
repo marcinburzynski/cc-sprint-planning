@@ -1,6 +1,8 @@
 import ClassName from 'classnames';
 import { MouseEventHandler } from 'react';
 
+import { Spinner } from '../Spinner';
+
 import './Button.scss';
 
 type ButtonStyle =
@@ -14,6 +16,7 @@ type ButtonSize =
 type ButtonProps = JSX.IntrinsicElements['button'] & {
     buttonStyle?: ButtonStyle;
     buttonSize?: ButtonSize;
+    loading?: boolean;
 }
 
 export const Button = ({
@@ -22,8 +25,11 @@ export const Button = ({
     onClick,
     buttonStyle = 'filled',
     buttonSize = 'small',
+    loading,
+    children,
     ...props
 }: ButtonProps) => {
+    console.log({ children });
     const handleClick: MouseEventHandler<HTMLButtonElement> = (e) => {
         if (disabled) return;
 
@@ -37,10 +43,23 @@ export const Button = ({
         className,
         {
             'default-button--disabled': disabled,
+            'default-button--loading': loading,
         }
     );
 
     return (
-        <button onClick={handleClick} disabled={disabled} className={fullClassName} {...props} />
+        <button onClick={handleClick} disabled={disabled} className={fullClassName} {...props}>
+            {typeof children === 'string' ? (
+                <span>{children}</span>
+            ) : (
+                children
+            )}
+
+            {loading && (
+                <div className="default-button-loader-container">
+                    <Spinner />
+                </div>
+            )}
+        </button>
     )
 }
