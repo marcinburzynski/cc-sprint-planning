@@ -5,6 +5,7 @@ import type { BoardsActionTypes } from '../../../actions/jira/boards';
 
 type BoardsReducerState = {
     data: JiraBoard[];
+    selectedBoardId: number | null;
     loading: boolean;
     fetched: boolean;
     error: boolean;
@@ -13,6 +14,7 @@ type BoardsReducerState = {
 
 const BOARDS_DEFAULT_STATE: BoardsReducerState = {
     data: [],
+    selectedBoardId: null,
     fetched: false,
     loading: false,
     error: false,
@@ -39,6 +41,10 @@ export const boardsReducer = (state = BOARDS_DEFAULT_STATE, action: BoardsAction
 
         case 'GET_BOARDS_FAILURE':
             draft.error = true;
+            break;
+
+        case 'SELECT_JIRA_BOARD':
+            draft.selectedBoardId = action.boardId;
             break;
     }
 })

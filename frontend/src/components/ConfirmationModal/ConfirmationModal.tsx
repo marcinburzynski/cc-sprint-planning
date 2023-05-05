@@ -13,6 +13,7 @@ type ConfirmationModalProps = {
     message?: string;
     content?: JSX.Element;
     dangerous?: boolean;
+    hideButtons?: boolean;
     stopPropagation?: boolean;
     acceptLabel?: string;
     cancelLabel?: string;
@@ -25,14 +26,15 @@ export const DetachedConfirmationModal = ({
     className,
     title,
     message,
-    content,
     dangerous,
+    hideButtons,
     stopPropagation,
     acceptLabel = 'Accept',
     cancelLabel = 'Cancel',
+    children,
     onAccept,
     onCancel,
-}: Omit<ConfirmationModalProps, 'children'>) => {
+}: Omit<ConfirmationModalProps, 'content'>) => {
     const handleStopPropagation = (callback?: MouseEventHandler<HTMLButtonElement>) => (e: MouseEvent<HTMLButtonElement>) => {
         if (stopPropagation) {
             e.stopPropagation();
@@ -57,26 +59,28 @@ export const DetachedConfirmationModal = ({
             stopPropagation={stopPropagation}
         >
             <div className="default-confirmation-modal-content">
-                {content ? (
-                    content
+                {children ? (
+                    children
                 ) : (
                     <span className="default-confirmation-modal-message">{message}</span>
                 )}
 
-                <div className="default-confirmation-modal-footer">
-                    <Button
-                        buttonSize="medium"
-                        buttonStyle="outline"
-                        className="cancel-button"
-                        onClick={handleStopPropagation(onCancel)}
-                    >
-                        {cancelLabel}
-                    </Button>
+                {!hideButtons && (
+                    <div className="default-confirmation-modal-footer">
+                        <Button
+                            buttonSize="medium"
+                            buttonStyle="outline"
+                            className="cancel-button"
+                            onClick={handleStopPropagation(onCancel)}
+                        >
+                            {cancelLabel}
+                        </Button>
 
-                    <Button buttonSize="medium" className="accept-button" onClick={handleStopPropagation(onAccept)}>
-                        {acceptLabel}
-                    </Button>
-                </div>
+                        <Button buttonSize="medium" className="accept-button" onClick={handleStopPropagation(onAccept)}>
+                            {acceptLabel}
+                        </Button>
+                    </div>
+                )}
             </div>
         </Modal>
     )
@@ -86,6 +90,7 @@ export const ConfirmationModal = ({
     children,
     onAccept,
     onCancel,
+    content,
     ...props
 }: ConfirmationModalProps) => {
     const [isVisible, setIsVisible] = useState(false);
@@ -107,6 +112,7 @@ export const ConfirmationModal = ({
             {isVisible && (
                 <DetachedConfirmationModal
                     {...props}
+                    children={content}
                     onAccept={handleAccept}
                     onCancel={handleCancel}
                 />

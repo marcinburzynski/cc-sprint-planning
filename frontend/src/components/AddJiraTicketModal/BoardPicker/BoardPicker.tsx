@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
+import ClassName from 'classnames';
 
 import { useTypedSelector, useTypedDispatch } from '../../../store/hooks';
-import { getBoards } from '../../../store/actions/jira/boards';
+import { getBoards, selectJiraBoard } from '../../../store/actions/jira/boards';
 import { Input } from '../../Input';
 import { JiraImage } from '../../JiraImage';
 import { Spinner } from '../../Spinner';
@@ -9,10 +10,10 @@ import { Spinner } from '../../Spinner';
 import './BoardPicker.scss';
 
 type BoardPickerProps = {
-    onSelect: (boardId: number) => void;
+    className?: string;
 }
 
-export const BoardPicker = ({ onSelect }: BoardPickerProps) => {
+export const BoardPicker = ({ className }: BoardPickerProps) => {
     const dispatch = useTypedDispatch();
 
     const [searchTerm, setSearchTerm] = useState('');
@@ -33,8 +34,10 @@ export const BoardPicker = ({ onSelect }: BoardPickerProps) => {
         || board.location.name.toLowerCase().includes(searchTerm.toLowerCase())
     ))
 
+    const fullClassName = ClassName('default-board-picker', className);
+
     return (
-        <div className="default-board-picker">
+        <div className={fullClassName}>
             <Input value={searchTerm} onChange={setSearchTerm} placeholder="Search" />
 
             {loading ? (
@@ -44,7 +47,11 @@ export const BoardPicker = ({ onSelect }: BoardPickerProps) => {
             ) : (
                 <div className="boards-list">
                     {filteredBoards.map((board) => (
-                        <div className="board-item" onClick={() => onSelect(board.id)} key={`${board.id}`}>
+                        <div
+                            key={`${board.id}`}
+                            className="board-item"
+                            onClick={() => dispatch(selectJiraBoard(board.id))}
+                        >
                             <span className="board-name">{board.name} | {board.location.projectName}</span>
                             <JiraImage className="board-avatar" src={board.location.avatarURI} />
                         </div>

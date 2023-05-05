@@ -43,5 +43,17 @@ export const getBoards = (nextPage?: boolean): TypedThunkAction<GetBoardsAction>
 }
 
 
+type SelectJiraBoardAction = {
+    type: 'SELECT_JIRA_BOARD';
+    boardId: number | null;
+}
+
+export const selectJiraBoard = (boardId: number | null): SelectJiraBoardAction => ({
+    type: 'SELECT_JIRA_BOARD',
+    boardId,
+})
+
+
 export type BoardsActionTypes =
     | GetBoardsAction
+    | SelectJiraBoardAction

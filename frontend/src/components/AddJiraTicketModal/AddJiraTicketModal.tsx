@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 import { jira } from '../../services/jira';
 import { useTypedSelector, useTypedDispatch } from '../../store/hooks';
+import { selectJiraBoard } from '../../store/actions/jira/boards';
 import { createMultipleTickets } from '../../store/actions/estimation/tickets';
 import { Button } from '../Button';
 import { ModalWithButton } from '../Modal';
@@ -23,10 +24,10 @@ export const AddJiraTicketModal = ({ buttonClassName }: AddJiraTicketModalProps)
     const dispatch = useTypedDispatch();
 
     const [isVisible, setIsVisible] = useState(false);
-    const [selectedBoard, setSelectedBoard] = useState<number>();
     const [selectedIssues, setSelectedIssues] = useState([] as JiraIssue[])
 
     const user = useTypedSelector((state) => state.user);
+    const selectedBoard = useTypedSelector((state) => state.jira.boards.selectedBoardId)
 
     const handleShowModal = async () => {
         if (!jira.authorized && user.id) {
@@ -47,12 +48,12 @@ export const AddJiraTicketModal = ({ buttonClassName }: AddJiraTicketModalProps)
     }
 
     const handleGoBackToBoardSelection = () => {
-        setSelectedBoard(undefined);
+        dispatch(selectJiraBoard(null));
     }
 
     const getModalContent = () => {
         if (!selectedBoard) {
-            return <BoardPicker onSelect={setSelectedBoard} />
+            return <BoardPicker />
         }
 
         return (
@@ -78,9 +79,12 @@ export const AddJiraTicketModal = ({ buttonClassName }: AddJiraTicketModalProps)
         </Button>
     )
 
-    const headerButton = selectedBoard
-        ? <ChevronLeftIconSVG className="go-back-button" onClick={handleGoBackToBoardSelection} />
-        : null
+    const headerButton = selectedBoard ? (
+        <div className="go-back-button" onClick={handleGoBackToBoardSelection}>
+            <ChevronLeftIconSVG />
+            <span>Select board</span>
+        </div>
+    ) : null
 
     return (
         <ModalWithButton

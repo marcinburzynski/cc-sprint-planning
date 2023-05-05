@@ -4,8 +4,10 @@ import { useMemo, useState } from 'react';
 import { useTypedSelector } from '../../../store/hooks';
 import { getUsersByTeam } from '../../../utils/users';
 import { countEstimations, getEstimationMedians, getEstimationSum } from '../../../utils/estimations';
+import { isJiraTicket } from '../../../types/typePredicates';
 import { Dropdown, DropdownItem } from '../../Dropdown';
 import { DetachedConfirmationModal } from '../../ConfirmationModal';
+import { SaveEstimateToJiraModal } from '../../SaveEstimateToJiraModal';
 
 import type { StoredEstimations } from '../../../store/reducers/estimation/estimations';
 import type { TicketType, UserType } from '../../../types/commonTypes';
@@ -34,6 +36,7 @@ export const TicketItem = ({
     onRemove,
 }: TicketItemProps) => {
     const [isConfirmRemoveVisible, setIsConfirmRemoveVisible] = useState(false);
+    const [isSaveEstimateToJiraVisible, setIsSaveEstimateToJiraVisible] = useState(false);
 
     const user = useTypedSelector((state) => state.user);
 
@@ -110,6 +113,13 @@ export const TicketItem = ({
                     Open in Jira
                 </DropdownItem>
 
+                <DropdownItem
+                    onClick={() => setIsSaveEstimateToJiraVisible(true)}
+                    hidden={!isJiraTicket(ticket) || !estimate || !user.isSpectator}
+                >
+                    Save estimate to Jira
+                </DropdownItem>
+
                 <DropdownItem onClick={handleRestartEstimation} hidden={!ticket.isRevealed || !user.isSpectator}>
                     Restart estimation
                 </DropdownItem>
@@ -127,6 +137,14 @@ export const TicketItem = ({
                     message={'This action will remove ticket from the estimation. \nAll changes will be lost. \nIt will not affect Jira tickets.'}
                     onAccept={handleRemoveTicket}
                     onCancel={() => setIsConfirmRemoveVisible(false)}
+                />
+            )}
+
+            {isSaveEstimateToJiraVisible && isJiraTicket(ticket) && estimate && (
+                <SaveEstimateToJiraModal
+                    ticket={ticket}
+                    initialEstimation={estimate}
+                    onHideModal={() => setIsSaveEstimateToJiraVisible(false)}
                 />
             )}
         </div>

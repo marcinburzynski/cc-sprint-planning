@@ -11,6 +11,8 @@ import {
     restartTicketEstimation,
     removeTicket,
 } from '../../store/actions/estimation/tickets';
+import { isCompleteUser } from '../../types/typePredicates';
+import { setNotification } from '../../store/actions/notifications';
 import { getSessionUsers } from '../../store/actions/estimation/users';
 import { getSessionEstimations, sendEstimation } from '../../store/actions/estimation/estimations';
 import { Button } from '../../components/Button';
@@ -20,13 +22,7 @@ import { EstimateCardsPreview } from '../../components/EstimateCardsPreview';
 import { EstimateCardPicker } from '../../components/EstimateCardPicker';
 import { EstimationResults } from '../../components/EstimationResults';
 
-import { UserType } from '../../types/commonTypes';
-
 import './EstimationPage.scss';
-
-const isUserComplete = (user: Partial<UserType>): user is UserType => !!(
-    user.name && user.id
-);
 
 export const EstimationPage = () => {
     const dispatch = useTypedDispatch();
@@ -100,7 +96,8 @@ export const EstimationPage = () => {
     }
 
     const handleCopyShareLink = () => {
-        navigator.clipboard.writeText('https://localhost:5173')
+        dispatch(setNotification('Sharing link saved to the clipboard!'));
+        navigator.clipboard.writeText(`${window.location.origin}/join/${sessionId}`);
     }
 
     useEffect(() => {
@@ -160,7 +157,7 @@ export const EstimationPage = () => {
 
             <div className="side-container">
                 <div className="sidebar-header">
-                    {isUserComplete(user) && (
+                    {isCompleteUser(user) && (
                         <>
                             <UserAvatar user={user} className="user-avatar" />
                             <span className="username">{user.name}</span>

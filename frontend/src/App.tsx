@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
+import { Notifications } from './components/Notifications';
 import {
     JoinPage,
     CreateSessionPage,
@@ -14,6 +15,8 @@ export const App = () => {
 
     return (
         <Provider store={store}>
+            <Notifications />
+
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<CreateSessionPage />} />

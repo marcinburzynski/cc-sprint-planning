@@ -1,0 +1,12 @@
+.default-notifications-container {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    bottom: 23px;
+    left: 23px;
+    z-index: 101;
+
+    & > div:not(:first-of-type) {
+        margin-top: 8px;
+    }
+}

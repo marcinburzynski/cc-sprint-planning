@@ -1,0 +1,28 @@
+.default-save-estimate-to-jira-modal {
+    height: unset;
+
+    .default-save-estimate-to-jira-modal-content {
+        display: flex;
+        flex-direction: column;
+        height: calc(100% - 40px);
+
+        .header {
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+
+        .go-back-button {
+            display: flex;
+            align-items: center;
+            user-select: none;
+            cursor: pointer;
+            margin-bottom: 32px;
+
+            span {
+                margin-left: 8px;
+                font-size: 14px;
+                font-weight: 500;
+            }
+        }
+    }
+}

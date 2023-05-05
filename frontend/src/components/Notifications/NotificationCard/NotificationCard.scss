@@ -1,0 +1,68 @@
+@import '../../../assets/style/colors';
+@import '../../../assets/style/shadows';
+
+.default-notification-card {
+    display: flex;
+    align-items: center;
+    min-width: 400px;
+    max-width: 600px;
+    min-height: 60px;
+    background-color: $blue-highlight;
+    box-shadow: $estimation-card-shadow;
+    border-radius: 4px;
+    will-change: opacity;
+    padding: 8px 8px 8px 16px;
+    white-space: pre;
+
+    .notification-text {
+        display: flex;
+        flex-direction: column;
+        margin-right: 8px;
+
+        .notification-title {
+            font-size: 14px;
+        }
+
+        .notification-description {
+            font-size: 12px;
+            font-weight: 300;
+            margin-top: 8px;
+        }
+    }
+
+    &--with-description {
+        .notification-title {
+            font-weight: 500;
+        }
+    }
+
+    svg {
+        width: 13px;
+        height: 17px;
+        margin: 0 0 auto auto;
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+
+    &--error {
+        background-color: $red-rose-bud;
+    }
+
+    &-enter {
+        opacity: 0;
+    }
+
+    &-enter-active {
+        opacity: 1;
+        transition: opacity 300ms;
+    }
+
+    &-exit {
+        opacity: 1;
+    }
+
+    &-exit-active {
+        opacity: 0;
+        transition: opacity 300ms;
+    }
+}

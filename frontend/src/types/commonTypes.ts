@@ -1,3 +1,5 @@
+import type { RequiredBy } from './utilTypes';
+
 export type UserType = {
     id: string;
     name: string;
@@ -12,6 +14,8 @@ export type TicketType = {
     issueKey?: string;
     isRevealed?: boolean;
 }
+
+export type JiraTicketType = RequiredBy<TicketType, 'issueKey'>;
 
 export type EstimationType = {
     ticketId: string;

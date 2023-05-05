@@ -1,8 +1,14 @@
 .jira-ticket-modal {
     .go-back-button {
-        width: 20px;
-        height: 20px;
+        display: flex;
+        align-items: center;
         cursor: pointer;
+
+        span {
+            font-size: 14px;
+            font-weight: 500;
+            margin-left: 8px;
+        }
     }
 
     .jira-ticket-modal-content {
