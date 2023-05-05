@@ -1,0 +1,41 @@
+@import '../../../assets/style/colors';
+@import '../../../assets/style/shadows';
+
+.default-estimation-result-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .labels {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 40px;
+
+        .name {
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 19px;
+        }
+
+        .additional-info {
+            font-size: 14px;
+            line-height: 17px;
+            color: $gray-silver;
+        }
+    }
+
+    .value {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 64px;
+        height: 64px;
+        margin-top: 8px;
+        background-color: $gray-white-smoke;
+        border-radius: 4px;
+        box-shadow: $estimation-card-shadow;
+        font-size: 24px;
+        font-weight: 500;
+    }
+}

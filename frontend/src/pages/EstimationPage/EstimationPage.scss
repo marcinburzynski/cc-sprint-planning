@@ -1,58 +1,112 @@
 @import '../../assets/style/colors';
 
-$page-padding: 20px;
-
 .estimation-page {
     display: flex;
-    padding: 0 $page-padding $page-padding $page-padding;
+    padding: 0 24px 24px 24px;
     height: 100vh;
 
+    .estimation-page-main-header {
+        position: absolute;
+        top: 24px;
+        left: 24px;
+        font-size: 24px;
+    }
+
     .cards-container {
-        margin-top: 111px;
+        margin-top: 72px;
         width: 100%;
 
-        .header {
+        .header-row {
             display: flex;
-            width: 80%;
-            flex-direction: column;
-            padding-bottom: 32px;
-            border-bottom: 1px solid $light-gray;
+            align-items: center;
 
-            .estimating-label {
-                font-size: 15px;
-                line-height: 18px;
+            .header {
+                display: flex;
+                width: 80%;
+                flex-direction: column;
+                padding-bottom: 10px;
+                border-bottom: 1px solid $gray-very-light;
+
+                .estimating-label {
+                    font-size: 15px;
+                    line-height: 18px;
+                }
+
+                .estimating-ticket {
+                    font-size: 24px;
+                    line-height: 28px;
+                    margin-top: 16px;
+                }
             }
 
-            .estimating-ticket {
-                font-size: 24px;
-                line-height: 28px;
-                margin-top: 5px;
+            .reveal-estimation-button {
+                margin: 0 auto;
+                position: relative;
+                top: 12px;
             }
         }
 
         .cards-preview {
-            margin-top: 32px;
+            margin-top: 19px;
         }
     }
 
     .side-container {
-        $sidebar-top-margin: 66px;
-        margin: $sidebar-top-margin 0 0 auto;
-        height: calc(100% - $page-padding - $sidebar-top-margin);
+        margin: 36px 0 0 auto;
 
-        &--spectator {
-            height: calc(100% - $page-padding - $sidebar-top-margin - 55px);
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+
+            .username {
+                margin-left: 8px;
+                padding: 1px 0;
+                max-width: 180px;
+                white-space: nowrap;
+                overflow-x: hidden;
+                overflow-y: visible;
+                text-overflow: ellipsis;
+                font-size: 14px;
+                font-weight: 500;
+            }
+
+            .share-button {
+                margin-left: auto;
+            }
+        }
+
+        .side-container-card {
+            display: flex;
+            flex-direction: column;
+            height: calc(100% - 60px);
+            background-color: $gray-white-smoke;
+            margin-top: 28px;
+            padding: 23px 16px;
+
+            .side-container-card-header {
+                font-size: 24px;
+                margin-bottom: 17px;
+            }
+
+            .ticket-manager {
+                max-height: 95%;
+            }
         }
     }
 
-    .card-picker {
+    .estimation-results {
+        width: calc(100% - 395px);
         position: fixed;
-        bottom: 40px;
-        right: 411px;
+        bottom: 112px;
+        left: 0;
     }
 
-    .reveal-estimation-button {
-        width: 100%;
-        margin-top: 16px;
+    .card-picker {
+        display: flex;
+        justify-content: center;
+        width: calc(100% - 395px);
+        position: fixed;
+        bottom: 112px;
+        left: 0;
     }
 }

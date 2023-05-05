@@ -69,9 +69,13 @@ export const AddJiraTicketModal = ({ buttonClassName }: AddJiraTicketModalProps)
     const buttonFullClassName = ClassName('add-jira-ticket-modal-button', buttonClassName)
 
     const triggerButton = (
-        <Button className={buttonFullClassName} onClick={handleShowModal}>
-            <JiraIconSVG />
-            <span>Get tickets from jira</span>
+        <Button
+            buttonSize="medium"
+            buttonStyle="outline"
+            className={buttonFullClassName}
+            onClick={handleShowModal}
+        >
+            <span>Import from jira</span>
         </Button>
     )
 

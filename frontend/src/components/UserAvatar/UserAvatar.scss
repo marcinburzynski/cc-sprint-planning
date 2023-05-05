@@ -1,0 +1,14 @@
+@import '../../assets/style/colors';
+
+.default-user-avatar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $blue-pelorous;
+    color: $white-completely;
+    font-size: 14px;
+    font-weight: 700;
+    width: 40px;
+    height: 40px;
+    border-radius: 100px;
+}

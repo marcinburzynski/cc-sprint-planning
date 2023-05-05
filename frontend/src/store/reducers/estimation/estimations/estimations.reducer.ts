@@ -2,12 +2,14 @@ import { produce } from 'immer';
 
 import type { EstimationsActionTypes } from '../../../actions/estimation/estimations';
 
-type EstimationsReducerState = {
-    data: {
-        [ticketId: string]: {
-            [userId: string]: string | null;
-        };
+export type StoredEstimations = {
+    [ticketId: string]: {
+        [userId: string]: string | null;
     };
+}
+
+type EstimationsReducerState = {
+    data: StoredEstimations;
     loading: boolean;
     error: boolean;
 }

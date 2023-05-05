@@ -2,7 +2,7 @@ import { useState, useRef, useCallback } from 'react';
 
 import { Button } from '../Button';
 
-import { ReactComponent as CrossIconSVG } from '../../assets/icons/cross.svg';
+import { ReactComponent as XMarkIconSVG } from '../../assets/icons/xmark.svg';
 
 import './CountdownButton.scss';
 
@@ -51,7 +51,7 @@ export const CountdownButton = ({ secondsToCountDown, onClick, children, ...prop
     const getButtonContent = () => {
         if (isCountingDown) {
             if (isMouseOver) {
-                return <CrossIconSVG />;
+                return <XMarkIconSVG />;
             }
 
             return counter;

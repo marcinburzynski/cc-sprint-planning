@@ -1,0 +1,102 @@
+@import '../../assets/style/colors';
+@import '../../assets/style/shadows';
+
+.default-dropdown-trigger-button {
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+
+    &:focus {
+        outline: none;
+    }
+}
+
+
+.default-dropdown-content {
+    box-shadow: $popup-shadow;
+    background-color: $white-completely;
+    min-width: 96px;
+    padding: 9px 0;
+    animation-duration: 400ms;
+    animation-timing-function: cubic-bezier(0, 1,.6,.96);
+    will-change: transform, opacity;
+
+    &[data-side='top'] {
+        animation-name: slideDownAndFade;
+    }
+
+    &[data-side='right'] {
+        animation-name: slideLeftAndFade;
+    }
+
+    &[data-side='bottom'] {
+        animation-name: slideUpAndFade;
+    }
+
+    &[data-side='left'] {
+        animation-name: slideRightAndFade;
+    }
+}
+
+.default-dropdown-item {
+    font-size: 14px;
+    line-height: 16px;
+    padding: 8px 16px;
+    cursor: pointer;
+
+    &:hover {
+        outline: none;
+        background-color: $gray-very-light;
+    }
+}
+
+.default-dropdown-separator {
+    border-bottom: 1px solid $gray-whisper;
+    margin: 0 8px;
+}
+
+
+@keyframes slideUpAndFade {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideRightAndFade {
+  from {
+    opacity: 0;
+    transform: translateX(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideDownAndFade {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideLeftAndFade {
+  from {
+    opacity: 0;
+    transform: translateX(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

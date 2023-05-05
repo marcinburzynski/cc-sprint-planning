@@ -57,6 +57,10 @@ export const ticketsReducer = (state = TicketsDefaultState, action: TicketsActio
             draft.data[action.ticketId].isRevealed = true;
             break;
 
+        case 'RESTART_TICKET_ESTIMATION':
+            draft.data[action.ticketId].isRevealed = false;
+            break;
+
         case 'REMOVE_TICKET':
         case 'RECEIVE_REMOVE_TICKET':
             draft.data = omit(state.data, action.ticketId);

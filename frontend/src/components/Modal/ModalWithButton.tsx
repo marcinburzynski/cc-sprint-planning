@@ -20,12 +20,10 @@ export const ModalWithButton = ({
     header,
 }: ModalWithButtonProps) => {
     const handleShow = (e: MouseEvent) => {
-        e.stopPropagation();
         setIsVisible(true);
     }
 
     const handleHide = (e: MouseEvent) => {
-        e.stopPropagation();
         setIsVisible(false);
     }
 
@@ -33,7 +31,7 @@ export const ModalWithButton = ({
 
     return (
         <>
-            {cloneElement(triggerButton, { onClick: handleShow, ...triggerButton.props })}
+            {cloneElement(triggerButton, { onClick: handleShow })}
 
             {isVisible && (
                 <Modal className={modalClassName} onHide={handleHide} header={header}>

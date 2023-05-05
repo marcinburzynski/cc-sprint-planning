@@ -105,10 +105,20 @@ export const initSocket = (io: Server) => {
         })
 
         socket.on('remove-ticket', async (ticketId: string, callback) => {
-            await prisma.ticket.delete({ where: { id: ticketId } })
+            const updateQuery = prisma.ticket.update({
+                where: { id: ticketId },
+                data: {
+                    estimations: {
+                        deleteMany: {},
+                    },
+                }
+            })
+
+            const deleteQuery = prisma.ticket.delete({ where: { id: ticketId } })
+
+            await prisma.$transaction([updateQuery, deleteQuery]);
 
             socket.to(socketSessionId).emit('receive-remove-ticket', ticketId);
-            callback();
         })
 
         socket.on('reveal-estimate', async (ticketId: string) => {
@@ -116,6 +126,15 @@ export const initSocket = (io: Server) => {
                 data: { isRevealed: true },
                 where: { id: ticketId },
             });
+
+            socket.to(socketSessionId).emit('receive-ticket', updatedTicket)
+        })
+
+        socket.on('restart-estimation', async (ticketId: string) => {
+            const updatedTicket = await prisma.ticket.update({
+                where: { id: ticketId },
+                data: { isRevealed: false },
+            })
 
             socket.to(socketSessionId).emit('receive-ticket', updatedTicket)
         })

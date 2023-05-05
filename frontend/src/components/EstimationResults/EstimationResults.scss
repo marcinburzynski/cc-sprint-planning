@@ -1,0 +1,19 @@
+.default-estimation-result {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .results {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        & > div:not(:first-of-type) {
+            margin-left: 64px;
+        }
+    }
+
+    button {
+        margin-top: 40px;
+    }
+}

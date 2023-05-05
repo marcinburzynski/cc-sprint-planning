@@ -1,9 +1,19 @@
+@import '../../assets/style/colors';
+
 .default-textarea {
     resize: none;
-    height: 80px;
-    border: 1px solid #000;
+    height: 112px;
+    border: none;
+    border-radius: 4px;
+    padding: 16px;
+    background-color: $white-completely;
+    font-size: 14px;
 
     &:focus {
         outline: none;
+    }
+
+    &::placeholder {
+        color: $gray-dim;
     }
 }

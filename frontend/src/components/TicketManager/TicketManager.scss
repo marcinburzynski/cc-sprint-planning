@@ -1,0 +1,29 @@
+@import '../../assets/style/colors';
+
+.default-ticket-manager {
+    display: flex;
+    flex-direction: column;
+    width: 371px;
+    height: 100%;
+    background-color: $gray-white-smoke;
+    border-radius: 3px;
+
+    .tickets-list {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        margin: 0 -4px 16px -4px;
+        padding: 6px 0;
+        overflow-y: auto;
+
+        .ticket-item {
+            &:not(:first-of-type) {
+                margin-top: 20px;
+            }
+        }
+    }
+
+    .add-ticket {
+        margin-top: 16px;
+    }
+}

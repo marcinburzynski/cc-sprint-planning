@@ -57,6 +57,8 @@ export const JoinPage = () => {
 
     return (
         <div className="join-session-page">
+            <span className="join-session-main-header">Sprint planning</span>
+
             <div className="join-session-page-box">
                 <span className="header">Join Planning</span>
 

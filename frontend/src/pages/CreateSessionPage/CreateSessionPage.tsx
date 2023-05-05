@@ -48,6 +48,8 @@ export const CreateSessionPage = () => {
 
     return (
         <div className="create-session-page">
+            <span className="create-session-main-header">Sprint planning</span>
+
             <div className="create-session-page-box">
                 <span className="header">
                     Start new planning

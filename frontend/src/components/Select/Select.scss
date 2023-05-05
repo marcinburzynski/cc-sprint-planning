@@ -32,7 +32,7 @@
     .default-select-item {
         cursor: pointer;
         padding: 8px;
-        color: $almost-black;
+        color: $black-nero;
         font-family: 'Roboto', sans-serif;
         font-size: 14px;
         white-space: nowrap;
@@ -45,7 +45,7 @@
 
         &:hover {
             outline: none;
-            background-color: $light-gray;
+            background-color: $gray-very-light;
         }
     }
 }

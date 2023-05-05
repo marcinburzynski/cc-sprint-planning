@@ -1,0 +1,32 @@
+.default-add-ticket {
+    .add-ticket-manually-container {
+        display: flex;
+        flex-direction: column;
+
+        .add-ticket-manually-buttons {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-top: 16px;
+
+            button:last-of-type {
+                margin-left: 8px;
+            }
+        }
+    }
+
+    .add-ticket-buttons {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+
+        button {
+            width: 176px;
+
+            &:not(:first-of-type) {
+                margin-top: 8px;
+            }
+        }
+    }
+}

@@ -1,10 +1,7 @@
 import ClassName from 'classnames';
 import { useState } from 'react';
 
-import { EstimateCard, EstimateCardMode } from '../EstimateCard';
-
-import { ReactComponent as EyeOpenIconSVG } from '../../assets/icons/eye-open.svg';
-import { ReactComponent as EyeClosedIconSVG } from '../../assets/icons/eye-closed.svg';
+import { EstimateCard } from '../EstimateCard';
 
 import './EstimateCardPicker.scss';
 
@@ -25,8 +22,6 @@ export const EstimateCardPicker = ({
     freeze,
     onChangeSelection,
 }: EstimateCardPickerProps) => {
-    const [isVisible, setIsVisible] = useState(true);
-
     const handlePickCard = (selection: string) => {
         if (freeze) return;
 
@@ -37,24 +32,20 @@ export const EstimateCardPicker = ({
         onChangeSelection(selection);
     }
 
-    const fullClassName = ClassName('default-est-card-picker', className, {
-        'default-est-card-picker--hidden': !isVisible,
-    });
+    const fullClassName = ClassName('default-est-card-picker', className);
 
     if (!cardsSet) return null;
 
     return (
         <div className={fullClassName}>
-            {isVisible
-                ? <EyeOpenIconSVG className="hide-icon" onClick={() => setIsVisible(false)} />
-                : <EyeClosedIconSVG className="hide-icon" onClick={() => setIsVisible(true)} />}
             {cardsSet.map((card) => (
                 <EstimateCard
+                    isRevealed
+                    isSelected={selectedCard === card}
                     key={card}
                     className="estimate-card"
                     value={card}
                     onClick={handlePickCard}
-                    mode={selectedCard === card ? EstimateCardMode.FrontSideSelected : EstimateCardMode.FrontSideNotSelected}
                 />
             ))}
         </div>

@@ -27,19 +27,20 @@
         padding: 11px 17px;
     }
 
-    &--disabled {
-        background-color: $default-bg-gray;
-        cursor: not-allowed;
-    }
-
     &--filled {
-        background-color: $light-blue;
+        background-color: $blue-malibu;
         color: #fff;
     }
 
     &--outline {
         background-color: transparent;
-        border: 1px solid $light-blue;
-        color: $light-blue;
+        border: 1px solid $blue-malibu;
+        color: $blue-malibu;
+    }
+
+    &--disabled {
+        background-color: $gray-white-smoke;
+        color: $white-completely;
+        cursor: not-allowed;
     }
 }

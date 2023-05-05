@@ -1,8 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
-import './App.scss';
-
 import {
     JoinPage,
     CreateSessionPage,
@@ -16,8 +14,6 @@ export const App = () => {
 
     return (
         <Provider store={store}>
-            <span className="main-header">Sprint planning</span>
-
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<CreateSessionPage />} />

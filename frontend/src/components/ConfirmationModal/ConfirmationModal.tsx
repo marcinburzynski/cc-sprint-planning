@@ -1,8 +1,8 @@
-import { useState, MouseEventHandler } from 'react';
+import { useState, cloneElement, MouseEventHandler, MouseEvent } from 'react';
 import ClassName from 'classnames';
 
 import { Button } from '../Button';
-import { ModalWithButton } from '../Modal';
+import { Modal } from '../Modal';
 
 import './ConfirmationModal.scss';
 
@@ -13,6 +13,7 @@ type ConfirmationModalProps = {
     message?: string;
     content?: JSX.Element;
     dangerous?: boolean;
+    stopPropagation?: boolean;
     acceptLabel?: string;
     cancelLabel?: string;
     children?: JSX.Element;
@@ -20,17 +21,72 @@ type ConfirmationModalProps = {
     onCancel?: MouseEventHandler<HTMLButtonElement>;
 }
 
-export const ConfirmationModal = ({
+export const DetachedConfirmationModal = ({
     className,
     title,
     message,
     content,
     dangerous,
+    stopPropagation,
     acceptLabel = 'Accept',
     cancelLabel = 'Cancel',
+    onAccept,
+    onCancel,
+}: Omit<ConfirmationModalProps, 'children'>) => {
+    const handleStopPropagation = (callback?: MouseEventHandler<HTMLButtonElement>) => (e: MouseEvent<HTMLButtonElement>) => {
+        if (stopPropagation) {
+            e.stopPropagation();
+        }
+
+        callback?.(e)
+    }
+
+    const headerContent = (
+        <span className="default-confirmation-modal-header">{title}</span>
+    )
+
+    const fullClassName = ClassName('default-confirmation-modal', className, {
+        'default-confirmation-modal--dangerous': dangerous,
+    });
+
+    return (
+        <Modal
+            className={fullClassName}
+            header={headerContent}
+            onHide={handleStopPropagation(onCancel)}
+            stopPropagation={stopPropagation}
+        >
+            <div className="default-confirmation-modal-content">
+                {content ? (
+                    content
+                ) : (
+                    <span className="default-confirmation-modal-message">{message}</span>
+                )}
+
+                <div className="default-confirmation-modal-footer">
+                    <Button
+                        buttonSize="medium"
+                        buttonStyle="outline"
+                        className="cancel-button"
+                        onClick={handleStopPropagation(onCancel)}
+                    >
+                        {cancelLabel}
+                    </Button>
+
+                    <Button buttonSize="medium" className="accept-button" onClick={handleStopPropagation(onAccept)}>
+                        {acceptLabel}
+                    </Button>
+                </div>
+            </div>
+        </Modal>
+    )
+}
+
+export const ConfirmationModal = ({
     children,
     onAccept,
     onCancel,
+    ...props
 }: ConfirmationModalProps) => {
     const [isVisible, setIsVisible] = useState(false);
 
@@ -44,39 +100,17 @@ export const ConfirmationModal = ({
         onAccept?.(e);
     }
 
-    const headerContent = (
-        <span className="default-confirmation-modal-header">{title}</span>
-    )
-
-    const fullClassName = ClassName('default-confirmation-modal', className, {
-        'default-confirmation-modal--dangerous': dangerous,
-    });
-
     return (
-        <ModalWithButton
-            modalClassName={fullClassName}
-            isVisible={isVisible}
-            setIsVisible={setIsVisible}
-            triggerButton={children}
-            header={headerContent}
-        >
-            <div className="default-confirmation-modal-content">
-                {content ? (
-                    content
-                ) : (
-                    <span className="default-confirmation-modal-message">{message}</span>
-                )}
+        <>
+            {children && cloneElement(children, { onClick: () => setIsVisible(true)})}
 
-                <div className="default-confirmation-modal-footer">
-                    <Button className="cancel-button" onClick={handleCancel}>
-                        {cancelLabel}
-                    </Button>
-
-                    <Button className="accept-button" onClick={handleAccept}>
-                        {acceptLabel}
-                    </Button>
-                </div>
-            </div>
-        </ModalWithButton>
+            {isVisible && (
+                <DetachedConfirmationModal
+                    {...props}
+                    onAccept={handleAccept}
+                    onCancel={handleCancel}
+                />
+            )}
+        </>
     )
 }

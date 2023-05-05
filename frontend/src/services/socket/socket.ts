@@ -63,6 +63,10 @@ class Socket {
         return this.client?.emit('reveal-estimate', ticketId);
     }
 
+    restartTicketEstimation = (ticketId: string) => {
+        return this.client?.emit('restart-estimation', ticketId);
+    }
+
     getSessionTickets = () => {
         return new Promise<{ tickets: TicketType[] }>((resolve) => {
             this.client?.emit('get-session-tickets', resolve);

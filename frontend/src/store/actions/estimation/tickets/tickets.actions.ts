@@ -136,6 +136,20 @@ export const receiveRemoveTicket = (ticketId: string): ReceiveRemoveTicketAction
     ticketId,
 })
 
+type RestartTicketEstimationAction = {
+    type: 'RESTART_TICKET_ESTIMATION';
+    ticketId: string;
+};
+
+export const restartTicketEstimation = (ticketId: string): TypedThunkAction<RestartTicketEstimationAction> => async (dispatch) => {
+    await socket.restartTicketEstimation(ticketId)
+
+    dispatch({
+        type: 'RESTART_TICKET_ESTIMATION',
+        ticketId,
+    });
+}
+
 export type TicketsActionTypes =
     | GetSessionTicketsAction
     | CreateTicketAction
@@ -145,3 +159,4 @@ export type TicketsActionTypes =
     | RevealTicketEstimateAction
     | RemoveTicketAction
     | ReceiveRemoveTicketAction
+    | RestartTicketEstimationAction

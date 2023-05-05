@@ -6,17 +6,19 @@ $top-padding: 64px;
     display: flex;
     justify-content: center;
     width: 100vw;
-    height: calc(100vh - $top-padding);
+    height: 100vh;
     position: fixed;
     padding-top: $top-padding;
+    z-index: 100;
+    background-color: rgba(#000, 0.3);
 }
 
 .default-modal {
     width: 800px;
-    background-color: $default-bg-gray;
+    background-color: $gray-white-smoke;
     border-radius: 8px;
     min-height: 400px;
-    max-height: 90vh;
+    max-height: calc(100vh - $top-padding * 2);
     overflow-y: hidden;
 
     .modal-header {
