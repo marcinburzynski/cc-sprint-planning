@@ -139,7 +139,7 @@ export const EstimationPage = () => {
                         <Button
                             className="reveal-estimation-button"
                             buttonSize="medium"
-                            disabled={!!selectedTicket?.isRevealed || !selectedTicketId}
+                            disabled={!!selectedTicket?.isRevealed || !selectedTicketId || !estimationsForTicket}
                             onClick={() => selectedTicketId && dispatch(revealTicketEstimate(selectedTicketId))}
                         >
                             Reveal Cards

@@ -49,6 +49,13 @@ class Jira extends JiraBase {
             url.searchParams.append('startAt', `${params.startAt}`);
         }
 
+        const fields = [
+            'created', 'description', 'summary', 'updated', 'issuetype', 'assignee', 'parent', 'status',
+        ]
+
+        fields.forEach((field) => url.searchParams.append('fields', field));
+
+
         return client.get<JiraIssuesRes>(url.toString());
     }
 

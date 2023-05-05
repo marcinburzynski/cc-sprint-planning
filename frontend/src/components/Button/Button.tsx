@@ -29,7 +29,6 @@ export const Button = ({
     children,
     ...props
 }: ButtonProps) => {
-    console.log({ children });
     const handleClick: MouseEventHandler<HTMLButtonElement> = (e) => {
         if (disabled) return;
 

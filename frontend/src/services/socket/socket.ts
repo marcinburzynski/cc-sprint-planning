@@ -60,11 +60,15 @@ class Socket {
     };
 
     revealTicketEstimate = (ticketId: string) => {
-        return this.client?.emit('reveal-estimate', ticketId);
+        return new Promise((resolve) => {
+            this.client?.emit('reveal-estimate', ticketId, resolve);
+        })
     }
 
     restartTicketEstimation = (ticketId: string) => {
-        return this.client?.emit('restart-estimation', ticketId);
+        return new Promise((resolve) => {
+            this.client?.emit('restart-estimation', ticketId, resolve);
+        })
     }
 
     getSessionTickets = () => {

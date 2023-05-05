@@ -109,7 +109,7 @@ export class JiraBase {
     #axiosResponseInterceptorOnRejected = (error: unknown) => {
         if (!(error instanceof AxiosError)) return Promise.reject(error)
 
-        if (error?.code === '401') {
+        if (error.response?.status === 401) {
             this.#disconnectClient();
 
             const userToken = localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY) as string;
@@ -200,6 +200,8 @@ export class JiraBase {
 
         localStorage.setItem(JIRA_TOKEN_LOCAL_STORAGE_KEY, this.#token);
         localStorage.setItem(JIRA_REFRESH_TOKEN_LOCAL_STORAGE_KEY, this.#refreshToken);
+
+        this.#client = this.#getConfiguredClient(this.#token)
 
         this.#refreshTokenTimeout = setTimeout(this.#handleRefreshToken, 3500 * 1000)
     }
