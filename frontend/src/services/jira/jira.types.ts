@@ -53,44 +53,53 @@ export type JiraIconsSet<T extends string = '16' | '24' | '32' | '48'> = {
     [R in T as `${R}x${R}`]: string;
 }
 
-export type JiraIssue = {
+export type JiraIncludedAccountRef = {
+    accountId: string;
+    displayName: string;
+    accountType: string;
+    emailAddress?: string;
+    active: boolean;
+    avatarUrls: JiraIconsSet;
+    self: string;
+    timeZone: string;
+}
+
+export type JiraIssueStatus = {
+    id: string;
+    name: string;
+    description: string;
+    iconUrl: string;
+    self: string;
+}
+
+export type JiraIssueFieldsShort = {
+    created: string;
+    description: string;
+    summary: string;
+    updated: string;
+    issuetype: JiraIssueType;
+    assignee: JiraIncludedAccountRef | null;
+    parent?: {
+        id: string;
+        key: string;
+        self: string;
+        fields: {
+            issuetype: JiraIssueType;
+            summary: string;
+        };
+    };
+    status: JiraIssueStatus;
+};
+
+export type JiraIssueGeneric<F> = {
     id: string;
     key: string;
     self: string;
     expand: string;
-    fields: {
-        created: string;
-        description: string;
-        summary: string;
-        updated: string;
-        issuetype: JiraIssueType;
-        assignee: {
-            accountId: string;
-            displayName: string;
-            accountType: string;
-            active: boolean;
-            avatarUrls: JiraIconsSet;
-            self: string;
-            timeZone: string;
-        } | null;
-        parent?: {
-            id: string;
-            key: string;
-            self: string;
-            fields: {
-                issuetype: JiraIssueType;
-                summary: string;
-            };
-        };
-        status: {
-            id: string;
-            name: string;
-            description: string;
-            iconUrl: string;
-            self: string;
-        };
-    };
+    fields: F
 }
+
+export type JiraIssue = JiraIssueGeneric<JiraIssueFieldsShort>
 
 export type JiraIssuesRes = {
     expand: string;
@@ -98,6 +107,75 @@ export type JiraIssuesRes = {
     startAt: number;
     total: number;
     issues: JiraIssue[];
+}
+
+export type JiraAttachment = {
+    id: string;
+    filename: string;
+    author: JiraIncludedAccountRef;
+    content: string;
+    created: string;
+    mimeType: string;
+    self: string;
+    size: number;
+}
+
+export type JiraComment = {
+    id: string;
+    self: string;
+    created: string;
+    updated: string;
+    jsdPublic: boolean;
+    author: JiraIncludedAccountRef;
+    updateAuthor: JiraIncludedAccountRef;
+    body: string;
+}
+
+export type JiraPriority = {
+    id: string;
+    name: string;
+    iconUrl: string;
+    self: string;
+}
+
+export type JiraProject = {
+    id: string;
+    key: string;
+    name: string;
+    self: string;
+    simplified: boolean;
+    projectTypeKey: string;
+    avatarUrls: JiraIconsSet;
+}
+
+export type JiraExtendedIssueStatus = JiraIssueStatus & {
+    statusCategory: {
+        id: number;
+        key: string;
+        name: string;
+        colorName: string;
+        self: string;
+    }
+}
+
+export type ExtendedJiraIssueFields = Omit<JiraIssueFieldsShort, 'status'> & {
+    attachment: JiraAttachment[];
+    comment: {
+        maxResults: number;
+        startAt: number;
+        total: number;
+        self: string;
+        comments: JiraComment[];
+    };
+    creator: JiraIncludedAccountRef;
+    priority: JiraPriority;
+    project: JiraProject;
+    reporter: JiraIncludedAccountRef;
+    status: JiraExtendedIssueStatus;
+}
+
+export type JiraIssueWithDetails = JiraIssueGeneric<ExtendedJiraIssueFields> & {
+    renderedFields: ExtendedJiraIssueFields;
 }
 
 export type JiraSprint = {

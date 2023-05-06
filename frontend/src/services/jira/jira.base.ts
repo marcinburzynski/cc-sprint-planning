@@ -109,7 +109,7 @@ export class JiraBase {
     #axiosResponseInterceptorOnRejected = (error: unknown) => {
         if (!(error instanceof AxiosError)) return Promise.reject(error)
 
-        if (error.response?.status === 401) {
+        if (error.response?.status === 401 || error.response?.status === 403) {
             this.#disconnectClient();
 
             const userToken = localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY) as string;

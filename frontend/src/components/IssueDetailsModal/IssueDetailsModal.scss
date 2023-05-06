@@ -1,0 +1,22 @@
+.issue-details-modal {
+    .issue-details-modal-content {
+        height: 100%;
+        max-width: 100%;
+        overflow-y: auto;
+        padding: 16px;
+
+        img {
+            display: block;
+            max-width: 100%;
+            width: auto;
+            height: auto;
+            cursor: pointer;
+        }
+
+        .loader-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+    }
+}

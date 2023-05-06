@@ -33,5 +33,12 @@ export const JIRA_API_PERMS = [
     'read:status:jira',
     'read:sprint:jira-software',
     'read:jql:jira',
+    'read:issue-meta:jira',
+    'read:issue-security-level:jira',
+    'read:issue.vote:jira',
+    'read:issue.changelog:jira',
+    'read:field-configuration:jira',
+    'read:attachment:jira',
     'write:issue:jira-software',
+    'write:issue:jira',
 ]

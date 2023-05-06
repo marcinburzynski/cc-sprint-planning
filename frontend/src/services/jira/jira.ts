@@ -4,6 +4,7 @@ import type {
     JiraBoardsRes,
     JiraIssuesRes,
     JiraSprintsRes,
+    JiraIssueWithDetails,
 } from './jira.types'
 
 export type GetIssuesSearchParams = {
@@ -102,6 +103,23 @@ class Jira extends JiraBase {
         url.searchParams.append('boardId', `${boardId}`);
 
         return client.put(url.toString(), { value: estimate });
+    }
+
+
+    getIssue = async (issueKey: string) => {
+        const client = await this.getAuthedClient();
+
+        const url = new URL(`https://api.atlassian.com/ex/jira/${this.cloudId}/rest/api/2/issue/${issueKey}`)
+        url.searchParams.append('expand', 'renderedFields')
+
+        const fields = [
+            'created', 'creator', 'comment', 'description', 'summary', 'updated', 'issuetype', 'assignee',
+            'attachment', 'parent', 'priority', 'status', 'project', 'reporter'
+        ]
+
+        fields.forEach((field) => url.searchParams.append('fields', field));
+
+        return client.get<JiraIssueWithDetails>(url.toString())
     }
 }
 

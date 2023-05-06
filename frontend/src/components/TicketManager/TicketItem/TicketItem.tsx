@@ -8,6 +8,7 @@ import { isJiraTicket } from '../../../types/typePredicates';
 import { Dropdown, DropdownItem } from '../../Dropdown';
 import { DetachedConfirmationModal } from '../../ConfirmationModal';
 import { SaveEstimateToJiraModal } from '../../SaveEstimateToJiraModal';
+import { IssueDetailsModal } from '../../IssueDetailsModal';
 
 import type { StoredEstimations } from '../../../store/reducers/estimation/estimations';
 import type { TicketType, UserType } from '../../../types/commonTypes';
@@ -37,6 +38,7 @@ export const TicketItem = ({
 }: TicketItemProps) => {
     const [isConfirmRemoveVisible, setIsConfirmRemoveVisible] = useState(false);
     const [isSaveEstimateToJiraVisible, setIsSaveEstimateToJiraVisible] = useState(false);
+    const [isDetailsModalVisible, setIsDetailsModalVisible] = useState(false);
 
     const user = useTypedSelector((state) => state.user);
 
@@ -113,6 +115,10 @@ export const TicketItem = ({
                     Open in Jira
                 </DropdownItem>
 
+                <DropdownItem onClick={() => setIsDetailsModalVisible(true)} hidden={!ticket.issueKey}>
+                    Issue details
+                </DropdownItem>
+
                 <DropdownItem
                     onClick={() => setIsSaveEstimateToJiraVisible(true)}
                     hidden={!isJiraTicket(ticket) || !estimate || !user.isSpectator}
@@ -146,6 +152,10 @@ export const TicketItem = ({
                     initialEstimation={estimate}
                     onHideModal={() => setIsSaveEstimateToJiraVisible(false)}
                 />
+            )}
+
+            {isDetailsModalVisible && isJiraTicket(ticket) && (
+                <IssueDetailsModal issueKey={ticket.issueKey} onHide={() => setIsDetailsModalVisible(false)} />
             )}
         </div>
     )

@@ -11,7 +11,6 @@ export const JiraImage = ({ src, ...props }: JiraImageProps) => {
 
     const handleGetImage = async () => {
         const res = await jira.getImage(src);
-        if (!res) return;
         setImgAsURL(res)
     }
 

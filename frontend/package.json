@@ -27,7 +27,8 @@
     "redux": "4.2.1",
     "redux-thunk": "2.4.2",
     "reset-css": "5.0.1",
-    "socket.io-client": "4.5.2"
+    "socket.io-client": "4.5.2",
+    "xss": "1.0.14"
   },
   "devDependencies": {
     "@types/lodash": "4.14.194",
