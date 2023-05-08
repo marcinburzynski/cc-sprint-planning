@@ -53,10 +53,11 @@ export const TeamItem = ({ className, name, onChange, onRemove }: TeamItemProps)
     useKeyEvent('Escape', handleEscapeEditMode);
 
     const fullClassName = ClassName('default-team-item', className);
+    const fullEditWrapperClassName = ClassName('default-team-item-edit-wrapper', className)
 
     if (isEditing) {
         return (
-            <div className="default-team-item-edit-wrapper">
+            <div className={fullEditWrapperClassName}>
                 <div className={fullClassName}>
                     <Input autoFocus value={newTeamName} onChange={setNewTeamName} inputRef={inputRef} />
                 </div>
