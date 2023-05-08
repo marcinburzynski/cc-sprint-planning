@@ -33,6 +33,7 @@ export const TeamsCreator = ({ className, teams, onChange }: TeamsCreatorProps) 
         if (teams.includes(newTeamName) || !newTeamName) return
 
         onChange([...teams, newTeamName])
+        setIsAddingTeam(false);
         setNewTeamName('')
     }
 

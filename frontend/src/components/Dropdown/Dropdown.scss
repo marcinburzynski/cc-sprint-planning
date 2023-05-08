@@ -17,7 +17,7 @@
     box-shadow: $popup-shadow;
     background-color: $white-completely;
     min-width: 96px;
-    padding: 9px 0;
+    padding: 16px;
     z-index: 101;
     animation-duration: 400ms;
     animation-timing-function: cubic-bezier(0, 1,.6,.96);
@@ -43,12 +43,12 @@
 .default-dropdown-item {
     font-size: 14px;
     line-height: 16px;
-    padding: 8px 16px;
+    padding: 12px 16px;
     cursor: pointer;
 
     &:hover {
         outline: none;
-        background-color: $gray-very-light;
+        background-color: $blue-highlight;
     }
 }
 

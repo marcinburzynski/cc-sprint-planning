@@ -3,6 +3,7 @@ import ClassName from 'classnames';
 
 import { useKeyEvent } from '../../../hooks';
 import { Input } from '../../Input';
+import { Button } from '../../Button';
 
 import { ReactComponent as TrashIconSVG } from '../../../assets/icons/trash-bin.svg';
 import { ReactComponent as EditIconSVG } from '../../../assets/icons/edit.svg';
@@ -21,8 +22,7 @@ export const TeamItem = ({ className, name, onChange, onRemove }: TeamItemProps)
     const [newTeamName, setNewTeamName] = useState(name);
     const inputRef = useRef<HTMLInputElement>(null)
 
-    const handleUpdateTeam = (e: KeyboardEvent) => {
-        if (e.target !== inputRef.current) return;
+    const handleUpdateTeam = () => {
         if (!isEditing) return;
         if (!newTeamName) return;
 
@@ -34,32 +34,54 @@ export const TeamItem = ({ className, name, onChange, onRemove }: TeamItemProps)
         setNewTeamName(name);
     }
 
-    const handleEscapeEditMode = (e: KeyboardEvent) => {
+    const handleUpdateTeamOnEnter = (e: KeyboardEvent) => {
         if (e.target !== inputRef.current) return;
+        handleUpdateTeam()
+    }
+
+    const handleExitEditMode = () => {
         setIsEditing(false);
         setNewTeamName(name);
     }
 
-    useKeyEvent('Enter', handleUpdateTeam);
+    const handleEscapeEditMode = (e: KeyboardEvent) => {
+        if (e.target !== inputRef.current) return;
+        handleExitEditMode();
+    }
+
+    useKeyEvent('Enter', handleUpdateTeamOnEnter);
     useKeyEvent('Escape', handleEscapeEditMode);
 
     const fullClassName = ClassName('default-team-item', className);
 
+    if (isEditing) {
+        return (
+            <div className="default-team-item-edit-wrapper">
+                <div className={fullClassName}>
+                    <Input autoFocus value={newTeamName} onChange={setNewTeamName} inputRef={inputRef} />
+                </div>
+
+                <div className="edit-buttons">
+                    <Button buttonStyle="outline" onClick={handleExitEditMode}>
+                        Cancel
+                    </Button>
+
+                    <Button onClick={handleUpdateTeam}>
+                        Apply
+                    </Button>
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div className={fullClassName}>
-            {isEditing ? (
-                <Input autoFocus value={newTeamName} onChange={setNewTeamName} inputRef={inputRef} />
-            ) : (
-                <>
-                    <span className="team-name">
-                        {name}
-                    </span>
+            <span className="team-name">
+                {name}
+            </span>
 
-
-                    <EditIconSVG className="edit-icon" onClick={() => setIsEditing(true)} />
-                    <TrashIconSVG onClick={() => onRemove(name)} />
-                </>
-            )}
+            <EditIconSVG className="edit-icon" onClick={() => setIsEditing(true)} />
+            <TrashIconSVG onClick={() => onRemove(name)} />
         </div>
     )
 }

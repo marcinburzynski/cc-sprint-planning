@@ -26,3 +26,20 @@
         margin: 0 11px 0 auto;
     }
 }
+
+.default-team-item-edit-wrapper {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+
+    .edit-buttons {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        margin-top: 8px;
+
+        & > button:not(:first-of-type) {
+            margin-left: 8px;
+        }
+    }
+}
