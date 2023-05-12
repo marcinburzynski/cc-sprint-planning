@@ -11,13 +11,14 @@ import { SaveEstimateToJiraModal } from '../../SaveEstimateToJiraModal';
 import { IssueDetailsModal } from '../../IssueDetailsModal';
 
 import type { StoredEstimations } from '../../../store/reducers/estimation/estimations';
-import type { TicketType, UserType } from '../../../types/commonTypes';
+import type { TicketType, UserType, EstimateCardType } from '../../../types/commonTypes';
 
 import './TicketItem.scss';
 
 type TicketItemProps = {
     className?: string;
     users: UserType[];
+    deck: EstimateCardType[];
     ticketEstimations: StoredEstimations[string];
     ticket: TicketType;
     isSelected: boolean;
@@ -29,6 +30,7 @@ type TicketItemProps = {
 export const TicketItem = ({
     className,
     users,
+    deck,
     ticketEstimations,
     ticket,
     isSelected,
@@ -76,8 +78,8 @@ export const TicketItem = ({
     const estimate = useMemo(() => {
         if (!ticketEstimations || !ticket.isRevealed) return;
 
-        return getEstimationSum(getEstimationMedians(countEstimations(ticketEstimations, usersByTeam)));
-    }, [usersByTeam, ticketEstimations])
+        return getEstimationSum(getEstimationMedians(countEstimations(ticketEstimations, usersByTeam)), deck);
+    }, [usersByTeam, ticketEstimations, deck])
 
     const fullClassName = ClassName('default-ticket-item', className, {
         'default-ticket-item--selected': isSelected,
@@ -149,6 +151,7 @@ export const TicketItem = ({
             {isSaveEstimateToJiraVisible && isJiraTicket(ticket) && estimate && (
                 <SaveEstimateToJiraModal
                     ticket={ticket}
+                    deck={deck}
                     initialEstimation={estimate}
                     onHideModal={() => setIsSaveEstimateToJiraVisible(false)}
                 />

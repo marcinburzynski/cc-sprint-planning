@@ -1,24 +1,23 @@
 import ClassName from 'classnames';
-import { useState } from 'react';
 
 import { EstimateCard } from '../EstimateCard';
+
+import type { EstimateCardType } from '../../types/commonTypes';
 
 import './EstimateCardPicker.scss';
 
 type EstimateCardPickerProps = {
     className?: string;
     selectedCard?: string | null
-    cardsSet?: string[];
+    deck: EstimateCardType[];
     freeze?: boolean;
     onChangeSelection: (selectedCard?: string) => void;
 }
 
-const DEFAULT_CARDS_SET = ['1', '2', '3', '5', '8', '13', '?']
-
 export const EstimateCardPicker = ({
     className,
     selectedCard,
-    cardsSet = DEFAULT_CARDS_SET,
+    deck,
     freeze,
     onChangeSelection,
 }: EstimateCardPickerProps) => {
@@ -34,17 +33,15 @@ export const EstimateCardPicker = ({
 
     const fullClassName = ClassName('default-est-card-picker', className);
 
-    if (!cardsSet) return null;
-
     return (
         <div className={fullClassName}>
-            {cardsSet.map((card) => (
+            {deck.map((card) => (
                 <EstimateCard
                     isRevealed
-                    isSelected={selectedCard === card}
-                    key={card}
+                    key={card.label}
+                    isSelected={selectedCard === card.label}
+                    card={card}
                     className="estimate-card"
-                    value={card}
                     onClick={handlePickCard}
                 />
             ))}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import jwtDecode from 'jwt-decode';
 
 import { useTypedDispatch } from '../../store/hooks';
@@ -11,6 +11,7 @@ import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
 import { Checkbox } from '../../components/Checkbox';
 import { Select, type SelectOption } from '../../components/Select';
+import { TOKEN_LOCAL_STORAGE_KEY } from '../../constants/localStorageKeys';
 
 import type { UserType } from '../../types/commonTypes';
 
@@ -20,6 +21,7 @@ export const JoinPage = () => {
     const dispatch = useTypedDispatch()
     const navigateTo = useNavigate();
     const { sessionId } = useParams<'sessionId'>();
+    const [searchParams] = useSearchParams();
 
     const [username, setUsername] = useState('');
     const [isSpectator, setIsSpectator] = useState(false);
@@ -37,7 +39,13 @@ export const JoinPage = () => {
     };
 
     useEffect(() => {
-        handleGetSessionTeams();
+        const userToken = localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY);
+
+        if (!userToken || searchParams.has('test')) {
+            handleGetSessionTeams();
+        } else {
+            navigateTo(`/session/${sessionId}`)
+        }
     }, [])
 
     const handleJoinSession = async () => {
@@ -55,8 +63,8 @@ export const JoinPage = () => {
             await socket.joinSession(sessionId, data.token);
 
             const decodedUser = jwtDecode(data.token) as UserType;
-
             dispatch(setUser(decodedUser));
+
             navigateTo(`/session/${sessionId}`);
         } catch (e: unknown) {
             if (e instanceof Error) {

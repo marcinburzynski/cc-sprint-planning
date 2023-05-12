@@ -1,6 +1,6 @@
 import { pick } from 'lodash';
 
-import type { UserType } from '../types/commonTypes';
+import type { UserType, EstimateCardType } from '../types/commonTypes';
 
 export type CountedEstimations = {
     [teamName: string]: {
@@ -52,19 +52,46 @@ export const getEstimationMedians = (countedEstimations: CountedEstimations) => 
 }
 
 
-export const getEstimationSum = (estimationMedians: EstimationMedians) => {
+export const getEstimationSum = (estimationMedians: EstimationMedians, deck: EstimateCardType[]) => {
+    const labelCardHashmap = deck.reduce<Record<string, EstimateCardType>>((acc, curr) => ({
+        ...acc,
+        [curr.label]: curr,
+    }), {});
+
+    const deckType = deck[0].type;
+
     const sum = Object.values(estimationMedians).reduce<number>((acc, curr) => {
         if (!curr) return acc;
 
-        const asNumber = parseInt(curr);
-        const isNotNumber = isNaN(asNumber);
+        const currentCard = labelCardHashmap[curr];
 
-        if (isNotNumber) {
-            return acc;
-        }
+        if (currentCard.type === 'utility') return acc;
 
-        return acc + asNumber;
+        return acc + currentCard.value;
     }, 0)
 
-    return sum === 0 ? '?' : sum;
+    if (sum === 0) {
+        return '?';
+    }
+
+    switch (deckType) {
+        case 'story-points':
+            return `${sum}`
+
+        case 'time': {
+            if (sum > 8) {
+                let asDays = sum / 8;
+
+                if (asDays % 1) {
+                    asDays = parseFloat(asDays.toFixed(1))
+                }
+
+                return `${asDays}d`
+            }
+
+            return `${sum}h`
+        }
+    }
+
+    return `${sum}`;
 }

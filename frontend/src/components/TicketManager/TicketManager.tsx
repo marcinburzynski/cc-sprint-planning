@@ -5,7 +5,7 @@ import { TicketItem } from './TicketItem';
 import { AddTicket } from './AddTicket';
 
 import type { StoredEstimations } from '../../store/reducers/estimation/estimations';
-import type { TicketType, UserType } from '../../types/commonTypes';
+import type { TicketType, UserType, EstimateCardType } from '../../types/commonTypes';
 
 import './TicketManager.scss';
 
@@ -13,6 +13,7 @@ type TicketManagerSidebarProps = {
     className?: string;
     estimations: StoredEstimations;
     users: UserType[];
+    deck: EstimateCardType[];
     tickets: TicketType[];
     selectedTicket: TicketType | undefined;
     isSpectator?: boolean;
@@ -26,6 +27,7 @@ export const TicketManager = ({
     className,
     estimations,
     users,
+    deck,
     tickets,
     selectedTicket,
     isSpectator,
@@ -50,6 +52,7 @@ export const TicketManager = ({
                         className="ticket-item"
                         ticket={ticket}
                         users={users}
+                        deck={deck}
                         ticketEstimations={estimations[ticket.id]}
                         isSelected={ticket.id === selectedTicket?.id}
                         onClick={onSelectTicket}

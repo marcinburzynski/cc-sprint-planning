@@ -7,13 +7,14 @@ import { EstimationResultItem } from './EstimationResultItem';
 import { Button } from '../Button';
 
 import type { StoredEstimations } from '../../store/reducers/estimation/estimations';
-import type { UserType } from '../../types/commonTypes';
+import type { UserType, EstimateCardType } from '../../types/commonTypes';
 
 import './EstimationResults.scss';
 
 type EstimationResultProps = {
     className?: string;
     users: UserType[];
+    deck: EstimateCardType[];
     ticketEstimations: StoredEstimations[string];
     onEstimateNextTicket: () => void;
 }
@@ -21,6 +22,7 @@ type EstimationResultProps = {
 export const EstimationResults = ({
     className,
     users,
+    deck,
     ticketEstimations,
     onEstimateNextTicket,
 }: EstimationResultProps) => {
@@ -32,8 +34,8 @@ export const EstimationResults = ({
     }, [users, ticketEstimations])
 
     const estimatesSum = useMemo(() => {
-        return getEstimationSum(estimationMedians)
-    }, [estimationMedians]);
+        return getEstimationSum(estimationMedians, deck);
+    }, [estimationMedians, deck]);
 
     const fullClassName = ClassName('default-estimation-result', className);
 

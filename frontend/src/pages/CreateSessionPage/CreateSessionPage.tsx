@@ -2,16 +2,18 @@ import { useState } from 'react';
 import { isEmpty } from 'lodash';
 import { useNavigate } from 'react-router-dom';
 import jwtDecode from 'jwt-decode';
-import { AxiosError } from 'axios';
 
 import { useTypedDispatch } from '../../store/hooks';
 import { socket } from '../../services/socket';
 import { http } from '../../services/http';
 import { setUser } from '../../store/actions/user';
+import { setSession } from '../../store/actions/estimation/session';
 import { setNotification } from '../../store/actions/notifications';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
+import { Select } from '../../components/Select';
 import { TeamsCreator } from '../../components/TeamsCreator';
+import { DECKS } from '../../constants/decks';
 
 import type { UserType } from '../../types/commonTypes';
 
@@ -23,10 +25,11 @@ export const CreateSessionPage = () => {
 
     const [username, setUsername] = useState('');
     const [teams, setTeams] = useState<string[]>([]);
+    const [selectedDeck, setSelectedDeck] = useState(DECKS.storyPoints.value);
     const [loading, setLoading] = useState(false);
 
     const handleStartSession = async () => {
-        if (isEmpty(teams) || !username) return;
+        if (!username || isEmpty(teams) || !DECKS[selectedDeck]) return;
 
         const partialUser = {
             name: username,
@@ -37,19 +40,20 @@ export const CreateSessionPage = () => {
 
         try {
             const [
-                { data: { sessionId } },
+                { data: { session } },
                 { data: { token } },
             ] = await Promise.all([
-                http.createSession(teams),
+                http.createSession(teams, DECKS[selectedDeck].deck),
                 http.createUser(partialUser),
             ]);
 
-            await socket.joinSession(sessionId, token);
+            await socket.joinSession(session.id, token);
 
-            const decodedUser = jwtDecode(token) as UserType;
+            const decodedUser = jwtDecode<UserType>(token);
 
+            dispatch(setSession(session));
             dispatch(setUser(decodedUser));
-            navigateTo(`/session/${sessionId}`);
+            navigateTo(`/session/${session.id}`);
         } catch (e: unknown) {
             if (e instanceof Error) {
                 dispatch(setNotification('Failed to create a session', {
@@ -73,6 +77,14 @@ export const CreateSessionPage = () => {
 
                 <label className="name-label">Your name:</label>
                 <Input className="name-input" value={username} onChange={setUsername} />
+
+                <label className="deck-label">Cards deck:</label>
+                <Select
+                    classNameButton="deck-select"
+                    selection={DECKS[selectedDeck]}
+                    options={Object.values(DECKS)}
+                    onChange={(selection) => selection && setSelectedDeck(selection.value)}
+                />
 
                 <label className="teams-label">Teams:</label>
                 <TeamsCreator className="teams-creator" teams={teams} onChange={setTeams} />

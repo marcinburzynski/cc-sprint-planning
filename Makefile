@@ -37,6 +37,7 @@ stop-prod-server:
 
 migrate:
 	@docker compose exec -it $(SERVER_CONTAINER) yarn migrate
+	@docker compose exec $(SERVER_CONTAINER) yarn generate-prisma
 
 gen-ssl-cert:
 	@./scripts/gen-self-signed-ssl-cert.sh

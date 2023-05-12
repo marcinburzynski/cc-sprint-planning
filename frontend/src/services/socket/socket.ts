@@ -4,7 +4,7 @@ import { store } from '../../store';
 import { listenToEvents } from './socketListener';
 import { TOKEN_LOCAL_STORAGE_KEY } from '../../constants/localStorageKeys';
 
-import type { UserType, EstimationType, TicketType } from '../../types/commonTypes';
+import type { UserType, EstimationType, TicketType, SessionType } from '../../types/commonTypes';
 
 class Socket {
 
@@ -86,6 +86,12 @@ class Socket {
     getSessionEstimates = () => {
         return new Promise<{ estimates: EstimationType[] }>((resolve) => {
             this.client?.emit('get-session-estimates', resolve);
+        })
+    }
+
+    getSession = (sessionId: string) => {
+        return new Promise<{ session: SessionType }>((resolve) => {
+            this.client?.emit('get-session', sessionId, resolve);
         })
     }
 }

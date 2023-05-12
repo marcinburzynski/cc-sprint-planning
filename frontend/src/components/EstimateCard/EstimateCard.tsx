@@ -1,12 +1,14 @@
 import ClassName from 'classnames';
 
+import type { EstimateCardType } from '../../types/commonTypes';
+
 import './EstimateCard.scss';
 
 type EstimateCardProps = {
     className?: string;
     isSelected?: boolean;
     isRevealed?: boolean;
-    value?: string | null;
+    card?: EstimateCardType;
     onClick?: (value: string) => void;
 }
 
@@ -14,7 +16,7 @@ export const EstimateCard = ({
     className,
     isSelected,
     isRevealed,
-    value,
+    card,
     onClick,
 }: EstimateCardProps) => {
     const fullClassName = ClassName('default-card', className, {
@@ -23,8 +25,8 @@ export const EstimateCard = ({
     })
 
     return (
-        <div className={fullClassName} onClick={() => onClick?.(value || '-')}>
-            {isRevealed ? value || '-' : null}
+        <div className={fullClassName} onClick={() => onClick?.(card?.label || '')}>
+            {isRevealed ? card?.label || '-' : null}
         </div>
     )
 }

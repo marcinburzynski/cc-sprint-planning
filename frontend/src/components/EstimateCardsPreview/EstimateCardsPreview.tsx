@@ -4,20 +4,27 @@ import { useMemo } from 'react';
 import { TeamEstimateLane } from './TeamEstimateLane';
 import { getAllTeams, getUsersByTeam } from '../../utils/users';
 
-import type { UserType } from '../../types/commonTypes';
+import type { UserType, EstimateCardType } from '../../types/commonTypes';
 
 import './EstimateCardsPreview.scss';
 
 type EstimateCardsPreviewProps = {
     className?: string;
     reveal?: boolean;
+    deck: EstimateCardType[];
     users: UserType[];
     estimations?: {
         [userId: string]: string | null;
     };
 }
 
-export const EstimateCardsPreview = ({ className, estimations = {}, users, reveal }: EstimateCardsPreviewProps) => {
+export const EstimateCardsPreview = ({
+    className,
+    estimations = {},
+    deck,
+    users,
+    reveal,
+}: EstimateCardsPreviewProps) => {
     const teams = useMemo(() => getAllTeams(users), [users])
     const usersByTeam = useMemo<Record<string, UserType[]>>(() => getUsersByTeam(users, teams), [teams])
 
@@ -29,6 +36,7 @@ export const EstimateCardsPreview = ({ className, estimations = {}, users, revea
                 <TeamEstimateLane
                     key={team}
                     className="team-lane"
+                    deck={deck}
                     teamName={team}
                     reveal={reveal}
                     users={usersByTeam[team]}

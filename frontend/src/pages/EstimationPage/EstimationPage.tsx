@@ -13,6 +13,7 @@ import {
 } from '../../store/actions/estimation/tickets';
 import { isCompleteUser } from '../../types/typePredicates';
 import { setNotification } from '../../store/actions/notifications';
+import { getSession } from '../../store/actions/estimation/session';
 import { getSessionUsers } from '../../store/actions/estimation/users';
 import { getSessionEstimations, sendEstimation } from '../../store/actions/estimation/estimations';
 import { Button } from '../../components/Button';
@@ -31,6 +32,7 @@ export const EstimationPage = () => {
 
     const [selectedTicketId, setSelectedTicketId] = useState<string>();
 
+    const { data: session } = useTypedSelector((state) => state.estimation.session);
     const user = useTypedSelector((state) => state.user);
     const { id: userId, isSpectator } = user
 
@@ -57,6 +59,8 @@ export const EstimationPage = () => {
     const userEstimation = estimationsForTicket && userId ? estimationsForTicket[userId] : undefined
 
     const handleJoinAndLoadData = async () => {
+        if (!sessionId) return;
+
         if (!socket.token) {
             return navigateTo(`/join/${sessionId}`);
         }
@@ -64,6 +68,8 @@ export const EstimationPage = () => {
         if (!socket.sessionId && sessionId && socket.token) {
             await socket.joinSession(sessionId, socket.token);
         }
+
+        dispatch(getSession(sessionId))
 
         if (!loadingTickets && !noTicketsAdded && isEmpty(tickets)) {
             dispatch(getSessionTickets());
@@ -147,12 +153,15 @@ export const EstimationPage = () => {
                     )}
                 </div>
 
-                <EstimateCardsPreview
-                    className="cards-preview"
-                    reveal={selectedTicket?.isRevealed}
-                    users={activeUsers}
-                    estimations={estimationsForTicket}
-                />
+                {session && (
+                    <EstimateCardsPreview
+                        className="cards-preview"
+                        deck={session.deck}
+                        reveal={selectedTicket?.isRevealed}
+                        users={activeUsers}
+                        estimations={estimationsForTicket}
+                    />
+                )}
             </div>
 
             <div className="side-container">
@@ -171,33 +180,38 @@ export const EstimationPage = () => {
 
                 <div className="side-container-card">
                     <span className="side-container-card-header">Issues:</span>
-                    <TicketManager
-                        className="ticket-manager"
-                        isSpectator={isSpectator}
-                        users={Object.values(users)}
-                        estimations={estimations}
-                        tickets={Object.values(tickets)}
-                        selectedTicket={selectedTicket}
-                        onSelectTicket={(ticket) => setSelectedTicketId(ticket.id)}
-                        onAddTicket={(name) => sessionId && dispatch(createTicket({ name }))}
-                        onRemoveTicket={(ticketId) => dispatch(removeTicket(ticketId))}
-                        onRestartEstimation={(ticketId) => dispatch(restartTicketEstimation(ticketId))}
-                    />
+                    {session && (
+                        <TicketManager
+                            className="ticket-manager"
+                            isSpectator={isSpectator}
+                            users={Object.values(users)}
+                            deck={session.deck}
+                            estimations={estimations}
+                            tickets={Object.values(tickets)}
+                            selectedTicket={selectedTicket}
+                            onSelectTicket={(ticket) => setSelectedTicketId(ticket.id)}
+                            onAddTicket={(name) => sessionId && dispatch(createTicket({ name }))}
+                            onRemoveTicket={(ticketId) => dispatch(removeTicket(ticketId))}
+                            onRestartEstimation={(ticketId) => dispatch(restartTicketEstimation(ticketId))}
+                        />
+                    )}
                 </div>
             </div>
 
-            {selectedTicket?.isRevealed && estimationsForTicket && (
+            {selectedTicket?.isRevealed && estimationsForTicket && session && (
                 <EstimationResults
                     className="estimation-results"
                     users={Object.values(users)}
+                    deck={session.deck}
                     ticketEstimations={estimationsForTicket}
                     onEstimateNextTicket={handleSelectNextTicketForEstimationInOrder}
                 />
             )}
 
-            {!isSpectator && !selectedTicket?.isRevealed && userId && selectedTicketId && (
+            {!isSpectator && !selectedTicket?.isRevealed && userId && selectedTicketId && session && (
                 <EstimateCardPicker
                     className="card-picker"
+                    deck={session.deck}
                     freeze={selectedTicket?.isRevealed}
                     selectedCard={userEstimation}
                     onChangeSelection={(value) => dispatch(sendEstimation(selectedTicketId, value || null))}

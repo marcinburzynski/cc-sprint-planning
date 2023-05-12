@@ -17,6 +17,7 @@
 
     .create-session-page-box {
         @include loginCard;
+        height: 655px;
 
         .header {
             font-size: 20px;
@@ -33,10 +34,11 @@
             font-size: 16px;
             margin-bottom: 9px;
             color: $black-nero;
-        }
-
-        .name-label {
             margin-top: 31px;
+
+            &:not(:first-of-type) {
+                margin-top: 24px;
+            }
         }
 
         .name-input {
@@ -44,15 +46,15 @@
             flex-shrink: 0;
         }
 
-        .teams-label {
-            margin-top: 24px;
+        .deck-select {
+            flex-shrink: 0;
         }
 
         .teams-creator {
             margin-bottom: 16px;
 
             .teams-list {
-                max-height: 200px;
+                max-height: 136px;
             }
         }
 

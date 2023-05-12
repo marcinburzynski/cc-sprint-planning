@@ -22,3 +22,14 @@ export type EstimationType = {
     userId: string;
     value: string | null;
 }
+
+export type EstimateCardType = {
+    label: string;
+    value: number;
+    type: 'story-points' | 'time' | 'utility';
+}
+
+export type SessionType = {
+    id: string;
+    deck: EstimateCardType[];
+}

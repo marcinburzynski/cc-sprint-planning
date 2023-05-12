@@ -6,13 +6,16 @@ import { prisma } from '../../datasources/prisma.js';
 export const sessionRouter = Router();
 
 sessionRouter.post('/create', async (req, res) => {
-    if (!req.body?.teams || !req.body?.teams.length) {
+    if (!req.body?.teams || !req.body?.teams.length || !req.body?.deck) {
         res.status(400);
         return res.json({ error: 'Teams field is required and cannot be empty' });
     }
 
     const session = await prisma.session.create({
-        data: { id: nanoid() }
+        data: {
+            id: nanoid(),
+            deck: req.body.deck,
+        }
     });
 
     await prisma.team.createMany({
@@ -22,7 +25,7 @@ sessionRouter.post('/create', async (req, res) => {
         })),
     });
 
-    res.json({ sessionId: session.id });
+    res.json({ session });
 });
 
 sessionRouter.get('/:sessionId/teams', async (req, res) => {

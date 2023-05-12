@@ -96,7 +96,7 @@ class Jira extends JiraBase {
         })
     };
 
-    setEstimate = async (boardId: number, issueKey: string, estimate: number) => {
+    setEstimate = async (boardId: number, issueKey: string, estimate: string) => {
         const client = await this.getAuthedClient();
 
         const url = new URL(`https://api.atlassian.com/ex/jira/${this.cloudId}/rest/agile/1.0/issue/${issueKey}/estimation`)

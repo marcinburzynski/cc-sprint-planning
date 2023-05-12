@@ -169,5 +169,11 @@ export const initSocket = (io: Server) => {
 
             callback({ estimates })
         })
+
+        socket.on('get-session', async (sessionId: string, callback) => {
+            const session = await prisma.session.findUnique({ where: { id: sessionId } });
+
+            callback({ session })
+        })
     });
 }

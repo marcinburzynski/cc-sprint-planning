@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from 'axios';
 
 import { TOKEN_LOCAL_STORAGE_KEY } from '../constants/localStorageKeys';
 
-import type { UserType } from '../types/commonTypes';
+import type { UserType, SessionType, EstimateCardType } from '../types/commonTypes';
 import type { JiraAccessTokenRes } from './jira/jira.types';
 
 class Http {
@@ -23,7 +23,10 @@ class Http {
         return res;
     }
 
-    createSession = (teams: string[]) => this.#client.post<{ sessionId: string }>('/session/create', { teams });
+    createSession = (teams: string[], deck: EstimateCardType[]) => {
+        return this.#client.post<{ session: SessionType }>('/session/create', { teams, deck });
+    }
+
     getSessionTeams = (sessionId: string) => this.#client.get<{ teams: string[] }>(`/session/${sessionId}/teams`);
 
     getJiraAuthToken = (oauthToken: string) => this.#client.post<JiraAccessTokenRes>('/jira/get-auth-token', { oauthToken });

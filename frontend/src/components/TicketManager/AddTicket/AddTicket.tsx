@@ -36,6 +36,7 @@ export const AddTicket = ({ className, onAddTicket }: AddTicketProps) => {
             {isAddingManually ? (
                 <div className="add-ticket-manually-container">
                     <TextArea
+                        autoFocus
                         value={newTicketName}
                         onChange={setNewTicketName}
                         placeholder="Type issue name"
