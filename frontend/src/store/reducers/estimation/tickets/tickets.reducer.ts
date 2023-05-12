@@ -7,6 +7,7 @@ import type { TicketType } from '../../../../types/commonTypes';
 
 type TicketsReducerState = {
     data: Record<string, TicketType>;
+    selectedTicketId?: string;
     loading: boolean;
     isEmpty: boolean;
     error: boolean;
@@ -64,6 +65,12 @@ export const ticketsReducer = (state = TicketsDefaultState, action: TicketsActio
         case 'REMOVE_TICKET':
         case 'RECEIVE_REMOVE_TICKET':
             draft.data = omit(state.data, action.ticketId);
+            break;
+
+        case 'SET_SELECTED_TICKET':
+        case 'SET_SELECTED_TICKET_FOR_EVERYONE':
+        case 'RECEIVE_SELECTED_TICKET':
+            draft.selectedTicketId = action.ticketId;
             break;
 
         default:

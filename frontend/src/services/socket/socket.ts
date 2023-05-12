@@ -92,7 +92,13 @@ class Socket {
     getSession = (sessionId: string) => {
         return new Promise<{ session: SessionType }>((resolve) => {
             this.client?.emit('get-session', sessionId, resolve);
-        })
+        });
+    }
+
+    setSelectedTicketForEveryone = (ticketId: string) => {
+        return new Promise((resolve) => {
+            this.client?.emit('set-selected-ticket-for-everyone', ticketId, resolve);
+        });
     }
 }
 

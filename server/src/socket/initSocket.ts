@@ -175,5 +175,10 @@ export const initSocket = (io: Server) => {
 
             callback({ session })
         })
+
+        socket.on('set-selected-ticket-for-everyone', (ticketId: string, callback) => {
+            socket.to(socketSessionId).emit('receive-selected-ticket-for-everyone', ticketId);
+            callback();
+        })
     });
 }

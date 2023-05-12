@@ -150,6 +150,41 @@ export const restartTicketEstimation = (ticketId: string): TypedThunkAction<Rest
     });
 }
 
+type SetSelectedTicketAction = {
+    type: 'SET_SELECTED_TICKET';
+    ticketId: string;
+}
+
+export const setSelectedTicket = (ticketId: string): SetSelectedTicketAction => ({
+    type: 'SET_SELECTED_TICKET',
+    ticketId,
+});
+
+type SetSelectedTicketForEveryoneAction = {
+    type: 'SET_SELECTED_TICKET_FOR_EVERYONE';
+    ticketId: string;
+};
+
+export const setSelectedTicketForEveryone = (ticketId: string): TypedThunkAction<SetSelectedTicketForEveryoneAction> => async (dispatch) => {
+    await socket.setSelectedTicketForEveryone(ticketId);
+
+    dispatch({
+        type: 'SET_SELECTED_TICKET_FOR_EVERYONE',
+        ticketId,
+    })
+};
+
+type ReceiveSelectedTicketAction = {
+    type: 'RECEIVE_SELECTED_TICKET';
+    ticketId: string;
+};
+
+export const receiveSelectedTicket = (ticketId: string): ReceiveSelectedTicketAction => ({
+    type: 'RECEIVE_SELECTED_TICKET',
+    ticketId,
+});
+
+
 export type TicketsActionTypes =
     | GetSessionTicketsAction
     | CreateTicketAction
@@ -160,3 +195,6 @@ export type TicketsActionTypes =
     | RemoveTicketAction
     | ReceiveRemoveTicketAction
     | RestartTicketEstimationAction
+    | SetSelectedTicketAction
+    | SetSelectedTicketForEveryoneAction
+    | ReceiveSelectedTicketAction

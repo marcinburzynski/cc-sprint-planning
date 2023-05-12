@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { isEmpty, omit } from 'lodash';
 
@@ -10,6 +10,8 @@ import {
     revealTicketEstimate,
     restartTicketEstimation,
     removeTicket,
+    setSelectedTicket,
+    setSelectedTicketForEveryone,
 } from '../../store/actions/estimation/tickets';
 import { isCompleteUser } from '../../types/typePredicates';
 import { setNotification } from '../../store/actions/notifications';
@@ -30,13 +32,12 @@ export const EstimationPage = () => {
     const navigateTo = useNavigate();
     const { sessionId } = useParams<'sessionId'>()
 
-    const [selectedTicketId, setSelectedTicketId] = useState<string>();
-
     const { data: session } = useTypedSelector((state) => state.estimation.session);
     const user = useTypedSelector((state) => state.user);
     const { id: userId, isSpectator, isAdmin } = user
 
     const {
+        selectedTicketId,
         data: tickets,
         loading: loadingTickets,
         isEmpty: noTicketsAdded,
@@ -89,7 +90,7 @@ export const EstimationPage = () => {
     const handleSelectFirstInOrderTicket = () => {
         const [firstTicket] = getOrderedTickets();
 
-        setSelectedTicketId(firstTicket.id);
+        dispatch(setSelectedTicket(firstTicket.id));
     };
 
     const handleSelectNextTicketForEstimationInOrder = () => {
@@ -98,7 +99,11 @@ export const EstimationPage = () => {
 
         if (!nextTicket) return;
 
-        setSelectedTicketId(nextTicket.id)
+        if (isAdmin) {
+            return dispatch(setSelectedTicketForEveryone(nextTicket.id));
+        }
+
+        dispatch(setSelectedTicket(nextTicket.id));
     }
 
     const handleCopyShareLink = () => {
@@ -189,7 +194,7 @@ export const EstimationPage = () => {
                             estimations={estimations}
                             tickets={Object.values(tickets)}
                             selectedTicket={selectedTicket}
-                            onSelectTicket={(ticket) => setSelectedTicketId(ticket.id)}
+                            onSelectTicket={(ticket) => dispatch(setSelectedTicket(ticket.id))}
                             onAddTicket={(name) => sessionId && dispatch(createTicket({ name }))}
                             onRemoveTicket={(ticketId) => dispatch(removeTicket(ticketId))}
                             onRestartEstimation={(ticketId) => dispatch(restartTicketEstimation(ticketId))}

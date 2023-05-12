@@ -6,7 +6,7 @@ type EstimationResultItemProps = {
     className?: string;
     name: string;
     additionalInfo?: string;
-    value: number | string;
+    value: string | undefined;
 }
 
 export const EstimationResultItem = ({ className, name, additionalInfo, value }: EstimationResultItemProps) => {
@@ -26,7 +26,7 @@ export const EstimationResultItem = ({ className, name, additionalInfo, value }:
                 )}
             </div>
             <div className="value">
-                {value}
+                {value || '?'}
             </div>
         </div>
     )

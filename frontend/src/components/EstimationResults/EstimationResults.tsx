@@ -51,10 +51,12 @@ export const EstimationResults = ({
                     />
                 ))}
 
-                <EstimationResultItem
-                    name="Sum"
-                    value={estimatesSum}
-                />
+                {Object.keys(estimationMedians).length > 1 && (
+                    <EstimationResultItem
+                        name="Sum"
+                        value={estimatesSum}
+                    />
+                )}
             </div>
 
             <Button buttonSize="medium" onClick={onEstimateNextTicket}>
