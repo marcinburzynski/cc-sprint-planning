@@ -1,4 +1,4 @@
-# CC Sprint Planning
+# Sprint Planning
 
 ## Requirements
 - mkcert

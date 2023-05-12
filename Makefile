@@ -24,19 +24,19 @@ help:
 
 
 start:
-	@docker-compose up -d --build --always-recreate-deps
+	@docker compose up -d --build --always-recreate-deps
 
 start-prod-server:
-	@docker-compose -f ./docker-compose.prod.yml up -d --build --always-recreate-deps
+	@docker compose -f ./docker-compose.prod.yml up -d --build --always-recreate-deps
 
 stop:
-	@docker-compose down
+	@docker compose down
 
 stop-prod-server:
-	@docker-compose -f ./docker-compose.prod.yml down
+	@docker compose -f ./docker-compose.prod.yml down
 
 migrate:
-	@docker-compose exec -it $(SERVER_CONTAINER) yarn migrate
+	@docker compose exec -it $(SERVER_CONTAINER) yarn migrate
 
 gen-ssl-cert:
 	@./scripts/gen-self-signed-ssl-cert.sh
