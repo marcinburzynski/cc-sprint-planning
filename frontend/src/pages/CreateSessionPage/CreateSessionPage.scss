@@ -17,7 +17,7 @@
 
     .create-session-page-box {
         @include loginCard;
-        height: 655px;
+        height: 660px;
 
         .header {
             font-size: 20px;
@@ -48,6 +48,21 @@
 
         .deck-select {
             flex-shrink: 0;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-top: 24px;
+            cursor: pointer;
+            user-select: none;
+
+            label {
+                margin: 0;
+                font-size: 14px;
+                padding-left: 8px;
+                cursor: pointer;
+            }
         }
 
         .teams-creator {

@@ -25,6 +25,7 @@ export const JoinPage = () => {
 
     const [username, setUsername] = useState('');
     const [isSpectator, setIsSpectator] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
     const [teams, setTeams] = useState<string[]>([]);
     const [selectedTeam, setSelectedTeam] = useState<SelectOption | undefined>()
     const [loading, setLoading] = useState(false);
@@ -56,6 +57,7 @@ export const JoinPage = () => {
         try {
             const { data } = await http.createUser({
                 isSpectator,
+                isAdmin,
                 name: username,
                 team: isSpectator ? undefined : selectedTeam.value,
             });
@@ -96,10 +98,17 @@ export const JoinPage = () => {
                     onChange={setSelectedTeam}
                 />
 
-                <div className="spectator-checkbox-container">
+                <div className="checkbox-container">
                     <Checkbox isChecked={isSpectator} onChange={setIsSpectator} />
-                    <label className="spectator-label" onClick={() => setIsSpectator(!isSpectator)}>
+                    <label onClick={() => setIsSpectator(!isSpectator)}>
                         Join as spectator
+                    </label>
+                </div>
+
+                <div className="checkbox-container">
+                    <Checkbox isChecked={isAdmin} onChange={setIsAdmin} />
+                    <label onClick={() => setIsAdmin(!isAdmin)}>
+                        Join as admin
                     </label>
                 </div>
 

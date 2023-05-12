@@ -34,7 +34,7 @@ export const EstimationPage = () => {
 
     const { data: session } = useTypedSelector((state) => state.estimation.session);
     const user = useTypedSelector((state) => state.user);
-    const { id: userId, isSpectator } = user
+    const { id: userId, isSpectator, isAdmin } = user
 
     const {
         data: tickets,
@@ -141,7 +141,7 @@ export const EstimationPage = () => {
                         <span className="estimating-ticket">{selectedTicket?.name}</span>
                     </div>
 
-                    {isSpectator && (
+                    {isAdmin && (
                         <Button
                             className="reveal-estimation-button"
                             buttonSize="medium"
@@ -183,7 +183,7 @@ export const EstimationPage = () => {
                     {session && (
                         <TicketManager
                             className="ticket-manager"
-                            isSpectator={isSpectator}
+                            isAdmin={isAdmin}
                             users={Object.values(users)}
                             deck={session.deck}
                             estimations={estimations}

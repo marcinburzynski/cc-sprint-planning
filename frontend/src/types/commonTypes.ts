@@ -4,6 +4,7 @@ export type UserType = {
     id: string;
     name: string;
     isSpectator: boolean;
+    isAdmin: boolean;
     team?: string;
 }
 

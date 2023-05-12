@@ -47,14 +47,14 @@
             margin-top: 23px;
         }
 
-        .spectator-checkbox-container {
+        .checkbox-container {
             display: flex;
             align-items: center;
             margin-top: 25px;
             cursor: pointer;
             user-select: none;
 
-            .spectator-label {
+            label {
                 margin: 0;
                 padding-left: 8px;
                 font-size: 14px;

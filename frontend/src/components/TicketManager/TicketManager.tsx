@@ -16,7 +16,7 @@ type TicketManagerSidebarProps = {
     deck: EstimateCardType[];
     tickets: TicketType[];
     selectedTicket: TicketType | undefined;
-    isSpectator?: boolean;
+    isAdmin?: boolean;
     onSelectTicket: (ticket: TicketType) => void;
     onAddTicket: (name: string) => void;
     onRemoveTicket: (ticketId: string) => void;
@@ -30,7 +30,7 @@ export const TicketManager = ({
     deck,
     tickets,
     selectedTicket,
-    isSpectator,
+    isAdmin,
     onSelectTicket,
     onAddTicket,
     onRemoveTicket,
@@ -62,7 +62,7 @@ export const TicketManager = ({
                 ))}
             </div>
 
-            {isSpectator && (
+            {isAdmin && (
                 <AddTicket
                     className="add-ticket"
                     onAddTicket={onAddTicket}

@@ -23,6 +23,7 @@ userRouter.post('/create', async (req, res) => {
             name: req.body.name,
             team: req.body.team,
             isSpectator: req.body.isSpectator || false,
+            isAdmin: req.body.isAdmin || false,
         }
     });
 

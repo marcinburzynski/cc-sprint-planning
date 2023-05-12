@@ -12,6 +12,7 @@ import { setNotification } from '../../store/actions/notifications';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
 import { Select } from '../../components/Select';
+import { Checkbox } from '../../components/Checkbox';
 import { TeamsCreator } from '../../components/TeamsCreator';
 import { DECKS } from '../../constants/decks';
 
@@ -26,14 +27,16 @@ export const CreateSessionPage = () => {
     const [username, setUsername] = useState('');
     const [teams, setTeams] = useState<string[]>([]);
     const [selectedDeck, setSelectedDeck] = useState(DECKS.storyPoints.value);
+    const [isSpectator, setIsSpectator] = useState(true);
     const [loading, setLoading] = useState(false);
 
     const handleStartSession = async () => {
         if (!username || isEmpty(teams) || !DECKS[selectedDeck]) return;
 
         const partialUser = {
+            isSpectator,
             name: username,
-            isSpectator: true,
+            isAdmin: true,
         }
 
         setLoading(true);
@@ -85,6 +88,11 @@ export const CreateSessionPage = () => {
                     options={Object.values(DECKS)}
                     onChange={(selection) => selection && setSelectedDeck(selection.value)}
                 />
+
+                <div className="checkbox-container">
+                    <Checkbox isChecked={isSpectator} onChange={setIsSpectator} />
+                    <label onClick={() => setIsSpectator(!isSpectator)}>Join as viewer</label>
+                </div>
 
                 <label className="teams-label">Teams:</label>
                 <TeamsCreator className="teams-creator" teams={teams} onChange={setTeams} />

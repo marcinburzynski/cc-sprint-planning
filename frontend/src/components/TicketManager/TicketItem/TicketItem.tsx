@@ -63,7 +63,11 @@ export const TicketItem = ({
 
     const getEstimationStatusLabel = () => {
         if (ticket.isRevealed) {
-            return 'Estimate again';
+            if (user.isAdmin) {
+                return 'Estimate again';
+            }
+
+            return 'Estimated';
         }
 
         if (ticketEstimations) {
@@ -86,7 +90,7 @@ export const TicketItem = ({
     });
 
     const estimationStatusFullClassName = ClassName('estimation-status', {
-        'estimation-status--clickable': ticket.isRevealed,
+        'estimation-status--clickable': ticket.isRevealed && user.isAdmin,
     })
 
     return (
@@ -96,7 +100,7 @@ export const TicketItem = ({
 
                 <span
                     className={estimationStatusFullClassName}
-                    onClick={ticket.isRevealed ? handleRestartEstimation : undefined}
+                    onClick={ticket.isRevealed && user.isAdmin ? handleRestartEstimation : undefined}
                 >
                     {getEstimationStatusLabel()}
                 </span>
@@ -123,16 +127,16 @@ export const TicketItem = ({
 
                 <DropdownItem
                     onClick={() => setIsSaveEstimateToJiraVisible(true)}
-                    hidden={!isJiraTicket(ticket) || !estimate || !user.isSpectator}
+                    hidden={!isJiraTicket(ticket) || !estimate || !user.isAdmin}
                 >
                     Save estimate to Jira
                 </DropdownItem>
 
-                <DropdownItem onClick={handleRestartEstimation} hidden={!ticket.isRevealed || !user.isSpectator}>
+                <DropdownItem onClick={handleRestartEstimation} hidden={!ticket.isRevealed || !user.isAdmin}>
                     Restart estimation
                 </DropdownItem>
 
-                <DropdownItem onClick={() => setIsConfirmRemoveVisible(true)} hidden={!user.isSpectator}>
+                <DropdownItem onClick={() => setIsConfirmRemoveVisible(true)} hidden={!user.isAdmin}>
                     Remove
                 </DropdownItem>
             </Dropdown>

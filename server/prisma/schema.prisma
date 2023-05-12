@@ -15,6 +15,7 @@ model User {
   name        String
   team        String?
   isSpectator Boolean
+  isAdmin     Boolean      @default(false)
   estimations Estimation[]
   sessions    Session[]
 }
