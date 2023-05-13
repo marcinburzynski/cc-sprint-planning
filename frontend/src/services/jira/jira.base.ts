@@ -22,6 +22,7 @@ export class JiraBase {
     #token?: string
     #refreshToken?: string
     #oauthToken?: string
+    #jiraUrl?: string
     cloudId?: string
 
     #client?: AxiosInstance
@@ -179,6 +180,7 @@ export class JiraBase {
         const { data: [firstApp] } = await this.#client.get<JiraResource[]>('https://api.atlassian.com/oauth/token/accessible-resources');
 
         this.cloudId = firstApp.id;
+        this.#jiraUrl = firstApp.url;
         localStorage.setItem(JIRA_CLOUD_ID_LOCAL_STORAGE_KEY, this.cloudId);
     }
 
@@ -215,5 +217,11 @@ export class JiraBase {
         }
 
         return this.#client as AxiosInstance;
+    }
+
+    getJiraUrl = async () => {
+        await this.getAuthedClient();
+
+        return this.#jiraUrl;
     }
 }

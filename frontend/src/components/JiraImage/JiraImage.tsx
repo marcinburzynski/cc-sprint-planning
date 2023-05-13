@@ -10,7 +10,7 @@ export const JiraImage = ({ src, ...props }: JiraImageProps) => {
     const [imgAsURL, setImgAsURL] = useState<string>();
 
     const handleGetImage = async () => {
-        const res = await jira.getImage(src);
+        const res = await jira.getSecuredAsset(src);
         setImgAsURL(res)
     }
 

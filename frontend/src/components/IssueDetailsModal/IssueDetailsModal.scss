@@ -1,4 +1,19 @@
+@import '../../assets/style/colors';
+
 .issue-details-modal {
+    .issue-details-modal-header {
+        display: flex;
+        white-space: pre;
+        font-weight: 500;
+        font-size: 18px;
+
+        .issue-link {
+            cursor: pointer;
+            text-decoration: underline;
+            color: $blue-pelorous;
+        }
+    }
+
     .issue-details-modal-content {
         height: 100%;
         max-width: 100%;
@@ -13,10 +28,39 @@
             cursor: pointer;
         }
 
-        .loader-container {
+        video {
+            display: block;
+            max-width: 100%;
+            width: auto;
+            height: auto;
+        }
+
+        .loader-container,
+        .image-loader-container,
+        .video-loader-container {
             width: 100%;
             display: flex;
             justify-content: center;
+        }
+
+        table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+            border-spacing: 2px;
+
+            tbody {
+                tr {
+                    border-collapse: collapse;
+
+                    td {
+                        border: 1px solid $gray-silver;
+                        padding: 8px;
+                        font-size: 14px;
+                    }
+                }
+            }
+
         }
     }
 }

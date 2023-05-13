@@ -82,18 +82,12 @@ class Jira extends JiraBase {
         return client.get<JiraSprintsRes>(url.toString());
     }
 
-    getImage = async (url: string) => {
+    getSecuredAsset = async (url: string) => {
         const client = await this.getAuthedClient();
 
         const { data } = await client.get(url, { responseType: 'blob' });
-        const reader = new FileReader();
-        reader.readAsDataURL(data);
 
-        return new Promise<string>((resolve) => {
-            reader.onload = () => {
-                resolve(reader.result as string);
-            };
-        })
+        return URL.createObjectURL(data)
     };
 
     setEstimate = async (boardId: number, issueKey: string, estimate: string) => {

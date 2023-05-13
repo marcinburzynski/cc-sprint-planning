@@ -2,6 +2,7 @@ import ClassName from 'classnames';
 import { useMemo, useState } from 'react';
 
 import { useTypedSelector } from '../../../store/hooks';
+import { jira } from '../../../services/jira';
 import { getUsersByTeam } from '../../../utils/users';
 import { countEstimations, getEstimationMedians, getEstimationSum } from '../../../utils/estimations';
 import { isJiraTicket } from '../../../types/typePredicates';
@@ -44,8 +45,10 @@ export const TicketItem = ({
 
     const user = useTypedSelector((state) => state.user);
 
-    const handleGoToTicket = () => {
-        window.open(`https://shareablee.atlassian.net/browse/${ticket.issueKey}`, '_blank');
+    const handleGoToTicket = async () => {
+        const jiraUrl = await jira.getJiraUrl();
+
+        window.open(`${jiraUrl}/browse/${ticket.issueKey}`, '_blank');
     };
 
     const handleRestartEstimation = () => {
