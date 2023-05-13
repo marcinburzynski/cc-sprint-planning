@@ -9,6 +9,7 @@ import {
     JIRA_TOKEN_LOCAL_STORAGE_KEY,
     JIRA_REFRESH_TOKEN_LOCAL_STORAGE_KEY,
     JIRA_CLOUD_ID_LOCAL_STORAGE_KEY,
+    JIRA_URL_LOCAL_STORAGE_KEY,
 } from '../../constants/localStorageKeys';
 import { JIRA_API_PERMS } from './jira.constants';
 
@@ -37,6 +38,7 @@ export class JiraBase {
         this.#oauthToken = localStorage.getItem(JIRA_OAUTH_TOKEN_LOCAL_STORAGE_KEY) || undefined;
         this.#token = localStorage.getItem(JIRA_TOKEN_LOCAL_STORAGE_KEY) || undefined;
         this.#refreshToken = localStorage.getItem(JIRA_REFRESH_TOKEN_LOCAL_STORAGE_KEY) || undefined;
+        this.#jiraUrl = localStorage.getItem(JIRA_URL_LOCAL_STORAGE_KEY) || undefined;
         this.cloudId = localStorage.getItem(JIRA_CLOUD_ID_LOCAL_STORAGE_KEY) || undefined;
 
         this.#attachStorageListener();
@@ -181,7 +183,9 @@ export class JiraBase {
 
         this.cloudId = firstApp.id;
         this.#jiraUrl = firstApp.url;
+
         localStorage.setItem(JIRA_CLOUD_ID_LOCAL_STORAGE_KEY, this.cloudId);
+        localStorage.setItem(JIRA_URL_LOCAL_STORAGE_KEY, this.#jiraUrl);
     }
 
     #finalizeAuth = async () => {

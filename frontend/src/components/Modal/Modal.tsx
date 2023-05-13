@@ -41,7 +41,7 @@ export const Modal = ({
 
     return (
         <Portal>
-            <div className={fullWrapperClassName} onClick={handleClickWrapper}>
+            <div className={fullWrapperClassName} onMouseDown={handleClickWrapper}>
                 <div className={fullClassName} ref={modalRef}>
                     <div className="modal-header">
                         {header}
