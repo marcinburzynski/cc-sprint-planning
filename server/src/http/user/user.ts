@@ -7,24 +7,26 @@ import { prisma } from '../../datasources/prisma.js';
 export const userRouter = Router();
 
 userRouter.post('/create', async (req, res) => {
-    if (!req.body?.name) {
+    const { body } = req;
+
+    if (!body.name) {
         res.status(400);
-        return res.json({ error: 'username field is required' });
+        return res.json({ error: 'Username field is required' });
     }
 
-    if (!req.body?.team && !req.body?.isSpectator) {
+    if (!body.isSpectator && !body.team) {
         res.status(400);
-        return res.json({ error: 'team field or isSpectator flag is required' });
+        return res.json({ error: 'When user is not a spectator, team selection is required' });
     }
 
     try {
         const user = await prisma.user.create({
             data: {
                 id: nanoid(),
-                name: req.body.name,
-                team: req.body.team,
-                isSpectator: req.body.isSpectator || false,
-                isAdmin: req.body.isAdmin || false,
+                name: body.name,
+                team: body.team,
+                isSpectator: body.isSpectator || false,
+                isAdmin: body.isAdmin || false,
             }
         });
 

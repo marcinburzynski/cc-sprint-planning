@@ -17,7 +17,7 @@
 
     .create-session-page-box {
         @include loginCard;
-        height: 660px;
+        height: 690px;
 
         .header {
             font-size: 20px;
@@ -46,24 +46,41 @@
             flex-shrink: 0;
         }
 
-        .deck-select {
-            flex-shrink: 0;
-        }
-
-        .checkbox-container {
+        .team-or-viewer-container {
             display: flex;
-            align-items: center;
+            justify-content: space-between;
             margin-top: 24px;
-            cursor: pointer;
-            user-select: none;
 
-            label {
-                margin: 0;
-                font-size: 14px;
-                padding-left: 8px;
+            .team-picker {
+                width: 150px;
+            }
+
+            .or-label {
+                display: flex;
+                align-items: center;
+                line-height: 1;
+                border-left: 1px solid $gray-silver;
+                border-right: 1px solid $gray-silver;
+                margin: 10px 0;
+                padding: 0 8px;
+            }
+
+
+            .checkbox-container {
+                display: flex;
+                align-items: center;
                 cursor: pointer;
+                user-select: none;
+
+                label {
+                    margin: 0;
+                    font-size: 14px;
+                    padding-left: 8px;
+                    cursor: pointer;
+                }
             }
         }
+
 
         .teams-creator {
             margin-bottom: 16px;

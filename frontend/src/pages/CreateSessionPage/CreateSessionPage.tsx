@@ -8,13 +8,13 @@ import { socket } from '../../services/socket';
 import { http } from '../../services/http';
 import { setUser } from '../../store/actions/user';
 import { setSession } from '../../store/actions/estimation/session';
-import { setNotification } from '../../store/actions/notifications';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
-import { Select } from '../../components/Select';
+import { Select, SelectOption } from '../../components/Select';
 import { Checkbox } from '../../components/Checkbox';
 import { TeamsCreator } from '../../components/TeamsCreator';
 import { DECKS } from '../../constants/decks';
+import { showErrorViaNotification } from '../../utils/errors';
 
 import type { UserType } from '../../types/commonTypes';
 
@@ -26,6 +26,7 @@ export const CreateSessionPage = () => {
 
     const [username, setUsername] = useState('');
     const [teams, setTeams] = useState<string[]>([]);
+    const [selectedTeam, setSelectedTeam] = useState<SelectOption>();
     const [selectedDeck, setSelectedDeck] = useState(DECKS.storyPoints.value);
     const [isSpectator, setIsSpectator] = useState(true);
     const [loading, setLoading] = useState(false);
@@ -35,6 +36,7 @@ export const CreateSessionPage = () => {
 
         const partialUser = {
             isSpectator,
+            team: selectedTeam?.value,
             name: username,
             isAdmin: true,
         }
@@ -58,12 +60,7 @@ export const CreateSessionPage = () => {
             dispatch(setUser(decodedUser));
             navigateTo(`/session/${session.id}`);
         } catch (e: unknown) {
-            if (e instanceof Error) {
-                dispatch(setNotification('Failed to create a session', {
-                    notificationType: 'error',
-                    description: e.message,
-                }))
-            }
+            showErrorViaNotification('Failed to create a session', e, dispatch);
         }
 
         setLoading(false)
@@ -78,23 +75,35 @@ export const CreateSessionPage = () => {
                     Start new planning
                 </span>
 
-                <label className="name-label">Your name:</label>
+                <label>Your name:</label>
                 <Input className="name-input" value={username} onChange={setUsername} />
 
-                <label className="deck-label">Cards deck:</label>
+                <label>Cards deck:</label>
                 <Select
-                    classNameButton="deck-select"
                     selection={DECKS[selectedDeck]}
                     options={Object.values(DECKS)}
                     onChange={(selection) => selection && setSelectedDeck(selection.value)}
                 />
 
-                <div className="checkbox-container">
-                    <Checkbox isChecked={isSpectator} onChange={setIsSpectator} />
-                    <label onClick={() => setIsSpectator(!isSpectator)}>Join as viewer</label>
+                <div className="team-or-viewer-container">
+                    <Select
+                        classNameButton="team-picker"
+                        disabled={isSpectator}
+                        selection={selectedTeam}
+                        onChange={setSelectedTeam}
+                        options={teams.map((team) => ({ label: team, value: team }))}
+                    />
+
+                    <span className="or-label">OR</span>
+
+                    <div className="checkbox-container">
+                        <Checkbox isChecked={isSpectator} onChange={setIsSpectator} />
+                        <label onClick={() => setIsSpectator(!isSpectator)}>Join as viewer</label>
+                    </div>
                 </div>
 
-                <label className="teams-label">Teams:</label>
+
+                <label>Teams:</label>
                 <TeamsCreator className="teams-creator" teams={teams} onChange={setTeams} />
 
                 <Button

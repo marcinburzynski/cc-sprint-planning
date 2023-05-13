@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { AxiosError } from 'axios';
 
 import { useTypedDispatch, useTypedSelector } from '../../store/hooks';
 import { selectJiraBoard } from '../../store/actions/jira/boards';
@@ -8,6 +7,7 @@ import { jira } from '../../services/jira';
 import { DetachedConfirmationModal } from '../ConfirmationModal';
 import { BoardPicker } from '../AddJiraTicketModal/BoardPicker';
 import { Input } from '../Input';
+import { showErrorViaNotification } from '../../utils/errors';
 
 import type { JiraTicketType, EstimateCardType } from '../../types/commonTypes';
 
@@ -66,12 +66,11 @@ export const SaveEstimateToJiraModal = ({
             dispatch(setNotification(`Estimate for issue ${ticket.issueKey} has been successfully saved in Jira.`))
             onHideModal();
         } catch (e: unknown) {
-            if (e instanceof AxiosError) {
-                dispatch(setNotification(
-                    `Failed saving estimate for issue ${ticket.issueKey} in Jira.`,
-                    { notificationType: 'error', description: `${e.code}\n${e.message}` },
-                ))
-            }
+            showErrorViaNotification(
+                `Failed saving estimate for issue ${ticket.issueKey} in Jira.`,
+                e,
+                dispatch,
+            )
         }
     }
 

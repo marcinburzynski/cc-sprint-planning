@@ -6,11 +6,11 @@ import { useTypedDispatch } from '../../store/hooks';
 import { socket } from '../../services/socket';
 import { http } from '../../services/http';
 import { setUser } from '../../store/actions/user';
-import { setNotification } from '../../store/actions/notifications';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
 import { Checkbox } from '../../components/Checkbox';
 import { Select, type SelectOption } from '../../components/Select';
+import { showErrorViaNotification } from '../../utils/errors';
 import { TOKEN_LOCAL_STORAGE_KEY } from '../../constants/localStorageKeys';
 
 import type { UserType } from '../../types/commonTypes';
@@ -69,12 +69,7 @@ export const JoinPage = () => {
 
             navigateTo(`/session/${sessionId}`);
         } catch (e: unknown) {
-            if (e instanceof Error) {
-                dispatch(setNotification('Failed to join session.', {
-                    notificationType: 'error',
-                    description: e.message,
-                }))
-            }
+            showErrorViaNotification('Failed to join session.', e, dispatch);
         }
 
         setLoading(false);
