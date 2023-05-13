@@ -17,17 +17,22 @@ userRouter.post('/create', async (req, res) => {
         return res.json({ error: 'team field or isSpectator flag is required' });
     }
 
-    const user = await prisma.user.create({
-        data: {
-            id: nanoid(),
-            name: req.body.name,
-            team: req.body.team,
-            isSpectator: req.body.isSpectator || false,
-            isAdmin: req.body.isAdmin || false,
-        }
-    });
+    try {
+        const user = await prisma.user.create({
+            data: {
+                id: nanoid(),
+                name: req.body.name,
+                team: req.body.team,
+                isSpectator: req.body.isSpectator || false,
+                isAdmin: req.body.isAdmin || false,
+            }
+        });
 
-    const token = jwt.sign(user, process.env.SECRET!);
+        const token = jwt.sign(user, process.env.SECRET!);
 
-    res.json({ token });
+        res.json({ token });
+    } catch (e) {
+        res.status(500);
+        res.json(e);
+    }
 });

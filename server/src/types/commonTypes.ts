@@ -19,3 +19,5 @@ export type EstimationType = {
     userId: string;
     value: string | null;
 }
+
+export type PromiseCallback = (params?: unknown) => void
