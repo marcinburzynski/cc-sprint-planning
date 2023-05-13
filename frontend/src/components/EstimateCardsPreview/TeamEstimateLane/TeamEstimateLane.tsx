@@ -14,12 +14,19 @@ type TeamEstimateLaneProps = {
     users: UserType[];
     deck: EstimateCardType[];
     reveal?: boolean;
-    estimations: {
+    estimations?: {
         [userId: string]: string | null;
     }
 }
 
-export const TeamEstimateLane = ({ className, teamName, users, deck, estimations, reveal }: TeamEstimateLaneProps) => {
+export const TeamEstimateLane = ({
+    className,
+    teamName,
+    users,
+    deck,
+    estimations = {},
+    reveal,
+}: TeamEstimateLaneProps) => {
     const usersSortedByCountedEstimations = useMemo(() => {
         if (!reveal) return users;
 
@@ -51,13 +58,12 @@ export const TeamEstimateLane = ({ className, teamName, users, deck, estimations
     }, [deck])
 
     const getEstimateCard = (userId: string) => {
-        const estimationLabelForUser = estimations[userId];
+        const estimationLabelForUser = estimations?.[userId];
 
         if (!estimationLabelForUser) return;
 
         return labelCardHashmap[estimationLabelForUser];
     }
-
 
     const fullClassName = ClassName('default-team-estimate-lane', className);
 

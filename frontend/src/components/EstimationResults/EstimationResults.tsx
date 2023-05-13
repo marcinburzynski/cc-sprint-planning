@@ -1,6 +1,7 @@
 import ClassName from 'classnames';
 import { useMemo } from 'react';
 
+import { useTypedSelector, useTypedDispatch } from '../../store/hooks';
 import { getUsersByTeam } from '../../utils/users';
 import { countEstimations, getEstimationMedians, getEstimationSum } from '../../utils/estimations';
 import { EstimationResultItem } from './EstimationResultItem';
@@ -10,34 +11,54 @@ import type { StoredEstimations } from '../../store/reducers/estimation/estimati
 import type { UserType, EstimateCardType } from '../../types/commonTypes';
 
 import './EstimationResults.scss';
+import { setSelectedTicket, setSelectedTicketForEveryone } from '../../store/actions/estimation/tickets';
 
 type EstimationResultProps = {
     className?: string;
-    users: UserType[];
-    deck: EstimateCardType[];
-    ticketEstimations: StoredEstimations[string];
-    onEstimateNextTicket: () => void;
 }
 
-export const EstimationResults = ({
-    className,
-    users,
-    deck,
-    ticketEstimations,
-    onEstimateNextTicket,
-}: EstimationResultProps) => {
+export const EstimationResults = ({ className }: EstimationResultProps) => {
+    const dispatch = useTypedDispatch();
+
+    const user = useTypedSelector((state) => state.user);
+    const { data: tickets, selectedTicketId } = useTypedSelector((state) => state.estimation.tickets);
+    const { data: session } = useTypedSelector((state) => state.estimation.session);
+    const { data: users } = useTypedSelector((state) => state.estimation.users);
+    const { data: estimations } = useTypedSelector((state) => state.estimation.estimations);
+
+    const ticketEstimations = selectedTicketId ? estimations[selectedTicketId] : undefined;
+
     const estimationMedians = useMemo(() => {
-        const usersByTeam = getUsersByTeam(users);
+        if (!ticketEstimations) return;
+
+        const usersByTeam = getUsersByTeam(Object.values(users));
         const countedEstimations = countEstimations(ticketEstimations, usersByTeam);
 
         return getEstimationMedians(countedEstimations);
     }, [users, ticketEstimations])
 
     const estimatesSum = useMemo(() => {
-        return getEstimationSum(estimationMedians, deck);
-    }, [estimationMedians, deck]);
+        if (!session || !estimationMedians) return '';
+
+        return getEstimationSum(estimationMedians, session.deck);
+    }, [estimationMedians, session]);
+
+    const handleSelectNextTicketForEstimationInOrder = () => {
+        const sortedTickets = Object.values(tickets).sort((a, b) => a.order - b.order);
+        const [nextTicket] = sortedTickets.filter((ticket) => !ticket.isRevealed);
+
+        if (!nextTicket) return;
+
+        if (user.isAdmin) {
+            return dispatch(setSelectedTicketForEveryone(nextTicket.id));
+        }
+
+        dispatch(setSelectedTicket(nextTicket.id));
+    };
 
     const fullClassName = ClassName('default-estimation-result', className);
+
+    if (!estimationMedians) return null;
 
     return (
         <div className={fullClassName}>
@@ -59,7 +80,7 @@ export const EstimationResults = ({
                 )}
             </div>
 
-            <Button buttonSize="medium" onClick={onEstimateNextTicket}>
+            <Button buttonSize="medium" onClick={handleSelectNextTicketForEstimationInOrder}>
                 Estimate next issue
             </Button>
         </div>

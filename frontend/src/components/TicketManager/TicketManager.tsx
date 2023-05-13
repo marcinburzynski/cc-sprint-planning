@@ -1,43 +1,26 @@
 import ClassName from 'classnames';
 import { useMemo } from 'react';
 
+import { useTypedSelector, useTypedDispatch } from '../../store/hooks';
+import { createTicket } from '../../store/actions/estimation/tickets';
 import { TicketItem } from './TicketItem';
 import { AddTicket } from './AddTicket';
-
-import type { StoredEstimations } from '../../store/reducers/estimation/estimations';
-import type { TicketType, UserType, EstimateCardType } from '../../types/commonTypes';
 
 import './TicketManager.scss';
 
 type TicketManagerSidebarProps = {
     className?: string;
-    estimations: StoredEstimations;
-    users: UserType[];
-    deck: EstimateCardType[];
-    tickets: TicketType[];
-    selectedTicket: TicketType | undefined;
-    isAdmin?: boolean;
-    onSelectTicket: (ticket: TicketType) => void;
-    onAddTicket: (name: string) => void;
-    onRemoveTicket: (ticketId: string) => void;
-    onRestartEstimation: (ticketId: string) => void;
 }
 
-export const TicketManager = ({
-    className,
-    estimations,
-    users,
-    deck,
-    tickets,
-    selectedTicket,
-    isAdmin,
-    onSelectTicket,
-    onAddTicket,
-    onRemoveTicket,
-    onRestartEstimation,
-}: TicketManagerSidebarProps) => {
+export const TicketManager = ({ className }: TicketManagerSidebarProps) => {
+    const dispatch = useTypedDispatch();
+
+    const user = useTypedSelector((state) => state.user);
+    const { data: tickets, selectedTicketId } = useTypedSelector((state) => state.estimation.tickets);
+
     const sortedTickets = useMemo(() => {
-        const clonedTickets = [...tickets];
+        const clonedTickets = [...Object.values(tickets)];
+
         return clonedTickets.sort((a, b) => a.order - b.order);
     }, [tickets])
 
@@ -51,21 +34,15 @@ export const TicketManager = ({
                         key={ticket.id}
                         className="ticket-item"
                         ticket={ticket}
-                        users={users}
-                        deck={deck}
-                        ticketEstimations={estimations[ticket.id]}
-                        isSelected={ticket.id === selectedTicket?.id}
-                        onClick={onSelectTicket}
-                        onRestartEstimation={onRestartEstimation}
-                        onRemove={onRemoveTicket}
+                        isSelected={ticket.id === selectedTicketId}
                     />
                 ))}
             </div>
 
-            {isAdmin && (
+            {user.isAdmin && (
                 <AddTicket
                     className="add-ticket"
-                    onAddTicket={onAddTicket}
+                    onAddTicket={(name) => dispatch(createTicket({ name }))}
                 />
             )}
         </div>

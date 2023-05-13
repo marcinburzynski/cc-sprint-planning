@@ -1,3 +1,5 @@
+import { isEmpty } from 'lodash';
+
 import { socket } from '../../../../services/socket';
 
 import type { TypedThunkAction } from '../../../types';
@@ -22,7 +24,11 @@ type GetSessionTicketsAction =
     | GetSessionTicketsFailure
 
 
-export const getSessionTickets = (): TypedThunkAction<GetSessionTicketsAction> => async (dispatch) => {
+export const getSessionTickets = (): TypedThunkAction<GetSessionTicketsAction> => async (dispatch, getState) => {
+    const ticketsStore = getState().estimation.tickets;
+
+    if (ticketsStore.loading || ticketsStore.error || !isEmpty(ticketsStore.data)) return;
+
     const { tickets } = await socket.getSessionTickets();
 
     dispatch({
@@ -184,6 +190,14 @@ export const receiveSelectedTicket = (ticketId: string): ReceiveSelectedTicketAc
     ticketId,
 });
 
+type TicketsStateResetAction = {
+    type: 'TICKETS_STATE_RESET_ACTION';
+}
+
+export const ticketsStateReset = (): TicketsStateResetAction => ({
+    type: 'TICKETS_STATE_RESET_ACTION',
+});
+
 
 export type TicketsActionTypes =
     | GetSessionTicketsAction
@@ -198,3 +212,4 @@ export type TicketsActionTypes =
     | SetSelectedTicketAction
     | SetSelectedTicketForEveryoneAction
     | ReceiveSelectedTicketAction
+    | TicketsStateResetAction

@@ -35,6 +35,9 @@ export const sessionReducer = (state = SessionReducerDefaultState, action: Sessi
             draft.error = true;
             break;
 
+        case 'SESSION_STATE_RESET':
+            return SessionReducerDefaultState;
+
         default:
             return state;
     }

@@ -73,6 +73,9 @@ export const ticketsReducer = (state = TicketsDefaultState, action: TicketsActio
             draft.selectedTicketId = action.ticketId;
             break;
 
+        case 'TICKETS_STATE_RESET_ACTION':
+            return TicketsDefaultState;
+
         default:
             return state
     }

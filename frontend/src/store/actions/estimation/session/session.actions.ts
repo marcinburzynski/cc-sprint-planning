@@ -47,7 +47,16 @@ export const getSession = (sessionId: string): TypedThunkAction<GetSessionAction
     })
 }
 
+type SessionStateResetAction = {
+    type: 'SESSION_STATE_RESET';
+};
+
+export const sessionStateReset = (): SessionStateResetAction => ({
+    type: 'SESSION_STATE_RESET',
+})
+
 
 export type SessionActionTypes =
     | SetSessionAction
     | GetSessionAction
+    | SessionStateResetAction

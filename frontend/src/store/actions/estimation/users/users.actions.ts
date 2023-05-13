@@ -1,3 +1,5 @@
+import { isEmpty, omit } from 'lodash';
+
 import { socket } from '../../../../services/socket';
 
 import type { TypedThunkAction } from '../../../types';
@@ -22,7 +24,12 @@ type GetSessionUsersAction =
     | GetSessionUsersFailure
 
 
-export const getSessionUsers = (): TypedThunkAction<GetSessionUsersAction> => async (dispatch) => {
+export const getSessionUsers = (): TypedThunkAction<GetSessionUsersAction> => async (dispatch, getState) => {
+    const userId = getState().user.id;
+    const usersStore = getState().estimation.users;
+
+    if (usersStore.loading || usersStore.isEmpty || !userId || !isEmpty(omit(usersStore.data, userId))) return;
+
     const { users } = await socket.getSessionUsers();
 
     dispatch({
@@ -41,7 +48,16 @@ export const userJoined = (user: UserType): UserJoined => ({
     user,
 })
 
+type UsersStateResetAction = {
+    type: 'USERS_STATE_RESET';
+};
+
+export const usersStateReset = (): UsersStateResetAction => ({
+    type: 'USERS_STATE_RESET',
+})
+
 
 export type SessionUsersActionTypes =
     | GetSessionUsersAction
     | UserJoined
+    | UsersStateResetAction

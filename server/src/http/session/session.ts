@@ -29,7 +29,7 @@ sessionRouter.post('/create', async (req, res) => {
         res.json({ session });
     } catch (e) {
         res.status(500);
-        res.json(e);
+        res.json({ error: e });
     }
 });
 
@@ -40,6 +40,6 @@ sessionRouter.get('/:sessionId/teams', async (req, res) => {
         res.json({ teams: teams.map((team) => team.name) });
     } catch (e) {
         res.status(500);
-        res.json(e);
+        res.json({ error: e });
     }
 });

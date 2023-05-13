@@ -16,6 +16,7 @@ jiraRouter.post('/get-auth-token', async (req, res) => {
         res.json(data);
     } catch (e) {
         res.status(500);
+        res.json({ error: e });
     }
 })
 
@@ -31,5 +32,6 @@ jiraRouter.post('/refresh-token', async (req, res) => {
         res.json(data);
     } catch (e) {
         res.status(500);
+        res.json({ error: e })
     }
 })

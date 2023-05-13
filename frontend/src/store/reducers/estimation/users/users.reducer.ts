@@ -53,6 +53,9 @@ export const usersReducer = (state = UsersDefaultState, action: UsersReducerActi
             draft.data[action.user.id] = action.user;
             break;
 
+        case 'USERS_STATE_RESET':
+            return UsersDefaultState;
+
         default:
             return state
     }

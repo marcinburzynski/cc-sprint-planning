@@ -33,6 +33,6 @@ userRouter.post('/create', async (req, res) => {
         res.json({ token });
     } catch (e) {
         res.status(500);
-        res.json(e);
+        res.json({ error: e });
     }
 });

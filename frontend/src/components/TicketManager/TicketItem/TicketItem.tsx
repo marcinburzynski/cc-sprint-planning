@@ -1,9 +1,10 @@
 import ClassName from 'classnames';
 import { useMemo, useState } from 'react';
 
-import { useTypedSelector } from '../../../store/hooks';
+import { useTypedSelector, useTypedDispatch } from '../../../store/hooks';
 import { jira } from '../../../services/jira';
 import { getUsersByTeam } from '../../../utils/users';
+import { setSelectedTicket, restartTicketEstimation, removeTicket } from '../../../store/actions/estimation/tickets';
 import { countEstimations, getEstimationMedians, getEstimationSum } from '../../../utils/estimations';
 import { isJiraTicket } from '../../../types/typePredicates';
 import { Dropdown, DropdownItem } from '../../Dropdown';
@@ -11,39 +12,29 @@ import { DetachedConfirmationModal } from '../../ConfirmationModal';
 import { SaveEstimateToJiraModal } from '../../SaveEstimateToJiraModal';
 import { IssueDetailsModal } from '../../IssueDetailsModal';
 
-import type { StoredEstimations } from '../../../store/reducers/estimation/estimations';
-import type { TicketType, UserType, EstimateCardType } from '../../../types/commonTypes';
+import type { TicketType } from '../../../types/commonTypes';
 
 import './TicketItem.scss';
 
 type TicketItemProps = {
     className?: string;
-    users: UserType[];
-    deck: EstimateCardType[];
-    ticketEstimations: StoredEstimations[string];
     ticket: TicketType;
     isSelected: boolean;
-    onClick: (ticket: TicketType) => void;
-    onRestartEstimation: (ticketId: string) => void;
-    onRemove: (ticketId: string) => void;
 }
 
-export const TicketItem = ({
-    className,
-    users,
-    deck,
-    ticketEstimations,
-    ticket,
-    isSelected,
-    onClick,
-    onRestartEstimation,
-    onRemove,
-}: TicketItemProps) => {
+export const TicketItem = ({ className, ticket, isSelected }: TicketItemProps) => {
+    const dispatch = useTypedDispatch();
+
     const [isConfirmRemoveVisible, setIsConfirmRemoveVisible] = useState(false);
     const [isSaveEstimateToJiraVisible, setIsSaveEstimateToJiraVisible] = useState(false);
     const [isDetailsModalVisible, setIsDetailsModalVisible] = useState(false);
 
     const user = useTypedSelector((state) => state.user);
+    const { data: session } = useTypedSelector((state) => state.estimation.session);
+    const { data: users } = useTypedSelector((state) => state.estimation.users);
+    const { data: estimations } = useTypedSelector((state) => state.estimation.estimations);
+
+    const ticketEstimations = estimations[ticket.id]
 
     const handleGoToTicket = async () => {
         const jiraUrl = await jira.getJiraUrl();
@@ -56,12 +47,12 @@ export const TicketItem = ({
 
         if (!shouldRestart) return;
 
-        onRestartEstimation(ticket.id);
+        dispatch(restartTicketEstimation(ticket.id));
     }
 
     const handleRemoveTicket = () => {
         setIsConfirmRemoveVisible(false);
-        onRemove(ticket.id);
+        dispatch(removeTicket(ticket.id));
     }
 
     const getEstimationStatusLabel = () => {
@@ -80,13 +71,13 @@ export const TicketItem = ({
         return 'Estimate';
     }
 
-    const usersByTeam = useMemo(() => getUsersByTeam(users), [users]);
+    const usersByTeam = useMemo(() => getUsersByTeam(Object.values(users)), [users]);
 
     const estimate = useMemo(() => {
-        if (!ticketEstimations || !ticket.isRevealed) return;
+        if (!ticketEstimations || !ticket.isRevealed || !session) return;
 
-        return getEstimationSum(getEstimationMedians(countEstimations(ticketEstimations, usersByTeam)), deck);
-    }, [usersByTeam, ticketEstimations, deck])
+        return getEstimationSum(getEstimationMedians(countEstimations(ticketEstimations, usersByTeam)), session.deck);
+    }, [usersByTeam, ticketEstimations, session])
 
     const fullClassName = ClassName('default-ticket-item', className, {
         'default-ticket-item--selected': isSelected,
@@ -97,7 +88,7 @@ export const TicketItem = ({
     })
 
     return (
-        <div className={fullClassName} onClick={() => onClick(ticket)}>
+        <div className={fullClassName} onClick={() => dispatch(setSelectedTicket(ticket.id))}>
             <div className="ticket-description">
                 <span className="ticket-name">{ticket.name}</span>
 
@@ -155,10 +146,10 @@ export const TicketItem = ({
                 />
             )}
 
-            {isSaveEstimateToJiraVisible && isJiraTicket(ticket) && estimate && (
+            {isSaveEstimateToJiraVisible && isJiraTicket(ticket) && estimate && session && (
                 <SaveEstimateToJiraModal
                     ticket={ticket}
-                    deck={deck}
+                    deck={session.deck}
                     initialEstimation={estimate}
                     onHideModal={() => setIsSaveEstimateToJiraVisible(false)}
                 />

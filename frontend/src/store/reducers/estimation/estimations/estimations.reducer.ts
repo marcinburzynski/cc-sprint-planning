@@ -52,6 +52,9 @@ export const estimationsReducer = (state = EstimationsDefaultState, action: Esti
             }
             break;
 
+        case 'ESTIMATIONS_STATE_RESET':
+            return EstimationsDefaultState;
+
         default:
             return state
     }

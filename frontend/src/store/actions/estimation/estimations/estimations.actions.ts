@@ -1,3 +1,5 @@
+import { isEmpty } from 'lodash';
+
 import { socket } from '../../../../services/socket';
 
 import type { TypedThunkAction } from '../../../types';
@@ -22,12 +24,17 @@ type GetSessionEstimationsAction =
     | GetSessionEstimationsFailure
 
 
-export const getSessionEstimations = (): TypedThunkAction<GetSessionEstimationsAction> => async (dispatch) => {
+export const getSessionEstimations = (): TypedThunkAction<GetSessionEstimationsAction> => async (dispatch, getState) => {
+    const estimationsStore = getState().estimation.estimations;
+
+    if (estimationsStore.loading || !isEmpty(estimationsStore.data)) return;
+
     dispatch({
         type: 'GET_SESSION_ESTIMATIONS_START',
     })
 
     const { estimates } = await socket.getSessionEstimates();
+
 
     dispatch({
         type: 'GET_SESSION_ESTIMATIONS_SUCCESS',
@@ -72,8 +79,17 @@ export const receiveEstimation = (estimation: EstimationType): ReceiveEstimation
     estimation,
 });
 
+type EstimationsStateResetAction = {
+    type: 'ESTIMATIONS_STATE_RESET';
+};
+
+export const estimationsStateReset = (): EstimationsStateResetAction => ({
+    type: 'ESTIMATIONS_STATE_RESET',
+})
+
 
 export type EstimationsActionTypes =
     | GetSessionEstimationsAction
     | SendEstimationAction
     | ReceiveEstimationAction
+    | EstimationsStateResetAction
