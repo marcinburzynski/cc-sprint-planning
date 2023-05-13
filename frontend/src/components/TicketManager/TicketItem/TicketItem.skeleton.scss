@@ -1,0 +1,21 @@
+@import '../../../assets/style/colors';
+
+.skeleton-ticket-item {
+    cursor: default;
+
+    .ticket-description {
+        .ticket-name {
+            width: 230px;
+            height: 32px;
+        }
+
+        .estimation-status {
+            width: 104px !important;
+            height: 16px;
+        }
+    }
+
+    .estimate-sum-display {
+        background-color: unset;
+    }
+}

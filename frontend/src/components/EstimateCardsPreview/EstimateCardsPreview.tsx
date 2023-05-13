@@ -1,8 +1,9 @@
 import ClassName from 'classnames';
 import { useMemo } from 'react';
+import { range } from 'lodash';
 
 import { useTypedSelector } from '../../store/hooks';
-import { TeamEstimateLane } from './TeamEstimateLane';
+import { TeamEstimateLane, TeamEstimateLaneSkeleton } from './TeamEstimateLane';
 import { getAllTeams, getUsersByTeam } from '../../utils/users';
 
 import type { UserType } from '../../types/commonTypes';
@@ -16,10 +17,22 @@ type EstimateCardsPreviewProps = {
 
 export const EstimateCardsPreview = ({ className, reveal }: EstimateCardsPreviewProps) => {
     const selectedTicketId = useTypedSelector((state) => state.estimation.tickets.selectedTicketId);
-    const { data: session } = useTypedSelector((state) => state.estimation.session);
-    const { data: estimations } = useTypedSelector((state) => state.estimation.estimations);
-    const { data: users } = useTypedSelector((state) => state.estimation.users);
+    const {
+        data: session,
+        loading: loadingSession,
+    } = useTypedSelector((state) => state.estimation.session);
 
+    const {
+        data: estimations,
+        loading: loadingEstimations,
+    } = useTypedSelector((state) => state.estimation.estimations);
+
+    const {
+        data: users,
+        loading: loadingUsers,
+    } = useTypedSelector((state) => state.estimation.users);
+
+    const isLoading = loadingSession || loadingEstimations || loadingUsers;
     const estimationsForTicket = selectedTicketId ? estimations[selectedTicketId] : {};
 
     const activeUsers = useMemo(() => {
@@ -34,13 +47,15 @@ export const EstimateCardsPreview = ({ className, reveal }: EstimateCardsPreview
         return getUsersByTeam(activeUsers, teams);
     }, [teams]);
 
-    if (!session) return null;
-
     const fullClassName = ClassName('estimate-cards-preview', className);
 
     return (
         <div className={fullClassName}>
-            {teams.map((team) => (
+            {isLoading || !session
+                ? range(0, 2).map((index) => (
+                    <TeamEstimateLaneSkeleton className="team-lane" key={`${index}`} />
+                ))
+                : teams.map((team) => (
                 <TeamEstimateLane
                     key={team}
                     className="team-lane"

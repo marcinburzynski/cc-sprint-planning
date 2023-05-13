@@ -29,6 +29,8 @@ export const getSessionTickets = (): TypedThunkAction<GetSessionTicketsAction> =
 
     if (ticketsStore.loading || ticketsStore.error || !isEmpty(ticketsStore.data)) return;
 
+    dispatch({ type: 'GET_SESSION_TICKETS_START' });
+
     const { tickets } = await socket.getSessionTickets();
 
     dispatch({

@@ -16,6 +16,7 @@ import { getSessionEstimations, estimationsStateReset } from '../../store/action
 import { setNotification } from '../../store/actions/notifications';
 import { isCompleteUser } from '../../types/typePredicates';
 import { Button } from '../../components/Button';
+import { SkeletonLoader } from '../../components/SkeletonLoader';
 import { UserAvatar } from '../../components/UserAvatar';
 import { TicketManager } from '../../components/TicketManager';
 import { EstimateCardsPreview } from '../../components/EstimateCardsPreview';
@@ -34,6 +35,7 @@ export const EstimationPage = () => {
     const {
         selectedTicketId,
         data: tickets,
+        loading: loadingTickets,
     } = useTypedSelector((state) => state.estimation.tickets);
 
     const selectedTicket = selectedTicketId ? tickets[selectedTicketId] : undefined;
@@ -101,7 +103,13 @@ export const EstimationPage = () => {
                 <div className="header-row">
                     <div className="header">
                         <span className="estimating-label">Estimating now:</span>
-                        <span className="estimating-ticket">{selectedTicket?.name}</span>
+                        {loadingTickets
+                            ? <SkeletonLoader className="skeleton-estimating-ticket" />
+                            : (
+                                <span className="estimating-ticket">
+                                    {selectedTicket?.name}
+                                </span>
+                            )}
                     </div>
 
                     {user.isAdmin && (

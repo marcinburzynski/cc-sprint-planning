@@ -1,9 +1,10 @@
 import ClassName from 'classnames';
 import { useMemo } from 'react';
+import { range } from 'lodash';
 
 import { useTypedSelector, useTypedDispatch } from '../../store/hooks';
 import { createTicket } from '../../store/actions/estimation/tickets';
-import { TicketItem } from './TicketItem';
+import { TicketItem, TicketItemSkeleton } from './TicketItem';
 import { AddTicket } from './AddTicket';
 
 import './TicketManager.scss';
@@ -16,7 +17,11 @@ export const TicketManager = ({ className }: TicketManagerSidebarProps) => {
     const dispatch = useTypedDispatch();
 
     const user = useTypedSelector((state) => state.user);
-    const { data: tickets, selectedTicketId } = useTypedSelector((state) => state.estimation.tickets);
+    const {
+        data: tickets,
+        loading: loadingTickets,
+        selectedTicketId
+    } = useTypedSelector((state) => state.estimation.tickets);
 
     const sortedTickets = useMemo(() => {
         const clonedTickets = [...Object.values(tickets)];
@@ -29,7 +34,11 @@ export const TicketManager = ({ className }: TicketManagerSidebarProps) => {
     return (
         <div className={fullClassName}>
             <div className="tickets-list">
-                {sortedTickets.map((ticket) => (
+                {loadingTickets
+                    ? range(0, 4).map((index) => (
+                        <TicketItemSkeleton key={`${index}`} className="ticket-item" />
+                    ))
+                    : sortedTickets.map((ticket) => (
                     <TicketItem
                         key={ticket.id}
                         className="ticket-item"

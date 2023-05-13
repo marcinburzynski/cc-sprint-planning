@@ -30,6 +30,8 @@ export const getSessionUsers = (): TypedThunkAction<GetSessionUsersAction> => as
 
     if (usersStore.loading || usersStore.isEmpty || !userId || !isEmpty(omit(usersStore.data, userId))) return;
 
+    dispatch({ type: 'GET_SESSION_USERS' })
+
     const { users } = await socket.getSessionUsers();
 
     dispatch({
