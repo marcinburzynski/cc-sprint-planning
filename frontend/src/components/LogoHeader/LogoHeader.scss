@@ -1,0 +1,14 @@
+.default-logo-header {
+    display: flex;
+    align-items: center;
+
+    svg {
+        width: 34px;
+        height: 30px;
+    }
+
+    span {
+        margin-left: 16px;
+        font-size: 24px;
+    }
+}

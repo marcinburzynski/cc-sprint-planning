@@ -6,6 +6,7 @@ import { useTypedDispatch } from '../../store/hooks';
 import { socket } from '../../services/socket';
 import { http } from '../../services/http';
 import { setUser } from '../../store/actions/user';
+import { LogoHeader } from '../../components/LogoHeader';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
 import { Checkbox } from '../../components/Checkbox';
@@ -77,7 +78,7 @@ export const JoinPage = () => {
 
     return (
         <div className="join-session-page">
-            <span className="join-session-main-header">Sprint planning</span>
+            <LogoHeader className="join-session-main-header" />
 
             <div className="join-session-page-box">
                 <span className="header">Join Planning</span>

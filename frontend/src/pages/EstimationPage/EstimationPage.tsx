@@ -15,6 +15,7 @@ import { getSessionUsers, usersStateReset } from '../../store/actions/estimation
 import { getSessionEstimations, estimationsStateReset } from '../../store/actions/estimation/estimations';
 import { setNotification } from '../../store/actions/notifications';
 import { isCompleteUser } from '../../types/typePredicates';
+import { LogoHeader } from '../../components/LogoHeader';
 import { Button } from '../../components/Button';
 import { SkeletonLoader } from '../../components/SkeletonLoader';
 import { UserAvatar } from '../../components/UserAvatar';
@@ -97,7 +98,7 @@ export const EstimationPage = () => {
 
     return (
         <div className="estimation-page">
-            <span className="estimation-page-main-header">Sprint planning</span>
+            <LogoHeader className="estimation-page-main-header" />
 
             <div className="cards-container">
                 <div className="header-row">

@@ -10,9 +10,9 @@ import { setUser } from '../../store/actions/user';
 import { setSession } from '../../store/actions/estimation/session';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
-import { Select, SelectOption } from '../../components/Select';
-import { Checkbox } from '../../components/Checkbox';
+import { Select } from '../../components/Select';
 import { TeamsCreator } from '../../components/TeamsCreator';
+import { LogoHeader } from '../../components/LogoHeader';
 import { DECKS } from '../../constants/decks';
 import { showErrorViaNotification } from '../../utils/errors';
 
@@ -26,18 +26,15 @@ export const CreateSessionPage = () => {
 
     const [username, setUsername] = useState('');
     const [teams, setTeams] = useState<string[]>([]);
-    const [selectedTeam, setSelectedTeam] = useState<SelectOption>();
     const [selectedDeck, setSelectedDeck] = useState(DECKS.storyPoints.value);
-    const [isSpectator, setIsSpectator] = useState(true);
     const [loading, setLoading] = useState(false);
 
     const handleStartSession = async () => {
         if (!username || isEmpty(teams) || !DECKS[selectedDeck]) return;
 
         const partialUser = {
-            isSpectator,
-            team: selectedTeam?.value,
             name: username,
+            isSpectator: true,
             isAdmin: true,
         }
 
@@ -68,7 +65,7 @@ export const CreateSessionPage = () => {
 
     return (
         <div className="create-session-page">
-            <span className="create-session-main-header">Sprint planning</span>
+            <LogoHeader className="create-session-main-header" />
 
             <div className="create-session-page-box">
                 <span className="header">
@@ -84,24 +81,6 @@ export const CreateSessionPage = () => {
                     options={Object.values(DECKS)}
                     onChange={(selection) => selection && setSelectedDeck(selection.value)}
                 />
-
-                <div className="team-or-viewer-container">
-                    <Select
-                        classNameButton="team-picker"
-                        disabled={isSpectator}
-                        selection={selectedTeam}
-                        onChange={setSelectedTeam}
-                        options={teams.map((team) => ({ label: team, value: team }))}
-                    />
-
-                    <span className="or-label">OR</span>
-
-                    <div className="checkbox-container">
-                        <Checkbox isChecked={isSpectator} onChange={setIsSpectator} />
-                        <label onClick={() => setIsSpectator(!isSpectator)}>Join as viewer</label>
-                    </div>
-                </div>
-
 
                 <label>Teams:</label>
                 <TeamsCreator className="teams-creator" teams={teams} onChange={setTeams} />
