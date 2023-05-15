@@ -77,7 +77,7 @@ export const TicketItem = ({ className, ticket, isSelected }: TicketItemProps) =
         if (!ticketEstimations || !ticket.isRevealed || !session) return;
 
         return getEstimationSum(getEstimationMedians(countEstimations(ticketEstimations, usersByTeam)), session.deck);
-    }, [usersByTeam, ticketEstimations, session])
+    }, [usersByTeam, ticketEstimations, session, ticket])
 
     const fullClassName = ClassName('default-ticket-item', className, {
         'default-ticket-item--selected': isSelected,
