@@ -41,7 +41,7 @@ export const IssueDetailsModal = ({ issueKey, onHide }: IssueDetailsModalProps) 
             const textContent = embeddedImage.textContent;
             embeddedImage.textContent = '';
 
-            const regexMatches = /(?<=attachment\/)\d+/.exec(textContent);
+            const regexMatches = /(?<=attachment\/(content\/)?)\d+/.exec(textContent);
 
             if (!regexMatches) return;
 
