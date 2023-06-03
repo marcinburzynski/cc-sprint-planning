@@ -1,7 +1,13 @@
 import ClassName from 'classnames';
 import { useMemo } from 'react';
 import { range } from 'lodash';
-import { DndContext, type DragEndEvent } from '@dnd-kit/core';
+import {
+    useSensor,
+    useSensors,
+    PointerSensor,
+    DndContext,
+    type DragEndEvent,
+} from '@dnd-kit/core';
 import { SortableContext, arrayMove } from '@dnd-kit/sortable';
 
 import { useTypedSelector, useTypedDispatch } from '../../store/hooks';
@@ -17,6 +23,9 @@ type TicketManagerSidebarProps = {
 
 export const TicketManager = ({ className }: TicketManagerSidebarProps) => {
     const dispatch = useTypedDispatch();
+
+    const pointerSensor = useSensor(PointerSensor, { activationConstraint: { distance: 1 }})
+    const sensors = useSensors(pointerSensor)
 
     const user = useTypedSelector((state) => state.user);
     const {
@@ -54,7 +63,7 @@ export const TicketManager = ({ className }: TicketManagerSidebarProps) => {
                         <TicketItemSkeleton key={`${index}`} className="ticket-item" />
                     ))
                     : (
-                        <DndContext onDragEnd={handleDragTicketEnd}>
+                        <DndContext sensors={sensors} onDragEnd={handleDragTicketEnd}>
                             <SortableContext items={sortedTicketIds}>
                                 {sortedTickets.map((ticket) => (
                                     <TicketItem

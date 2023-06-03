@@ -36,7 +36,6 @@ export const TicketItem = ({ className, ticket, isSelected }: TicketItemProps) =
         attributes,
         listeners,
         setNodeRef,
-        setActivatorNodeRef,
         transform,
         transition,
     } = useSortable({ id: ticket.id });
@@ -106,6 +105,7 @@ export const TicketItem = ({ className, ticket, isSelected }: TicketItemProps) =
     const draggableStyle = {
         transition,
         transform: CSS.Transform.toString(transform),
+        cursor: transform ? 'grabbing' : undefined,
     }
 
     return (
@@ -113,9 +113,11 @@ export const TicketItem = ({ className, ticket, isSelected }: TicketItemProps) =
             className={fullClassName}
             style={draggableStyle}
             ref={setNodeRef}
+            {...attributes}
+            {...listeners}
             onClick={() => dispatch(setSelectedTicket(ticket.id))}
         >
-            <div className="ticket-description" ref={setActivatorNodeRef} {...attributes} {...listeners}>
+            <div className="ticket-description">
                 <span className="ticket-name">{ticket.name}</span>
 
                 <span
