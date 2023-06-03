@@ -6,7 +6,12 @@ import { CSS } from '@dnd-kit/utilities'
 import { useTypedSelector, useTypedDispatch } from '../../../store/hooks';
 import { jira } from '../../../services/jira';
 import { getUsersByTeam } from '../../../utils/users';
-import { setSelectedTicket, restartTicketEstimation, removeTicket } from '../../../store/actions/estimation/tickets';
+import {
+    setSelectedTicket,
+    setSelectedTicketForEveryone,
+    restartTicketEstimation,
+    removeTicket,
+} from '../../../store/actions/estimation/tickets';
 import { countEstimations, getEstimationMedians, getEstimationSum } from '../../../utils/estimations';
 import { isJiraTicket } from '../../../types/typePredicates';
 import { Dropdown, DropdownItem } from '../../Dropdown';
@@ -146,6 +151,13 @@ export const TicketItem = ({ className, ticket, isSelected }: TicketItemProps) =
                     hidden={!isJiraTicket(ticket) || !estimate || !user.isAdmin}
                 >
                     Save estimate to Jira
+                </DropdownItem>
+
+                <DropdownItem
+                    onClick={() => dispatch(setSelectedTicketForEveryone(ticket.id))}
+                    hidden={!user.isAdmin}
+                >
+                    Select ticket for everyone
                 </DropdownItem>
 
                 <DropdownItem onClick={handleRestartEstimation} hidden={!ticket.isRevealed || !user.isAdmin}>
