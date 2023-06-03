@@ -8,6 +8,7 @@ import './Button.scss';
 type ButtonStyle =
     | 'filled'
     | 'outline'
+    | 'warning'
 
 type ButtonSize =
     | 'small'

@@ -27,10 +27,4 @@
             margin-top: auto;
         }
     }
-
-    &--dangerous {
-        .accept-button {
-            background-color: $red-warning !important;
-        }
-    }
 }

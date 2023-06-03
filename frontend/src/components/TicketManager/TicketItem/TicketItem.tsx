@@ -38,6 +38,7 @@ export const TicketItem = ({ className, ticket, isSelected }: TicketItemProps) =
         setNodeRef,
         transform,
         transition,
+        isDragging,
     } = useSortable({ id: ticket.id });
 
     const [isConfirmRemoveVisible, setIsConfirmRemoveVisible] = useState(false);
@@ -105,7 +106,8 @@ export const TicketItem = ({ className, ticket, isSelected }: TicketItemProps) =
     const draggableStyle = {
         transition,
         transform: CSS.Transform.toString(transform),
-        cursor: transform ? 'grabbing' : undefined,
+        cursor: isDragging ? 'grabbing' : undefined,
+        zIndex: isDragging ? 1000 : undefined,
     }
 
     return (

@@ -55,10 +55,15 @@
 
     &--filled {
         background-color: $blue-malibu;
-        color: #fff;
+        border: 1px solid transparent;
+        color: $white-completely;
 
         .default-button-loader-container svg path {
             fill: $white-completely
+        }
+
+        &:hover {
+            background-color: $blue-pacific;
         }
     }
 
@@ -69,6 +74,29 @@
 
         .default-button-loader-container svg path {
             fill: $blue-malibu;
+        }
+
+        &:hover {
+            background-color: $blue-malibu;
+            color: $white-completely;
+        }
+
+        .default-button-loader-container svg path {
+            fill: $white-completely;
+        }
+    }
+
+    &--warning {
+        background-color: $red-warning;
+        border: 1px solid transparent;
+        color: $white-completely;
+
+        .default-button-loader-container svg path {
+            fill: $white-completely;
+        }
+
+        &:hover {
+            background-color: $red-fire-brick;
         }
     }
 

@@ -47,9 +47,7 @@ export const DetachedConfirmationModal = ({
         <span className="default-confirmation-modal-header">{title}</span>
     )
 
-    const fullClassName = ClassName('default-confirmation-modal', className, {
-        'default-confirmation-modal--dangerous': dangerous,
-    });
+    const fullClassName = ClassName('default-confirmation-modal', className);
 
     return (
         <Modal
@@ -76,7 +74,12 @@ export const DetachedConfirmationModal = ({
                             {cancelLabel}
                         </Button>
 
-                        <Button buttonSize="medium" className="accept-button" onClick={handleStopPropagation(onAccept)}>
+                        <Button
+                            buttonStyle={dangerous ? 'warning' : 'filled'}
+                            buttonSize="medium"
+                            className="accept-button"
+                            onClick={handleStopPropagation(onAccept)}
+                        >
                             {acceptLabel}
                         </Button>
                     </div>
