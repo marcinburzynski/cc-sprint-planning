@@ -129,6 +129,7 @@ export const TicketItem = ({ className, ticket, isSelected }: TicketItemProps) =
 
             <Dropdown
                 stopPropagation
+                hideIfEmpty
                 triggerClassName="kebab-menu"
                 align="end"
             >

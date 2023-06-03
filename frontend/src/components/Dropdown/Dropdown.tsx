@@ -21,6 +21,7 @@ type DropdownProps = Pick<MenuContentProps, 'align' | 'side' | 'alignOffset' | '
     triggerClassName?: string;
     contentClassName?: string;
     triggerButton?: JSX.Element;
+    hideIfEmpty?: boolean;
     children: JSX.Element | JSX.Element[];
     stopPropagation?: boolean;
 }
@@ -33,9 +34,20 @@ export const Dropdown = ({
     side = 'bottom',
     align,
     triggerButton = <KebabMenuIconSVG />,
+    hideIfEmpty,
     children,
     stopPropagation,
 }: DropdownProps) => {
+
+    if (hideIfEmpty) {
+        if (Array.isArray(children) && children.every((child) => child.props.hidden)) {
+            return null
+        }
+
+        if (!Array.isArray(children) && children.props.hidden) {
+            return null;
+        }
+    }
 
     const triggerFullClassName = ClassName('default-dropdown-trigger-button', triggerClassName);
     const contentFullClassName = ClassName('default-dropdown-content', contentClassName);
