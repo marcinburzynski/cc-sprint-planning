@@ -9,16 +9,14 @@
 
     .cards-lane {
         display: flex;
+        flex-wrap: wrap;
         margin-top: 16px;
 
         .estimate-card-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-
-            &:not(:first-of-type) {
-                margin-left: 44px;
-            }
+            margin-right: 44px;
 
             .username {
                 margin-top: 11px;
