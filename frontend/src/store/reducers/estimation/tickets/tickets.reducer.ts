@@ -73,6 +73,16 @@ export const ticketsReducer = (state = TicketsDefaultState, action: TicketsActio
             draft.selectedTicketId = action.ticketId;
             break;
 
+        case 'SET_TICKETS_ORDER_START':
+        case 'SET_TICKETS_ORDER_FAILURE':
+        case 'RECEIVE_TICKETS_ORDER':
+            action.orderedTicketIds.forEach((id, index) => {
+                if (!state.data[id]) return;
+
+                draft.data[id].order = index + 1;
+            })
+            break;
+
         case 'TICKETS_STATE_RESET_ACTION':
             return TicketsDefaultState;
 

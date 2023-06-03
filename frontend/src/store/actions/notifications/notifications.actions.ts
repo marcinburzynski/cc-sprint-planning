@@ -1,6 +1,6 @@
 import type { NotificationTypes } from '../../reducers/notifications';
 
-type SetNotificationAction = {
+export type SetNotificationAction = {
     type: 'SET_NOTIFICATION';
     title: string;
     notificationType: NotificationTypes;

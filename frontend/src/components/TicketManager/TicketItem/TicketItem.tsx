@@ -1,5 +1,7 @@
 import ClassName from 'classnames';
 import { useMemo, useState } from 'react';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities'
 
 import { useTypedSelector, useTypedDispatch } from '../../../store/hooks';
 import { jira } from '../../../services/jira';
@@ -24,6 +26,15 @@ type TicketItemProps = {
 
 export const TicketItem = ({ className, ticket, isSelected }: TicketItemProps) => {
     const dispatch = useTypedDispatch();
+
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        setActivatorNodeRef,
+        transform,
+        transition,
+    } = useSortable({ id: ticket.id });
 
     const [isConfirmRemoveVisible, setIsConfirmRemoveVisible] = useState(false);
     const [isSaveEstimateToJiraVisible, setIsSaveEstimateToJiraVisible] = useState(false);
@@ -87,9 +98,19 @@ export const TicketItem = ({ className, ticket, isSelected }: TicketItemProps) =
         'estimation-status--clickable': ticket.isRevealed && user.isAdmin,
     })
 
+    const draggableStyle = {
+        transition,
+        transform: CSS.Transform.toString(transform),
+    }
+
     return (
-        <div className={fullClassName} onClick={() => dispatch(setSelectedTicket(ticket.id))}>
-            <div className="ticket-description">
+        <div
+            className={fullClassName}
+            style={draggableStyle}
+            ref={setNodeRef}
+            onClick={() => dispatch(setSelectedTicket(ticket.id))}
+        >
+            <div className="ticket-description" ref={setActivatorNodeRef} {...attributes} {...listeners}>
                 <span className="ticket-name">{ticket.name}</span>
 
                 <span

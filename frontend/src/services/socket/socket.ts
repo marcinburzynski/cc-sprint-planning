@@ -100,6 +100,17 @@ class Socket {
             this.client?.emit('set-selected-ticket-for-everyone', ticketId, resolve);
         });
     }
+
+    setTicketsOrder = (orderedTicketIds: string[]) => {
+        type SetTicketsOrderRes = {
+            error?: Record<string, unknown>;
+            ok?: true;
+        }
+
+        return new Promise<SetTicketsOrderRes>((resolve) => {
+            this.client?.emit('set-tickets-order', orderedTicketIds, resolve);
+        })
+    }
 }
 
 

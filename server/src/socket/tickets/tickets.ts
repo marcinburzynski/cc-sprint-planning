@@ -91,4 +91,23 @@ export const initTicketsSocket = (io: Server, socket: Socket, socketSessionId: s
             callback({ error: e })
         }
     });
+
+    socket.on('set-tickets-order', async (orderedTicketIds: string[], callback: PromiseCallback) => {
+        try {
+            const updateTicketOrderQueries = orderedTicketIds.map((id, index) => {
+                return prisma.ticket.update({
+                    where: { id },
+                    data: { order: index + 1 },
+                });
+            })
+
+            await prisma.$transaction(updateTicketOrderQueries);
+
+            socket.to(socketSessionId).emit('receive-tickets-order', orderedTicketIds);
+
+            callback({ ok: true });
+        } catch (e) {
+            callback({ error: e });
+        }
+    })
 };

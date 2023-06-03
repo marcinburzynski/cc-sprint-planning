@@ -1,9 +1,11 @@
 import ClassName from 'classnames';
 import { useMemo } from 'react';
 import { range } from 'lodash';
+import { DndContext, type DragEndEvent } from '@dnd-kit/core';
+import { SortableContext, arrayMove } from '@dnd-kit/sortable';
 
 import { useTypedSelector, useTypedDispatch } from '../../store/hooks';
-import { createTicket } from '../../store/actions/estimation/tickets';
+import { createTicket, setTicketsOrder } from '../../store/actions/estimation/tickets';
 import { TicketItem, TicketItemSkeleton } from './TicketItem';
 import { AddTicket } from './AddTicket';
 
@@ -27,7 +29,20 @@ export const TicketManager = ({ className }: TicketManagerSidebarProps) => {
         const clonedTickets = [...Object.values(tickets)];
 
         return clonedTickets.sort((a, b) => a.order - b.order);
-    }, [tickets])
+    }, [tickets]);
+
+    const sortedTicketIds = useMemo(() => sortedTickets.map(({ id }) => id), [sortedTickets]);
+
+    const handleDragTicketEnd = ({ active, over }: DragEndEvent) => {
+        if (active.id === over?.id) return;
+
+        const oldIndex = sortedTicketIds.indexOf(active.id as string);
+        const newIndex = sortedTicketIds.indexOf(over?.id as string);
+
+        const newTicketsOrder = arrayMove(sortedTicketIds, oldIndex, newIndex);
+
+        dispatch(setTicketsOrder(newTicketsOrder));
+    }
 
     const fullClassName = ClassName('default-ticket-manager', className);
 
@@ -38,14 +53,21 @@ export const TicketManager = ({ className }: TicketManagerSidebarProps) => {
                     ? range(0, 4).map((index) => (
                         <TicketItemSkeleton key={`${index}`} className="ticket-item" />
                     ))
-                    : sortedTickets.map((ticket) => (
-                    <TicketItem
-                        key={ticket.id}
-                        className="ticket-item"
-                        ticket={ticket}
-                        isSelected={ticket.id === selectedTicketId}
-                    />
-                ))}
+                    : (
+                        <DndContext onDragEnd={handleDragTicketEnd}>
+                            <SortableContext items={sortedTicketIds}>
+                                {sortedTickets.map((ticket) => (
+                                    <TicketItem
+                                        key={ticket.id}
+                                        className="ticket-item"
+                                        ticket={ticket}
+                                        isSelected={ticket.id === selectedTicketId}
+                                    />
+                                ))}
+                            </SortableContext>
+                        </DndContext>
+                    )
+                }
             </div>
 
             {user.isAdmin && (

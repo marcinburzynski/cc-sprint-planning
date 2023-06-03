@@ -7,6 +7,7 @@ import {
     receiveMultipleTickets,
     receiveRemoveTicket,
     receiveSelectedTicket,
+    receiveTicketsOrder,
 } from '../../store/actions/estimation/tickets';
 
 import type { StoreType } from '../../store';
@@ -39,5 +40,9 @@ export const listenToEvents = (socket: Socket, store: StoreType) => {
 
     socket.on('user-removed', (userId: string) => {
         store.dispatch(userRemoved(userId));
+    })
+
+    socket.on('receive-tickets-order', (orderedTicketIds: string[]) => {
+        store.dispatch(receiveTicketsOrder(orderedTicketIds));
     })
 }

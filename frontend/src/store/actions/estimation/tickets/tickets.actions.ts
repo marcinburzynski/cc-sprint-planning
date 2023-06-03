@@ -1,6 +1,7 @@
 import { isEmpty } from 'lodash';
 
 import { socket } from '../../../../services/socket';
+import { setNotification, type SetNotificationAction } from '../../notifications';
 
 import type { TypedThunkAction } from '../../../types';
 import type { TicketType } from '../../../../types/commonTypes';
@@ -192,6 +193,65 @@ export const receiveSelectedTicket = (ticketId: string): ReceiveSelectedTicketAc
     ticketId,
 });
 
+type SetTicketsOrderStart = {
+    type: 'SET_TICKETS_ORDER_START';
+    orderedTicketIds: string[];
+};
+
+type SetTicketsOrderSuccess = {
+    type: 'SET_TICKETS_ORDER_SUCCESS';
+}
+
+type SetTicketsOrderFailure = {
+    type: 'SET_TICKETS_ORDER_FAILURE';
+    orderedTicketIds: string[];
+}
+
+type SetTicketsOrderAction =
+    | SetTicketsOrderStart
+    | SetTicketsOrderSuccess
+    | SetTicketsOrderFailure
+
+export const setTicketsOrder = (orderedTicketIds: string[]): TypedThunkAction<SetTicketsOrderAction | SetNotificationAction> => {
+    return async (dispatch, getState) => {
+        const tickets = getState().estimation.tickets.data
+        const prevOrderedTicketIds = Object.values(tickets)
+            .sort((a, b) => a.order - b.order)
+            .map(({ id }) => id)
+
+        dispatch({
+            type: 'SET_TICKETS_ORDER_START',
+            orderedTicketIds,
+        });
+
+        const res = await socket.setTicketsOrder(orderedTicketIds);
+
+        if (!res.ok) {
+            dispatch(setNotification('Failed to change tickets order.', {
+                notificationType: 'error',
+                description: 'Unexpected error occurred. Please try reordering tickets once again.',
+            }));
+
+            return dispatch({
+                type: 'SET_TICKETS_ORDER_FAILURE',
+                orderedTicketIds: prevOrderedTicketIds,
+            });
+        }
+
+        dispatch({ type: 'SET_TICKETS_ORDER_SUCCESS' });
+    }
+}
+
+type ReceiveTicketsOrderAction = {
+    type: 'RECEIVE_TICKETS_ORDER';
+    orderedTicketIds: string[];
+};
+
+export const receiveTicketsOrder = (orderedTicketIds: string[]): ReceiveTicketsOrderAction => ({
+    type: 'RECEIVE_TICKETS_ORDER',
+    orderedTicketIds,
+});
+
 type TicketsStateResetAction = {
     type: 'TICKETS_STATE_RESET_ACTION';
 }
@@ -214,4 +274,6 @@ export type TicketsActionTypes =
     | SetSelectedTicketAction
     | SetSelectedTicketForEveryoneAction
     | ReceiveSelectedTicketAction
+    | SetTicketsOrderAction
+    | ReceiveTicketsOrderAction
     | TicketsStateResetAction
