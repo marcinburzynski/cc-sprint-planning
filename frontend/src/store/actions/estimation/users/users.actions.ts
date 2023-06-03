@@ -40,14 +40,24 @@ export const getSessionUsers = (): TypedThunkAction<GetSessionUsersAction> => as
     })
 }
 
-type UserJoined = {
+type UserJoinedAction = {
     type: 'USER_JOINED';
     user: UserType;
 }
 
-export const userJoined = (user: UserType): UserJoined => ({
+export const userJoined = (user: UserType): UserJoinedAction => ({
     type: 'USER_JOINED',
     user,
+})
+
+type UserRemovedAction = {
+    type: 'USER_REMOVED';
+    userId: string;
+}
+
+export const userRemoved = (userId: string): UserRemovedAction => ({
+    type: 'USER_REMOVED',
+    userId,
 })
 
 type UsersStateResetAction = {
@@ -61,5 +71,6 @@ export const usersStateReset = (): UsersStateResetAction => ({
 
 export type SessionUsersActionTypes =
     | GetSessionUsersAction
-    | UserJoined
+    | UserJoinedAction
+    | UserRemovedAction
     | UsersStateResetAction

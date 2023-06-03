@@ -48,6 +48,10 @@ export const usersReducer = (state = UsersDefaultState, action: UsersReducerActi
             draft.isEmpty = false;
             break;
 
+        case 'USER_REMOVED':
+            delete draft.data[action.userId]
+            break;
+
         case 'SET_USER':
             if (action.user.isSpectator) return state
             draft.data[action.user.id] = action.user;

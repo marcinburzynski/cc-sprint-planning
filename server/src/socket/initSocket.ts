@@ -6,6 +6,7 @@ import { authenticateMiddleware } from './middlewares/auth.js';
 import { initEstimationsSocket } from './estimations/estimations.js';
 import { initTicketsSocket } from './tickets/tickets.js';
 import { initSessionSocket } from './session/session.js';
+import { initDisconnectEvent } from './disconnect/disconnect.js';
 
 const connectUserToSession = async (socket: Socket, sessionId: string) => {
     try {
@@ -48,5 +49,6 @@ export const initSocket = (io: Server) => {
         initEstimationsSocket(io, socket, socketSessionId);
         initTicketsSocket(io, socket, socketSessionId);
         initSessionSocket(io, socket, socketSessionId);
+        initDisconnectEvent(io, socket, socketSessionId);
     });
 }

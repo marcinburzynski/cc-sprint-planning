@@ -1,6 +1,6 @@
 import { Socket } from 'socket.io-client';
 
-import { userJoined } from '../../store/actions/estimation/users';
+import { userJoined, userRemoved } from '../../store/actions/estimation/users';
 import { receiveEstimation } from '../../store/actions/estimation/estimations';
 import {
     receiveTicket,
@@ -35,5 +35,9 @@ export const listenToEvents = (socket: Socket, store: StoreType) => {
 
     socket.on('receive-selected-ticket-for-everyone', (ticketId: string) => {
         store.dispatch(receiveSelectedTicket(ticketId));
+    })
+
+    socket.on('user-removed', (userId: string) => {
+        store.dispatch(userRemoved(userId));
     })
 }
