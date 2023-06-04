@@ -12,6 +12,9 @@ export const userReducer = (state = UserDefaultState, action: UserActionTypes): 
         case 'SET_USER':
             return action.user;
 
+        case 'UPDATE_USER_SUCCESS':
+            return action.user;
+
         default:
             return state
     }

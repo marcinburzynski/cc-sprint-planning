@@ -5,12 +5,14 @@ import type { SessionType } from '../../../../types/commonTypes';
 
 type SessionReducerState = {
     data?: SessionType;
+    teams: string[];
     loading: boolean;
     error: boolean;
 }
 
 const SessionReducerDefaultState: SessionReducerState = {
     data: undefined,
+    teams: [],
     loading: false,
     error: false,
 };
@@ -33,6 +35,10 @@ export const sessionReducer = (state = SessionReducerDefaultState, action: Sessi
         case 'GET_SESSION_FAILURE':
             draft.loading = false;
             draft.error = true;
+            break;
+
+        case 'GET_TEAMS_SUCCESS':
+            draft.teams = action.teams;
             break;
 
         case 'SESSION_STATE_RESET':

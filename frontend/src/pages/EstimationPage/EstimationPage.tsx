@@ -18,7 +18,7 @@ import { isCompleteUser } from '../../types/typePredicates';
 import { LogoHeader } from '../../components/LogoHeader';
 import { Button } from '../../components/Button';
 import { SkeletonLoader } from '../../components/SkeletonLoader';
-import { UserAvatar } from '../../components/UserAvatar';
+import { UserProfile } from '../../components/UserProfile';
 import { TicketManager } from '../../components/TicketManager';
 import { EstimateCardsPreview } from '../../components/EstimateCardsPreview';
 import { EstimateCardPicker } from '../../components/EstimateCardPicker';
@@ -113,7 +113,7 @@ export const EstimationPage = () => {
                             )}
                     </div>
 
-                    {user.isAdmin && (
+                    {(user.isAdmin || user.isSpectator) && (
                         <Button
                             className="reveal-estimation-button"
                             buttonSize="medium"
@@ -132,7 +132,7 @@ export const EstimationPage = () => {
                 <div className="sidebar-header">
                     {isCompleteUser(user) && (
                         <>
-                            <UserAvatar user={user} className="user-avatar" />
+                            <UserProfile user={user} className="user-avatar" />
                             <span className="username">{user.name}</span>
                         </>
                     )}

@@ -1,7 +1,7 @@
 import { produce } from 'immer';
 
 import type { SessionUsersActionTypes } from '../../../actions/estimation/users';
-import type { SetUserAction } from '../../../actions/user';
+import type { SetUserAction, UpdateUserAction } from '../../../actions/user';
 import type { UserType } from '../../../../types/commonTypes';
 
 type UsersState = {
@@ -21,6 +21,7 @@ const UsersDefaultState: UsersState = {
 type UsersReducerActionTypes =
     | SessionUsersActionTypes
     | SetUserAction
+    | UpdateUserAction
 
 export const usersReducer = (state = UsersDefaultState, action: UsersReducerActionTypes) => produce(state, (draft) => {
     switch (action.type) {
@@ -57,8 +58,18 @@ export const usersReducer = (state = UsersDefaultState, action: UsersReducerActi
             draft.data[action.user.id] = action.user;
             break;
 
+        case 'UPDATE_USER_SUCCESS':
+            if (draft.data[action.user.id]) {
+                draft.data[action.user.id] = action.user;
+            }
+            break;
+
         case 'USERS_STATE_RESET':
             return UsersDefaultState;
+
+        case 'RECEIVE_UPDATED_USER':
+            draft.data[action.user.id] = action.user;
+            break;
 
         default:
             return state

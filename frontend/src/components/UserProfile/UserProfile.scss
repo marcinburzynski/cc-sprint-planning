@@ -1,0 +1,62 @@
+@import '../../assets/style/colors';
+
+.user-profile-content {
+    display: flex;
+    flex-direction: column;
+    min-width: 200px;
+
+    .profile-description-row {
+        display: flex;
+        align-items: center;
+        padding-bottom: 6px;
+        border-bottom: 1px solid $gray-very-light;
+
+        .profile-description-values {
+            display: flex;
+            flex-direction: column;
+            flex: 1 1 auto;
+            margin-left: 8px;
+
+            .username {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                flex-grow: 1;
+                cursor: pointer;
+                font-size: 14px;
+                line-height: 16px;
+                font-weight: 500;
+
+                svg {
+                    margin-left: 8px;
+                    flex-shrink: 0;
+                }
+            }
+
+            .user-role {
+                font-size: 14px;
+                line-height: 16px;
+                color: $gray-pearl-dark;
+                margin-top: 7px;
+
+            }
+        }
+    }
+
+    .role-choice-button {
+        padding: 11px 9px;
+        cursor: pointer;
+        margin-top: 14px;
+        user-select: none;
+
+        &:hover {
+            background-color: $cyan-light;
+        }
+    }
+}
+
+.user-profile__confirm-modal {
+    height: fit-content;
+    min-height: unset;
+    width: 504px;
+}

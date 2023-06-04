@@ -1,6 +1,6 @@
 import { Socket } from 'socket.io-client';
 
-import { userJoined, userRemoved } from '../../store/actions/estimation/users';
+import { userJoined, userRemoved, receiveUpdatedUser } from '../../store/actions/estimation/users';
 import { receiveEstimation } from '../../store/actions/estimation/estimations';
 import {
     receiveTicket,
@@ -44,5 +44,9 @@ export const listenToEvents = (socket: Socket, store: StoreType) => {
 
     socket.on('receive-tickets-order', (orderedTicketIds: string[]) => {
         store.dispatch(receiveTicketsOrder(orderedTicketIds));
+    })
+
+    socket.on('receive-updated-user', (user: UserType) => {
+        store.dispatch(receiveUpdatedUser(user));
     })
 }

@@ -68,9 +68,19 @@ export const usersStateReset = (): UsersStateResetAction => ({
     type: 'USERS_STATE_RESET',
 })
 
+type ReceiveUpdatedUserAction = {
+    type: 'RECEIVE_UPDATED_USER';
+    user: UserType;
+}
+
+export const receiveUpdatedUser = (user: UserType): ReceiveUpdatedUserAction => ({
+    type: 'RECEIVE_UPDATED_USER',
+    user,
+});
 
 export type SessionUsersActionTypes =
     | GetSessionUsersAction
     | UserJoinedAction
     | UserRemovedAction
     | UsersStateResetAction
+    | ReceiveUpdatedUserAction

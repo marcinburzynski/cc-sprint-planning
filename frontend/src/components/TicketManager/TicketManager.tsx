@@ -27,7 +27,6 @@ export const TicketManager = ({ className }: TicketManagerSidebarProps) => {
     const pointerSensor = useSensor(PointerSensor, { activationConstraint: { distance: 1 }})
     const sensors = useSensors(pointerSensor)
 
-    const user = useTypedSelector((state) => state.user);
     const {
         data: tickets,
         loading: loadingTickets,
@@ -79,12 +78,10 @@ export const TicketManager = ({ className }: TicketManagerSidebarProps) => {
                 }
             </div>
 
-            {user.isAdmin && (
-                <AddTicket
-                    className="add-ticket"
-                    onAddTicket={(name) => dispatch(createTicket({ name }))}
-                />
-            )}
+            <AddTicket
+                className="add-ticket"
+                onAddTicket={(name) => dispatch(createTicket({ name }))}
+            />
         </div>
     )
 }

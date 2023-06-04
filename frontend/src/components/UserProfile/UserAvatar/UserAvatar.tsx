@@ -1,7 +1,7 @@
 import ClassName from 'classnames';
 import { useMemo } from 'react';
 
-import type { UserType } from '../../types/commonTypes';
+import type { UserType } from '../../../types/commonTypes';
 
 import './UserAvatar.scss';
 

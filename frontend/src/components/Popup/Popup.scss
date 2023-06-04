@@ -1,0 +1,19 @@
+@import '../../assets/style/colors';
+@import '../../assets/style/shadows';
+
+.default-popup-trigger {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.default-popup-dropdown {
+    background-color: $white-completely;
+    box-shadow: $popup-shadow;
+    border-radius: 2px;
+    padding: 16px;
+
+    &:focus {
+        outline: none;
+    }
+}

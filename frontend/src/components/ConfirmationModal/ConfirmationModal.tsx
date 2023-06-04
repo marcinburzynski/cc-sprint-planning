@@ -15,6 +15,8 @@ type ConfirmationModalProps = {
     dangerous?: boolean;
     hideButtons?: boolean;
     stopPropagation?: boolean;
+    disableAccept?: boolean;
+    isLoading?: boolean;
     acceptLabel?: string;
     cancelLabel?: string;
     children?: JSX.Element;
@@ -29,18 +31,19 @@ export const DetachedConfirmationModal = ({
     dangerous,
     hideButtons,
     stopPropagation,
+    isLoading,
     acceptLabel = 'Accept',
     cancelLabel = 'Cancel',
     children,
     onAccept,
     onCancel,
 }: Omit<ConfirmationModalProps, 'content'>) => {
-    const handleStopPropagation = (callback?: MouseEventHandler<HTMLButtonElement>) => (e: MouseEvent<HTMLButtonElement>) => {
+    const handleStopPropagation = (callback?: MouseEventHandler<HTMLButtonElement>) => async (e: MouseEvent<HTMLButtonElement>) => {
         if (stopPropagation) {
             e.stopPropagation();
         }
 
-        callback?.(e)
+        await callback?.(e)
     }
 
     const headerContent = (
@@ -78,6 +81,7 @@ export const DetachedConfirmationModal = ({
                             buttonStyle={dangerous ? 'warning' : 'filled'}
                             buttonSize="medium"
                             className="accept-button"
+                            loading={isLoading}
                             onClick={handleStopPropagation(onAccept)}
                         >
                             {acceptLabel}
@@ -95,17 +99,22 @@ export const ConfirmationModal = ({
     onCancel,
     content,
     ...props
-}: ConfirmationModalProps) => {
+}: Omit<ConfirmationModalProps, 'isLoading'>) => {
     const [isVisible, setIsVisible] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const handleCancel: MouseEventHandler<HTMLButtonElement> = (e) => {
-        setIsVisible(false);
+    const handleCancel: MouseEventHandler<HTMLButtonElement> = async (e) => {
         onCancel?.(e);
+        setIsVisible(false);
     }
 
-    const handleAccept: MouseEventHandler<HTMLButtonElement> = (e) => {
+    const handleAccept: MouseEventHandler<HTMLButtonElement> = async (e) => {
+        setIsLoading(true);
+
+        await onAccept?.(e);
+
         setIsVisible(false);
-        onAccept?.(e);
+        setIsLoading(false);
     }
 
     return (
@@ -118,6 +127,7 @@ export const ConfirmationModal = ({
                     children={content}
                     onAccept={handleAccept}
                     onCancel={handleCancel}
+                    isLoading={isLoading}
                 />
             )}
         </>
