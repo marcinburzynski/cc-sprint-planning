@@ -19,6 +19,8 @@ import { DetachedConfirmationModal } from '../../ConfirmationModal';
 import { SaveEstimateToJiraModal } from '../../SaveEstimateToJiraModal';
 import { IssueDetailsModal } from '../../IssueDetailsModal';
 
+import { ReactComponent as JiraLinkIconSVG } from '../../../assets/icons/jira-link.svg';
+
 import type { TicketType } from '../../../types/commonTypes';
 
 import './TicketItem.scss';
@@ -50,12 +52,10 @@ export const TicketItem = ({ className, ticket, isSelected }: TicketItemProps) =
     const { data: users } = useTypedSelector((state) => state.estimation.users);
     const { data: estimations } = useTypedSelector((state) => state.estimation.estimations);
 
-    const ticketEstimations = estimations[ticket.id]
+    const ticketEstimations = estimations[ticket.id];
 
-    const handleGoToTicket = async () => {
-        const jiraUrl = await jira.getJiraUrl();
-
-        window.open(`${jiraUrl}/browse/${ticket.issueKey}`, '_blank');
+    const handleGoToTicket = () => {
+        window.open(ticket.issueUrl, '_blank');
     };
 
     const handleRestartEstimation = () => {
@@ -108,7 +108,7 @@ export const TicketItem = ({ className, ticket, isSelected }: TicketItemProps) =
         transform: CSS.Transform.toString(transform),
         cursor: isDragging ? 'grabbing' : undefined,
         zIndex: isDragging ? 1000 : undefined,
-    }
+    };
 
     return (
         <div
@@ -120,7 +120,12 @@ export const TicketItem = ({ className, ticket, isSelected }: TicketItemProps) =
             onClick={() => dispatch(setSelectedTicket(ticket.id))}
         >
             <div className="ticket-description">
-                <span className="ticket-name">{ticket.name}</span>
+                <div className="ticket-name-container" >
+                    {ticket.issueUrl && (
+                        <JiraLinkIconSVG onClick={handleGoToTicket} />
+                    )}
+                    <span className="ticket-name">{ticket.name}</span>
+                </div>
 
                 <span
                     className={estimationStatusFullClassName}
@@ -142,10 +147,6 @@ export const TicketItem = ({ className, ticket, isSelected }: TicketItemProps) =
                 triggerClassName="kebab-menu"
                 align="end"
             >
-                <DropdownItem onClick={handleGoToTicket} hidden={!ticket.issueKey}>
-                    Open in Jira
-                </DropdownItem>
-
                 <DropdownItem onClick={() => setIsDetailsModalVisible(true)} hidden={!ticket.issueKey}>
                     Issue details
                 </DropdownItem>

@@ -11,6 +11,7 @@ export type TicketType = {
     name: string;
     order: number;
     issueKey?: string;
+    issueUrl?: string;
     isRevealed?: boolean;
 }
 

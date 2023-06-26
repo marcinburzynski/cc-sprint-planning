@@ -24,6 +24,7 @@ model Ticket {
   id          String       @id
   name        String
   issueKey    String?
+  issueUrl    String?
   order       Int
   isRevealed  Boolean
   estimations Estimation[]

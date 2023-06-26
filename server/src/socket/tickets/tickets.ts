@@ -15,6 +15,7 @@ export const initTicketsSocket = (io: Server, socket: Socket, socketSessionId: s
                     name: ticket.name,
                     order: ticket.order,
                     issueKey: ticket.issueKey,
+                    issueUrl: ticket.issueUrl,
                     isRevealed: ticket.isRevealed || false,
                     session: {
                         connect: { id: socketSessionId },
@@ -36,6 +37,7 @@ export const initTicketsSocket = (io: Server, socket: Socket, socketSessionId: s
                 name: ticket.name,
                 order: ticket.order,
                 issueKey: ticket.issueKey,
+                issueUrl: ticket.issueUrl,
                 isRevealed: ticket.isRevealed || false,
                 sessionId: socketSessionId,
             }));

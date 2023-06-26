@@ -75,6 +75,7 @@ export const createMultipleTickets = (newTickets: Omit<TicketType, 'id' | 'order
     const partialTickets: Omit<TicketType, 'id'>[] = newTickets.map((ticket, index) => ({
         name: ticket.name,
         issueKey: ticket.issueKey,
+        issueUrl: ticket.issueUrl,
         order: Object.values(state.estimation.tickets.data).length + index + 1,
         isRevealed: false,
     }));

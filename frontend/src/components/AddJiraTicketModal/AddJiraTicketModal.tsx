@@ -37,13 +37,16 @@ export const AddJiraTicketModal = ({ buttonClassName }: AddJiraTicketModalProps)
         setIsVisible(true);
     }
 
-    const handleAddTickets = (issues: JiraIssue[]) => {
+    const handleAddTickets = async (issues: JiraIssue[]) => {
         setIsVisible(false);
         setSelectedIssues([]);
+
+        const jiraUrl = await jira.getJiraUrl()
 
         dispatch(createMultipleTickets(issues.map((issue) => ({
             name: `${issue.key}: ${issue.fields.summary}`,
             issueKey: issue.key,
+            issueUrl: `${jiraUrl}/browse/${issue.key}`,
         }))));
     }
 

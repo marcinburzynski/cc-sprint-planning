@@ -14,11 +14,11 @@
     margin: 0 4px;
 
     &:hover {
-        background-color: $blue-highlight;
+        background-color: $blue-ticket-highlight;
     }
 
     &--selected {
-        background-color: $blue-highlight;
+        background-color: $blue-ticket-highlight;
         box-shadow: $selected-shadow;
     }
 
@@ -28,9 +28,18 @@
         justify-content: space-between;
         max-width: 230px;
 
-        .ticket-name {
-            font-size: 14px;
-            line-height: 16px;
+        .ticket-name-container {
+            display: flex;
+
+            svg {
+                flex-shrink: 0;
+                margin-right: 7px;
+            }
+
+            .ticket-name {
+                font-size: 14px;
+                line-height: 16px;
+            }
         }
 
         .estimation-status {
