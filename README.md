@@ -1,4 +1,4 @@
-# Sprint Planning
+# Sprint Planning V0.4.0
 
 ## Requirements
 - mkcert

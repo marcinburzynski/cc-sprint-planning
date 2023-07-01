@@ -2,7 +2,7 @@
   "name": "sprint-planning-server",
   "main": "src/main.ts",
   "type": "module",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "scripts": {
     "start-server": "node build/main.js",

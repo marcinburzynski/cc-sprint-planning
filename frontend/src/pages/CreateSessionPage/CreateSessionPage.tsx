@@ -128,7 +128,6 @@ export const CreateSessionPage = () => {
         <div className="create-session-page">
             {isCompleteUser(loggedUser) && (
                 <UserProfile
-                    changeUserType
                     className="user-profile-button"
                     user={loggedUser}
                 />
