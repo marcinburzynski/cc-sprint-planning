@@ -11,6 +11,7 @@ import { Input } from '../Input';
 import { ConfirmationModal, DetachedConfirmationModal } from '../ConfirmationModal';
 
 import { ReactComponent as EditIconSVG } from '../../assets/icons/edit.svg';
+import { ReactComponent as SignOutIconSVG } from '../../assets/icons/sign-out.svg';
 
 import type { UserType } from '../../types/commonTypes';
 
@@ -19,14 +20,16 @@ import './UserProfile.scss';
 type UserProfileProps = {
     className?: string;
     user: UserType;
+    changeUserType?: boolean;
 }
 
-export const UserProfile = ({ className, user }: UserProfileProps) => {
+export const UserProfile = ({ className, user, changeUserType }: UserProfileProps) => {
     const dispatch = useTypedDispatch();
     const { sessionId } = useParams<{ sessionId: string }>();
 
     const [updatedUsername, setUpdatedUsername] = useState(user.name);
     const [isSelectTeamModalVisible, setIsSelectTeamModalVisible] = useState(false);
+    const [isSignOutConfirmModalVisible, setIsSignOutConfirmModalVisible] = useState(false);
     const [selectedTeam, setSelectedTeam] = useState(user.team ? { label: user.team, value: user.team } : undefined);
 
     const teams = useTypedSelector((state) => state.estimation.session.teams);
@@ -74,6 +77,18 @@ export const UserProfile = ({ className, user }: UserProfileProps) => {
         dispatch(updateUser({ isSpectator: true }));
     }
 
+    const handleSignOut = () => {
+        localStorage.clear()
+
+        const [,, sessionId] = window.location.pathname.split('/');
+
+        const redirectPath = sessionId
+            ? `/join/${sessionId}`
+            : '/'
+
+        window.location.replace(`${window.location.origin}${redirectPath}`);
+    }
+
     const editNameModalContent = (
         <Input
             value={updatedUsername}
@@ -117,9 +132,18 @@ export const UserProfile = ({ className, user }: UserProfileProps) => {
                 </div>
             </div>
 
-            <span className="role-choice-button" onClick={handleClickRoleButton}>
-                {user.isSpectator ? 'Join as a player' : 'Become a viewer'}
-            </span>
+            <div className="options-list">
+                {changeUserType && (
+                    <span className="list-option" onClick={handleClickRoleButton}>
+                    {user.isSpectator ? 'Join as a player' : 'Become a viewer'}
+                </span>
+                )}
+
+                <div className="list-option danger" onClick={() => setIsSignOutConfirmModalVisible(true)}>
+                    <span>Sign Out</span>
+                    <SignOutIconSVG />
+                </div>
+            </div>
 
             {isSelectTeamModalVisible && (
                 <DetachedConfirmationModal
@@ -136,6 +160,23 @@ export const UserProfile = ({ className, user }: UserProfileProps) => {
                         onChange={((selectedTeam) => setSelectedTeam(selectedTeam))}
                         disabled={!teams}
                     />
+                </DetachedConfirmationModal>
+            )}
+
+            {isSignOutConfirmModalVisible && (
+                <DetachedConfirmationModal
+                    dangerous
+                    title="Signing out"
+                    acceptLabel="Sign out"
+                    className="user-profile__confirm-modal"
+                    onAccept={handleSignOut}
+                    onCancel={() => setIsSignOutConfirmModalVisible(false)}
+                >
+                    <span>
+                        Are you sure you want to sign out?
+                        <br />
+                        {!user.email && 'You are currently using a temporary account.\nYou will not be able to log into this account again!'}
+                    </span>
                 </DetachedConfirmationModal>
             )}
         </Popup>

@@ -38,19 +38,30 @@
                 line-height: 16px;
                 color: $gray-pearl-dark;
                 margin-top: 7px;
-
             }
         }
     }
 
-    .role-choice-button {
-        padding: 11px 9px;
-        cursor: pointer;
-        margin-top: 14px;
-        user-select: none;
+    .options-list {
+        & > *:first-child {
+            margin-top: 14px;
+        }
 
-        &:hover {
-            background-color: $cyan-light;
+        .list-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 11px 9px;
+            cursor: pointer;
+            user-select: none;
+
+            &:hover {
+                background-color: $cyan-light;
+            }
+
+            &.danger:hover {
+                background-color: $red-misty-rose;
+            }
         }
     }
 }
@@ -59,4 +70,5 @@
     height: fit-content;
     min-height: unset;
     width: 504px;
+    white-space: pre;
 }

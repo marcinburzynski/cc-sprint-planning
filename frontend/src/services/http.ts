@@ -6,12 +6,22 @@ import type { UserType, SessionType, EstimateCardType } from '../types/commonTyp
 import type { JiraAccessTokenRes } from './jira/jira.types';
 
 class Http {
-    #client: AxiosInstance
+    #client = axios.create();
     token?: string
 
     constructor() {
-        this.#client = axios.create({ baseURL: `${window.location.protocol}//${window.location.hostname}/api` })
-        this.token = localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY) || undefined;
+        this.init();
+    }
+
+    init = (newToken: string | null = localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY)) => {
+        this.token = newToken || undefined;
+
+        this.#client = axios.create({
+            baseURL: `${window.location.protocol}//${window.location.hostname}/api`,
+            headers: {
+                common: { authorization: this.token },
+            },
+        });
     }
 
     createUser = async (user: Omit<UserType, 'id'>) => {
@@ -22,6 +32,25 @@ class Http {
 
         return res;
     }
+
+    updateYourUser = async (user: Partial<UserType>) => {
+        type UserUpdateRes = {
+            user: UserType;
+            token: string;
+        }
+
+        const res = await this.#client.post<UserUpdateRes>('/user/update-self', user);
+
+        this.token = res.data.token;
+        localStorage.setItem(TOKEN_LOCAL_STORAGE_KEY, this.token);
+
+        return res;
+    }
+
+    getGoogleUser = async (code: string, sessionId?: string) => this.#client.post<{ token: string }>(
+        '/google/auth',
+        { code, sessionId },
+    );
 
     createSession = (teams: string[], deck: EstimateCardType[]) => {
         return this.#client.post<{ session: SessionType }>('/session/create', { teams, deck });

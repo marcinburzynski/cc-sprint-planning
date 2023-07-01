@@ -4,7 +4,6 @@ import { prisma } from '../datasources/prisma.js';
 import { authenticateMiddleware } from './middlewares/auth.js';
 
 import { initEstimationsSocket } from './estimations/estimations.js';
-import { initUsersSocket } from './users/users.js';
 import { initTicketsSocket } from './tickets/tickets.js';
 import { initSessionSocket } from './session/session.js';
 import { initDisconnectEvent } from './disconnect/disconnect.js';
@@ -48,7 +47,6 @@ export const initSocket = (io: Server) => {
         socket.in(socketSessionId).emit('user-joined', socket.data.user)
 
         initEstimationsSocket(io, socket, socketSessionId);
-        initUsersSocket(io, socket, socketSessionId);
         initTicketsSocket(io, socket, socketSessionId);
         initSessionSocket(io, socket, socketSessionId);
         initDisconnectEvent(io, socket, socketSessionId);

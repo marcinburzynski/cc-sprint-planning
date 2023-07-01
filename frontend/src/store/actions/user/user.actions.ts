@@ -1,3 +1,4 @@
+import { http } from '../../../services/http';
 import { socket } from '../../../services/socket';
 import { TOKEN_LOCAL_STORAGE_KEY } from '../../../constants/localStorageKeys';
 
@@ -37,17 +38,18 @@ export const updateUser = (updatedUser: Partial<UserType>): TypedThunkAction<Upd
     dispatch({ type: 'UPDATE_USER_START' });
 
     try {
-        const res = await socket.updateUser(updatedUser);
+        const res = await http.updateYourUser(updatedUser);
 
         if ('error' in res) {
             return dispatch({ type: 'UPDATE_USER_FAILURE' });
         }
 
-        localStorage.setItem(TOKEN_LOCAL_STORAGE_KEY, res.token);
+        localStorage.setItem(TOKEN_LOCAL_STORAGE_KEY, res.data.token);
+        http.init(res.data.token);
 
         dispatch({
             type: 'UPDATE_USER_SUCCESS',
-            user: res.user,
+            user: res.data.user,
         });
 
     } catch (e: unknown) {

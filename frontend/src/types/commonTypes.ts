@@ -2,6 +2,7 @@ import type { RequiredBy } from './utilTypes';
 
 export type UserType = {
     id: string;
+    email?: string;
     name: string;
     isSpectator: boolean;
     isAdmin: boolean;

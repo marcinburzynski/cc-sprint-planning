@@ -7,6 +7,7 @@ import { Server } from 'socket.io';
 
 import { initSocket } from './socket/initSocket.js';
 import { initHTTP } from './http/initHTTP.js';
+import { SocketContainer } from './socket/socketContainer.js';
 
 const corsOrigin = process.env.DEV ? '*' : 'https://cc-planning.stormymood.me'
 
@@ -26,10 +27,10 @@ const main = async () => {
         rejectUnauthorized: false,
     }, app);
 
-    const io = new Server(server, { cors: { origin: corsOrigin } });
+    SocketContainer.socket = new Server(server, { cors: { origin: corsOrigin } });
 
     initHTTP(app);
-    initSocket(io);
+    initSocket(SocketContainer.socket);
 
     server.listen(443)
 };

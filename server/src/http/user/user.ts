@@ -1,10 +1,17 @@
 import { nanoid } from 'nanoid';
 import jwt from 'jsonwebtoken';
+import lodash from 'lodash';
 import { Router } from 'express';
 
-import { prisma } from '../../datasources/prisma.js';
+import { prisma, getRegularModelFields } from '../../datasources/prisma.js';
+import { SocketContainer } from '../../socket/socketContainer.js';
+import { UserType } from '../../types/commonTypes.js';
 
 export const userRouter = Router();
+
+const userModelFields = getRegularModelFields('User').fields;
+const getCleanUserObject = (user: Record<string, unknown>) => lodash.pick(user, ...userModelFields) as UserType;
+
 
 userRouter.post('/create', async (req, res) => {
     const { body } = req;
@@ -22,9 +29,8 @@ userRouter.post('/create', async (req, res) => {
     try {
         const user = await prisma.user.create({
             data: {
+                ...getCleanUserObject(body),
                 id: nanoid(),
-                name: body.name,
-                team: body.team,
                 isSpectator: body.isSpectator || false,
                 isAdmin: body.isAdmin || false,
             }
@@ -38,3 +44,49 @@ userRouter.post('/create', async (req, res) => {
         res.json({ error: e });
     }
 });
+
+userRouter.post('/update-self', async (req, res) => {
+    const authToken = req.headers.authorization
+
+    if (!authToken) {
+        res.status(401);
+        return res.json({ error: 'User token required' });
+    }
+
+    let decodedToken: UserType
+
+    try {
+        decodedToken = jwt.verify(authToken, process.env.SECRET!) as UserType;
+    } catch (e: unknown) {
+        res.status(401);
+        return res.json({ error: 'User token is not valid' });
+    }
+
+    try {
+        const updatedUser = await prisma.user.update({
+            where: { id: decodedToken.id },
+            data: lodash.omit(getCleanUserObject(req.body), 'id'),
+            include: { sessions: true }
+        })
+
+        const cleanUser = getCleanUserObject(updatedUser);
+
+        if (SocketContainer.socket && !lodash.isEmpty(updatedUser.sessions)) {
+            const sessionIds = updatedUser.sessions.map(({ id }) => id);
+
+            SocketContainer.socket.to(sessionIds).emit('receive-updated-user', cleanUser);
+        }
+
+        const token = jwt.sign(cleanUser, process.env.SECRET!)
+
+        res.status(200);
+        res.json({
+            token,
+            user: updatedUser,
+        });
+    } catch (e: unknown) {
+        console.error(e)
+        res.status(500);
+        res.json({ error: e })
+    }
+})

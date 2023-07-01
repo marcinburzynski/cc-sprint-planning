@@ -6,7 +6,8 @@ import {
     JoinPage,
     CreateSessionPage,
     EstimationPage,
-    OAuth,
+    JiraOAuth,
+    GoogleOAuth,
 } from './pages';
 
 import { store } from './store';
@@ -22,7 +23,8 @@ export const App = () => {
                     <Route path="/" element={<CreateSessionPage />} />
                     <Route path="/join/:sessionId" element={<JoinPage />} />
                     <Route path="/session/:sessionId" element={<EstimationPage />} />
-                    <Route path="/oauth" element={<OAuth />} />
+                    <Route path="/jira-oauth" element={<JiraOAuth />} />
+                    <Route path="/google-oauth" element={<GoogleOAuth />} />
                 </Routes>
             </BrowserRouter>
         </Provider>

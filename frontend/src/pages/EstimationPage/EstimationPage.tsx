@@ -132,7 +132,11 @@ export const EstimationPage = () => {
                 <div className="sidebar-header">
                     {isCompleteUser(user) && (
                         <>
-                            <UserProfile user={user} className="user-avatar" />
+                            <UserProfile
+                                changeUserType
+                                user={user}
+                                className="user-avatar"
+                            />
                             <span className="username">{user.name}</span>
                         </>
                     )}

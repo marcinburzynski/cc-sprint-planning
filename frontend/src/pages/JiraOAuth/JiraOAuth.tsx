@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { JIRA_STATE_LOCAL_STORAGE_KEY, JIRA_OAUTH_TOKEN_LOCAL_STORAGE_KEY } from '../../constants/localStorageKeys';
+import { JIRA_STATE_LOCAL_STORAGE_KEY, JIRA_OAUTH_CODE_LOCAL_STORAGE_KEY } from '../../constants/localStorageKeys';
 
-export const OAuth = () => {
+export const JiraOAuth = () => {
     const [searchParams] = useSearchParams();
 
     useEffect(() => {
@@ -12,7 +12,7 @@ export const OAuth = () => {
 
         if (state && token) {
             localStorage.setItem(JIRA_STATE_LOCAL_STORAGE_KEY, state);
-            localStorage.setItem(JIRA_OAUTH_TOKEN_LOCAL_STORAGE_KEY, token);
+            localStorage.setItem(JIRA_OAUTH_CODE_LOCAL_STORAGE_KEY, token);
         }
 
         window.close();

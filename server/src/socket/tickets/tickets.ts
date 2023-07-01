@@ -2,20 +2,22 @@ import lodash from 'lodash';
 import { nanoid } from 'nanoid';
 import { Server, Socket } from 'socket.io';
 
-import { prisma } from '../../datasources/prisma.js';
+import { prisma, getRegularModelFields } from '../../datasources/prisma.js';
 
 import type { TicketType, PromiseCallback } from '../../types/commonTypes.js';
+
+const ticketModelFields = getRegularModelFields('Ticket').fields;
+const getCleanTicketObject = <T extends Record<string, unknown>>(ticket: T) => {
+    return lodash.pick(ticket, ...ticketModelFields) as T;
+}
 
 export const initTicketsSocket = (io: Server, socket: Socket, socketSessionId: string) => {
     socket.on('create-ticket', async (ticket: Omit<TicketType, 'id'>, callback: PromiseCallback) => {
         try {
             const savedTicket = await prisma.ticket.create({
                 data: {
+                    ...getCleanTicketObject(ticket),
                     id: nanoid(),
-                    name: ticket.name,
-                    order: ticket.order,
-                    issueKey: ticket.issueKey,
-                    issueUrl: ticket.issueUrl,
                     isRevealed: ticket.isRevealed || false,
                     session: {
                         connect: { id: socketSessionId },
@@ -33,11 +35,8 @@ export const initTicketsSocket = (io: Server, socket: Socket, socketSessionId: s
     socket.on('create-multiple-tickets', async (tickets: Omit<TicketType, 'id'>[], callback: PromiseCallback) => {
         try {
             const completeTickets = tickets.map((ticket) => ({
+                ...getCleanTicketObject(ticket),
                 id: nanoid(),
-                name: ticket.name,
-                order: ticket.order,
-                issueKey: ticket.issueKey,
-                issueUrl: ticket.issueUrl,
                 isRevealed: ticket.isRevealed || false,
                 sessionId: socketSessionId,
             }));

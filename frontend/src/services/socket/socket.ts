@@ -35,19 +35,6 @@ class Socket {
         listenToEvents(this.client, store)
     }
 
-    updateUser = async (updatedUser: Partial<UserType>) => {
-        type SetNewUsernameRes = {
-            user: UserType;
-            token: string;
-        } | {
-            error: Record<string, unknown>;
-        };
-
-        return new Promise<SetNewUsernameRes>((resolve) => {
-            this.client?.emit('update-user', updatedUser, resolve);
-        });
-    }
-
     sendEstimation = (estimation: Omit<EstimationType, 'userId'>) => {
         return new Promise<{ estimation: EstimationType }>((resolve) => {
             this.client?.emit('send-estimation', estimation, resolve);

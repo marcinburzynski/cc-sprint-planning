@@ -10,7 +10,7 @@ jiraRouter.post('/get-auth-token', async (req, res) => {
             client_id: process.env.JIRA_CLIENT_ID,
             client_secret: process.env.JIRA_CLIENT_SECRET,
             code: req.body.oauthToken,
-            redirect_uri: `${process.env.APP_HOST}/oauth`,
+            redirect_uri: `${process.env.APP_HOST}/jira-oauth`,
         });
 
         res.json(data);

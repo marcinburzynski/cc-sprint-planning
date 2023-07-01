@@ -5,7 +5,7 @@ import { http } from '../http';
 import {
     TOKEN_LOCAL_STORAGE_KEY,
     JIRA_STATE_LOCAL_STORAGE_KEY,
-    JIRA_OAUTH_TOKEN_LOCAL_STORAGE_KEY,
+    JIRA_OAUTH_CODE_LOCAL_STORAGE_KEY,
     JIRA_TOKEN_LOCAL_STORAGE_KEY,
     JIRA_REFRESH_TOKEN_LOCAL_STORAGE_KEY,
     JIRA_CLOUD_ID_LOCAL_STORAGE_KEY,
@@ -35,7 +35,7 @@ export class JiraBase {
 
     constructor() {
         this.#state = localStorage.getItem(JIRA_STATE_LOCAL_STORAGE_KEY) || undefined;
-        this.#oauthToken = localStorage.getItem(JIRA_OAUTH_TOKEN_LOCAL_STORAGE_KEY) || undefined;
+        this.#oauthToken = localStorage.getItem(JIRA_OAUTH_CODE_LOCAL_STORAGE_KEY) || undefined;
         this.#token = localStorage.getItem(JIRA_TOKEN_LOCAL_STORAGE_KEY) || undefined;
         this.#refreshToken = localStorage.getItem(JIRA_REFRESH_TOKEN_LOCAL_STORAGE_KEY) || undefined;
         this.#jiraUrl = localStorage.getItem(JIRA_URL_LOCAL_STORAGE_KEY) || undefined;
@@ -76,7 +76,7 @@ export class JiraBase {
                     this.#state = e.newValue || this.#state;
                     break;
 
-                case JIRA_OAUTH_TOKEN_LOCAL_STORAGE_KEY:
+                case JIRA_OAUTH_CODE_LOCAL_STORAGE_KEY:
                     if (e.newValue) {
                         this.#oauthToken = e.newValue;
 
@@ -99,7 +99,7 @@ export class JiraBase {
         this.#state = undefined;
 
         localStorage.removeItem(JIRA_STATE_LOCAL_STORAGE_KEY);
-        localStorage.removeItem(JIRA_OAUTH_TOKEN_LOCAL_STORAGE_KEY);
+        localStorage.removeItem(JIRA_OAUTH_CODE_LOCAL_STORAGE_KEY);
         localStorage.removeItem(JIRA_TOKEN_LOCAL_STORAGE_KEY);
         localStorage.removeItem(JIRA_REFRESH_TOKEN_LOCAL_STORAGE_KEY);
         localStorage.removeItem(JIRA_CLOUD_ID_LOCAL_STORAGE_KEY);
@@ -145,7 +145,7 @@ export class JiraBase {
             audience: 'api.atlassian.com',
             client_id: import.meta.env.VITE_ENV_JIRA_CLIENT_ID,
             scope: JIRA_API_PERMS.join(' '),
-            redirect_uri: `${window.location.origin}/oauth`,
+            redirect_uri: `${window.location.origin}/jira-oauth`,
             state: userId,
             response_type: 'code',
             prompt: 'consent',

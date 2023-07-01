@@ -40,6 +40,7 @@ services:
       target: "prod"
       args:
         JIRA_CLIENT_ID_ARG: $JIRA_CLIENT_ID
+        GOOGLE_CLIENT_ID_ARG: $GOOGLE_CLIENT_ID
     networks:
       comscore-planning-network:
         ipv4_address: 172.41.0.14

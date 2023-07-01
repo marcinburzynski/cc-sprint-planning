@@ -8,6 +8,12 @@
     height: 100vh;
     padding-top: 144px;
 
+    .user-profile-button {
+        position: fixed;
+        right: 33px;
+        top: 33px;
+    }
+
     .join-session-main-header {
         position: absolute;
         top: 33px;
@@ -23,6 +29,12 @@
             font-weight: 500;
             text-align: center;
             color: $black-nero;
+            margin-bottom: 69px;
+        }
+
+        .google-auth-button {
+            width: 100%;
+            margin-bottom: 23px;
         }
 
         input {
@@ -33,10 +45,6 @@
             font-size: 16px;
             margin-bottom: 9px;
             color: $black-nero;
-        }
-
-        .name-label {
-            margin-top: 69px;
         }
 
         .name-input {

@@ -49,6 +49,7 @@ services:
       target: "dev"
       args:
         JIRA_CLIENT_ID_ARG: $JIRA_CLIENT_ID
+        GOOGLE_CLIENT_ID_ARG: $GOOGLE_CLIENT_ID
     ports:
       - "5173:5173"
     volumes:

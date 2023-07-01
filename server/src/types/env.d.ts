@@ -12,6 +12,8 @@ declare global {
             POSTGRES_PASSWORD: string;
             JIRA_CLIENT_ID: string;
             JIRA_CLIENT_SECRET: string;
+            GOOGLE_CLIENT_ID: string;
+            GOOGLE_CLIENT_SECRET: string;
             APP_HOST: string;
         }
     }
