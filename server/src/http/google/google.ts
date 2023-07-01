@@ -52,10 +52,7 @@ googleRouter.post('/auth', async (req, res) => {
 
         const { data } = await axios.post<GoogleOauthTokenResponse>(url.toString())
 
-        console.log({ data })
-
         const decodedData = jwt.decode(data.id_token) as DecodedGoogleIDToken;
-        console.log({ decodedData })
 
         if (!decodedData.email_verified) {
             res.status(401);

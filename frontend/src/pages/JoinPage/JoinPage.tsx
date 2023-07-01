@@ -8,6 +8,7 @@ import { isCompleteUser } from '../../types/typePredicates';
 import { getTeams } from '../../store/actions/estimation/session';
 import { socket } from '../../services/socket';
 import { http } from '../../services/http';
+import { google } from '../../services/google';
 import { setUser } from '../../store/actions/user';
 import { setNotification } from '../../store/actions/notifications';
 import { LogoHeader } from '../../components/LogoHeader';
@@ -23,7 +24,6 @@ import { TOKEN_LOCAL_STORAGE_KEY } from '../../constants/localStorageKeys';
 import type { UserType } from '../../types/commonTypes';
 
 import './JoinPage.scss';
-import { google } from '../../services/google';
 
 export const JoinPage = () => {
     const dispatch = useTypedDispatch()
