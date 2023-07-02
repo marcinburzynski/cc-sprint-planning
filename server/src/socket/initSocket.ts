@@ -1,12 +1,12 @@
 import type { Server, Socket } from 'socket.io';
 
 import { prisma } from '../datasources/prisma.js';
-import { authenticateMiddleware } from './middlewares/auth.js';
+import { authenticateMiddleware } from './middlewares/auth.socket.js';
 
-import { initEstimationsSocket } from './estimations/estimations.js';
-import { initTicketsSocket } from './tickets/tickets.js';
-import { initSessionSocket } from './session/session.js';
-import { initDisconnectEvent } from './disconnect/disconnect.js';
+import { initEstimationsSocket } from './estimations/estimations.socket.js';
+import { initTicketsSocket } from './tickets/tickets.socket.js';
+import { initSessionSocket } from './session/session.socket.js';
+import { initDisconnectEvent } from './disconnect/disconnect.socket.js';
 
 const connectUserToSession = async (socket: Socket, sessionId: string) => {
     try {

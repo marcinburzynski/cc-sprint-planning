@@ -1,9 +1,9 @@
 import { Router, type Express } from 'express';
 
-import { sessionRouter } from './session/session.js';
-import { userRouter } from './user/user.js';
-import { jiraRouter } from './jira/jira.js';
-import { googleRouter } from './google/google.js';
+import { sessionRouter } from './session/session.http.js';
+import { userRouter } from './user/user.http.js';
+import { jiraRouter } from './jira/jira.http.js';
+import { googleRouter } from './google/google.http.js';
 
 export const initHTTP = (app: Express) => {
     const apiRouter = Router();
