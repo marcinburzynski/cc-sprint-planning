@@ -4,6 +4,7 @@ import ClassName from 'classnames';
 import { countEstimations, sortCountedEstimations } from '../../../utils/estimations';
 import { EstimateCard } from '../../EstimateCard';
 
+import type { StoredEstimations } from '../../../store/reducers/estimation/estimations';
 import type { UserType, EstimateCardType } from '../../../types/commonTypes';
 
 import './TeamEstimateLane.scss'
@@ -14,9 +15,7 @@ type TeamEstimateLaneProps = {
     users: UserType[];
     deck: EstimateCardType[];
     reveal?: boolean;
-    estimations?: {
-        [userId: string]: string | null;
-    }
+    estimations?: StoredEstimations[string];
 }
 
 export const TeamEstimateLane = ({

@@ -4,7 +4,7 @@ import type { EstimationsActionTypes } from '../../../actions/estimation/estimat
 
 export type StoredEstimations = {
     [ticketId: string]: {
-        [userId: string]: string | null;
+        [userId: string]: string | undefined;
     };
 }
 
@@ -36,7 +36,7 @@ export const estimationsReducer = (state = EstimationsDefaultState, action: Esti
                     }
 
                     return acc
-                }, {} as EstimationsReducerState['data'])
+                }, {} as StoredEstimations)
             }
 
         case 'GET_SESSION_ESTIMATIONS_FAILURE':

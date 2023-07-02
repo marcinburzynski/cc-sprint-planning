@@ -1,5 +1,6 @@
 import { pick } from 'lodash';
 
+import type { StoredEstimations } from '../store/reducers/estimation/estimations';
 import type { UserType, EstimateCardType } from '../types/commonTypes';
 
 export type CountedEstimations = {
@@ -9,7 +10,7 @@ export type CountedEstimations = {
 };
 
 export const countEstimations = (
-    ticketEstimations: Record<string, string | null>,
+    ticketEstimations: StoredEstimations[string],
     usersByTeam: Record<string, UserType[]>,
 ) => {
     return Object.entries(usersByTeam).reduce<CountedEstimations>((acc, [teamName, users]) => {

@@ -12,6 +12,18 @@ export const initEstimationsSocket = (io: Server, socket: Socket, socketSessionI
                 where: { ticket: { id: estimation.ticketId }, user: { id: socket.data.user.id } }
             });
 
+            if (!estimation.value && previousEstimation) {
+                await prisma.estimation.delete({ where: { id: previousEstimation.id } });
+
+                const newEmptyEstimation: EstimationType = {
+                    ...previousEstimation,
+                    value: undefined,
+                }
+
+                socket.to(socketSessionId).emit('receive-estimation', newEmptyEstimation);
+                return callback({ estimation: newEmptyEstimation });
+            }
+
             let newEstimation: Estimation;
 
             if (previousEstimation) {

@@ -49,7 +49,7 @@ type SendEstimationAction = {
 
 export const sendEstimation = (
     ticketId: string,
-    estimationValue: string | null,
+    estimationValue?: string,
 ): TypedThunkAction<SendEstimationAction> => async (dispatch, getState) => {
     const { id } = getState().user;
     if (!id) return;

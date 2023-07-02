@@ -19,7 +19,7 @@ export type TicketType = {
 export type EstimationType = {
     ticketId: string;
     userId: string;
-    value: string | null;
+    value?: string;
 }
 
 export type PromiseCallback = (params?: unknown) => void

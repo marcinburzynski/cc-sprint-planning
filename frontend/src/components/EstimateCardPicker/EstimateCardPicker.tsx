@@ -25,7 +25,7 @@ export const EstimateCardPicker = ({ className }: EstimateCardPickerProps) => {
 
     const handlePickCard = (selection: string) => {
         if (selection === userEstimate) {
-            return dispatch(sendEstimation(selectedTicketId,null));
+            return dispatch(sendEstimation(selectedTicketId, undefined));
         }
 
         dispatch(sendEstimation(selectedTicketId, selection));

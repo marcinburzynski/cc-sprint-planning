@@ -7,9 +7,6 @@ import { countEstimations, getEstimationMedians, getEstimationSum } from '../../
 import { EstimationResultItem } from './EstimationResultItem';
 import { Button } from '../Button';
 
-import type { StoredEstimations } from '../../store/reducers/estimation/estimations';
-import type { UserType, EstimateCardType } from '../../types/commonTypes';
-
 import './EstimationResults.scss';
 import { setSelectedTicket, setSelectedTicketForEveryone } from '../../store/actions/estimation/tickets';
 

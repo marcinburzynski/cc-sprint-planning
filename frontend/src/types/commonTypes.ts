@@ -23,7 +23,7 @@ export type JiraTicketType = RequiredBy<TicketType, 'issueKey'>;
 export type EstimationType = {
     ticketId: string;
     userId: string;
-    value: string | null;
+    value?: string;
 }
 
 export type EstimateCardType = {
