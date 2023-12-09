@@ -4,7 +4,6 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities'
 
 import { useTypedSelector, useTypedDispatch } from '../../../store/hooks';
-import { jira } from '../../../services/jira';
 import { getUsersByTeam } from '../../../utils/users';
 import {
     setSelectedTicket,
@@ -18,6 +17,7 @@ import { Dropdown, DropdownItem } from '../../Dropdown';
 import { DetachedConfirmationModal } from '../../ConfirmationModal';
 import { SaveEstimateToJiraModal } from '../../SaveEstimateToJiraModal';
 import { IssueDetailsModal } from '../../IssueDetailsModal';
+import { jiraKeyRegex } from '../../../constants/regex';
 
 import { ReactComponent as JiraLinkIconSVG } from '../../../assets/icons/jira-link.svg';
 
@@ -54,8 +54,17 @@ export const TicketItem = ({ className, ticket, isSelected }: TicketItemProps) =
 
     const ticketEstimations = estimations[ticket.id];
 
+    const issueUrl = useMemo(() => {
+        if (ticket.issueUrl) return ticket.issueUrl;
+
+        const key = new RegExp(jiraKeyRegex).exec(ticket.name)?.[0]
+        if (key) return `https://jira.comscore.com/browse/${key}`
+    }, [ticket?.issueUrl, ticket?.name])
+
     const handleGoToTicket = () => {
-        window.open(ticket.issueUrl, '_blank');
+        if (!issueUrl) return
+
+        window.open(issueUrl, '_blank');
     };
 
     const handleRestartEstimation = () => {
@@ -121,7 +130,7 @@ export const TicketItem = ({ className, ticket, isSelected }: TicketItemProps) =
         >
             <div className="ticket-description">
                 <div className="ticket-name-container" >
-                    {ticket.issueUrl && (
+                    {issueUrl && (
                         <JiraLinkIconSVG onClick={handleGoToTicket} />
                     )}
                     <span className="ticket-name">{ticket.name}</span>
