@@ -1,5 +1,7 @@
 import { pick } from 'lodash';
 
+import { TSHIRT_LABEL_VALUE_MAPPING, TSHIRT_VALUE_LABEL_MAPPING } from '../constants/decks';
+
 import type { StoredEstimations } from '../store/reducers/estimation/estimations';
 import type { UserType, EstimateCardType } from '../types/commonTypes';
 
@@ -50,6 +52,16 @@ export const getEstimationMedians = (countedEstimations: CountedEstimations) => 
 
         return acc;
     }, {})
+}
+
+export const findBiggestTShirtFromLabels = (medians: EstimationMedians) => {
+    const mediansList = Object.values(medians).filter((medianLabel) => (
+        Object.keys(TSHIRT_LABEL_VALUE_MAPPING).includes(medianLabel)
+    ));
+    const mediansValuesList = mediansList.map((medianLabel) => TSHIRT_LABEL_VALUE_MAPPING[medianLabel as keyof typeof TSHIRT_LABEL_VALUE_MAPPING])
+    mediansValuesList.sort((a, b) => b - a);
+
+    return TSHIRT_VALUE_LABEL_MAPPING[mediansValuesList[0]]
 }
 
 

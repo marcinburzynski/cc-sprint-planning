@@ -11,7 +11,7 @@ import {
     restartTicketEstimation,
     removeTicket,
 } from '../../../store/actions/estimation/tickets';
-import { countEstimations, getEstimationMedians, getEstimationSum } from '../../../utils/estimations';
+import { countEstimations, getEstimationMedians, getEstimationSum, findBiggestTShirtFromLabels } from '../../../utils/estimations';
 import { isJiraTicket } from '../../../types/typePredicates';
 import { Dropdown, DropdownItem } from '../../Dropdown';
 import { DetachedConfirmationModal } from '../../ConfirmationModal';
@@ -52,6 +52,7 @@ export const TicketItem = ({ className, ticket, isSelected }: TicketItemProps) =
     const { data: users } = useTypedSelector((state) => state.estimation.users);
     const { data: estimations } = useTypedSelector((state) => state.estimation.estimations);
 
+    const deckType = session?.deck[0].type
     const ticketEstimations = estimations[ticket.id];
 
     const issueUrl = useMemo(() => {
@@ -100,6 +101,10 @@ export const TicketItem = ({ className, ticket, isSelected }: TicketItemProps) =
 
     const estimate = useMemo(() => {
         if (!ticketEstimations || !ticket.isRevealed || !session) return;
+
+        if (deckType === 'tshirt') {
+            return findBiggestTShirtFromLabels(getEstimationMedians(countEstimations(ticketEstimations, usersByTeam)));
+        }
 
         return getEstimationSum(getEstimationMedians(countEstimations(ticketEstimations, usersByTeam)), session.deck);
     }, [usersByTeam, ticketEstimations, session, ticket])

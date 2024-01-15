@@ -30,6 +30,13 @@ export const TSHIRT_LABEL_VALUE_MAPPING = {
     L: 3,
 } as const;
 
+export const TSHIRT_VALUE_LABEL_MAPPING = Object.keys(TSHIRT_LABEL_VALUE_MAPPING).reduce((acc, curr) => {
+    return {
+        ...acc,
+        [TSHIRT_LABEL_VALUE_MAPPING[curr as keyof typeof TSHIRT_LABEL_VALUE_MAPPING]]: curr,
+    }
+}, {} as Record<number, string>);
+
 export const TSHIRT_SIZE_DECK: EstimateCardType[] = [
     { label: 'S', value: TSHIRT_LABEL_VALUE_MAPPING.S, type: 'tshirt' },
     { label: 'M', value: TSHIRT_LABEL_VALUE_MAPPING.M, type: 'tshirt' },

@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 
 import { useTypedSelector, useTypedDispatch } from '../../store/hooks';
 import { getUsersByTeam } from '../../utils/users';
-import { countEstimations, getEstimationMedians, getEstimationSum } from '../../utils/estimations';
+import { countEstimations, getEstimationMedians, getEstimationSum, findBiggestTShirtFromLabels } from '../../utils/estimations';
 import { EstimationResultItem } from './EstimationResultItem';
 import { Button } from '../Button';
 
@@ -23,6 +23,7 @@ export const EstimationResults = ({ className }: EstimationResultProps) => {
     const { data: users } = useTypedSelector((state) => state.estimation.users);
     const { data: estimations } = useTypedSelector((state) => state.estimation.estimations);
 
+    const deckType = session?.deck[0].type
     const ticketEstimations = selectedTicketId ? estimations[selectedTicketId] : undefined;
 
     const estimationMedians = useMemo(() => {
@@ -37,8 +38,21 @@ export const EstimationResults = ({ className }: EstimationResultProps) => {
     const estimatesSum = useMemo(() => {
         if (!session || !estimationMedians) return '';
 
+        if (deckType === 'tshirt') {
+            return findBiggestTShirtFromLabels(estimationMedians);
+        }
+
         return getEstimationSum(estimationMedians, session.deck);
     }, [estimationMedians, session]);
+
+    const finalEstimateLabel = useMemo(() => {
+        switch (deckType) {
+            case 'tshirt':
+                return 'Biggest';
+            default:
+                return 'Sum';
+        }
+    }, [deckType])
 
     const handleSelectNextTicketForEstimationInOrder = () => {
         const sortedTickets = Object.values(tickets).sort((a, b) => a.order - b.order);
@@ -71,7 +85,7 @@ export const EstimationResults = ({ className }: EstimationResultProps) => {
 
                 {Object.keys(estimationMedians).length > 1 && (
                     <EstimationResultItem
-                        name="Sum"
+                        name={finalEstimateLabel}
                         value={estimatesSum}
                     />
                 )}
