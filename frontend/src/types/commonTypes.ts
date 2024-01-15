@@ -29,7 +29,7 @@ export type EstimationType = {
 export type EstimateCardType = {
     label: string;
     value: number;
-    type: 'story-points' | 'time' | 'utility';
+    type: 'story-points' | 'time' | 'tshirt' | 'utility';
 }
 
 export type SessionType = {

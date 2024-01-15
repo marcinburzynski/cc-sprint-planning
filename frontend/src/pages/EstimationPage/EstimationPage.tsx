@@ -96,6 +96,15 @@ export const EstimationPage = () => {
         }
     }, [selectedTicket, selectedTicketId, tickets])
 
+    console.log({ estimationsForTicket })
+
+    const isRevealButtonDisabled = (
+        !!selectedTicket?.isRevealed
+        || !selectedTicketId
+        || !estimationsForTicket
+        || !Object.keys(estimationsForTicket).length
+    )
+
     return (
         <div className="estimation-page">
             <LogoHeader className="estimation-page-main-header" />
@@ -117,7 +126,7 @@ export const EstimationPage = () => {
                         <Button
                             className="reveal-estimation-button"
                             buttonSize="medium"
-                            disabled={!!selectedTicket?.isRevealed || !selectedTicketId || !estimationsForTicket}
+                            disabled={isRevealButtonDisabled}
                             onClick={() => selectedTicketId && dispatch(revealTicketEstimate(selectedTicketId))}
                         >
                             Reveal Cards

@@ -2,6 +2,8 @@ import { useState, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { useTypedDispatch, useTypedSelector } from '../../store/hooks';
+import { useRerenderComponent } from '../../hooks/useRerenderComponent';
+import { jira } from '../../services/jira';
 import { getTeams } from '../../store/actions/estimation/session';
 import { updateUser } from '../../store/actions/user';
 import { UserAvatar } from './UserAvatar';
@@ -12,6 +14,7 @@ import { ConfirmationModal, DetachedConfirmationModal } from '../ConfirmationMod
 
 import { ReactComponent as EditIconSVG } from '../../assets/icons/edit.svg';
 import { ReactComponent as SignOutIconSVG } from '../../assets/icons/sign-out.svg';
+import { ReactComponent as JiraLogoSVG } from '../../assets/icons/jira.svg';
 
 import type { UserType } from '../../types/commonTypes';
 
@@ -25,6 +28,7 @@ type UserProfileProps = {
 
 export const UserProfile = ({ className, user, changeUserType }: UserProfileProps) => {
     const dispatch = useTypedDispatch();
+    const { rerender } = useRerenderComponent();
     const { sessionId } = useParams<{ sessionId: string }>();
 
     const [updatedUsername, setUpdatedUsername] = useState(user.name);
@@ -89,6 +93,11 @@ export const UserProfile = ({ className, user, changeUserType }: UserProfileProp
         window.location.replace(`${window.location.origin}${redirectPath}`);
     }
 
+    const handleAuthJira = async () => {
+        await jira.auth(user.id);
+        rerender();
+    }
+
     const editNameModalContent = (
         <Input
             value={updatedUsername}
@@ -135,8 +144,21 @@ export const UserProfile = ({ className, user, changeUserType }: UserProfileProp
             <div className="options-list">
                 {changeUserType && (
                     <span className="list-option" onClick={handleClickRoleButton}>
-                    {user.isSpectator ? 'Join as a player' : 'Become a viewer'}
-                </span>
+                        {user.isSpectator ? 'Join as a player' : 'Become a viewer'}
+                    </span>
+                )}
+
+                {changeUserType && user.team && (
+                    <div className="list-option" onClick={() => setIsSelectTeamModalVisible(true)}>
+                        <span>Change team</span>
+                    </div>
+                )}
+
+                {!jira.authorized && (
+                    <div className="list-option" onClick={handleAuthJira}>
+                        <span>Authenticate with Jira</span>
+                        <JiraLogoSVG />
+                    </div>
                 )}
 
                 <div className="list-option danger" onClick={() => setIsSignOutConfirmModalVisible(true)}>

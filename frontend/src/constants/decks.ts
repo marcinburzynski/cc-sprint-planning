@@ -16,8 +16,24 @@ export const TIME_DECK: EstimateCardType[] = [
     { label: '1d', value: 8, type: 'time' },
     { label: '2d', value: 16, type: 'time' },
     { label: '3d', value: 24, type: 'time' },
+    { label: '4d', value: 32, type: 'time' },
     { label: '5d', value: 40, type: 'time' },
-    { label: '13d', value: 104, type: 'time' },
+    { label: '8d', value: 64, type: 'time' },
+    { label: '10d', value: 80, type: 'time' },
+    { label: '14d', value: 112, type: 'time' },
+    { label: '?', value: 0, type: 'utility' },
+]
+
+export const TSHIRT_LABEL_VALUE_MAPPING = {
+    S: 1,
+    M: 2,
+    L: 3,
+} as const;
+
+export const TSHIRT_SIZE_DECK: EstimateCardType[] = [
+    { label: 'S', value: TSHIRT_LABEL_VALUE_MAPPING.S, type: 'tshirt' },
+    { label: 'M', value: TSHIRT_LABEL_VALUE_MAPPING.M, type: 'tshirt' },
+    { label: 'L', value: TSHIRT_LABEL_VALUE_MAPPING.L, type: 'tshirt' },
     { label: '?', value: 0, type: 'utility' },
 ]
 
@@ -40,4 +56,9 @@ export const DECKS: Record<string, DeckOption> = {
         value: 'time',
         deck: TIME_DECK,
     },
+    tshirt: {
+        label: `T-shirt (${getDeckCardsLabelsList(TSHIRT_SIZE_DECK)})`,
+        value: 'tshirt',
+        deck: TSHIRT_SIZE_DECK,
+    }
 }

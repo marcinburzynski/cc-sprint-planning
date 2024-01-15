@@ -62,6 +62,10 @@
             &.danger:hover {
                 background-color: $red-misty-rose;
             }
+
+            svg {
+                margin-left: 16px;
+            }
         }
     }
 }

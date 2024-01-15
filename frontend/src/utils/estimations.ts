@@ -66,7 +66,7 @@ export const getEstimationSum = (estimationMedians: EstimationMedians, deck: Est
 
         const currentCard = labelCardHashmap[curr];
 
-        if (currentCard.type === 'utility') return acc;
+        if (['utility', 'tshirt'].includes(currentCard.type)) return acc;
 
         return acc + currentCard.value;
     }, 0)
