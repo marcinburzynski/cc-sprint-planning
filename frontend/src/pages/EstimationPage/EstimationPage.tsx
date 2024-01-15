@@ -96,8 +96,6 @@ export const EstimationPage = () => {
         }
     }, [selectedTicket, selectedTicketId, tickets])
 
-    console.log({ estimationsForTicket })
-
     const isRevealButtonDisabled = (
         !!selectedTicket?.isRevealed
         || !selectedTicketId
